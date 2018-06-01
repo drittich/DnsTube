@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Web;
 using System.Windows.Forms;
 using CloudflareDynDNS.Dns;
 using CloudflareDynDNS.Zone;
@@ -15,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace CloudflareDynDNS
 {
-	public partial class frmMain : frmBaseForm
+	public partial class frmMain : Form
 	{
 		string EndPoint = "https://api.cloudflare.com/client/v4/";
 
@@ -24,7 +20,8 @@ namespace CloudflareDynDNS
 		public frmMain()
 		{
 			InitializeComponent();
-			Init();
+			foreach (Control c in Controls)
+				c.Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 9f, FontStyle.Regular, GraphicsUnit.Point);
 		}
 
 		void Init()
@@ -32,12 +29,13 @@ namespace CloudflareDynDNS
 			Client = new HttpClient();
 			Client.BaseAddress = new Uri(EndPoint);
 			System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
+
+			var externalAddress = GetExternalAddress();
+			txtExternalAddress.Text = externalAddress;
 		}
 
 		void btnGo_Click(object sender, EventArgs e)
 		{
-			var externalAddress = GetExternalAddress();
-			txtExternalAddress.Text = externalAddress;
 			var zones = ListZones();
 
 			var allDnsEntriesByZone = new Dictionary<string, DnsRecordsResponse>();
@@ -214,6 +212,11 @@ namespace CloudflareDynDNS
 			var frm = new frmSettings();
 			frm.ShowDialog();
 			frm.Close();
+		}
+
+		void frmMain_Load(object sender, EventArgs e)
+		{
+			Init();
 		}
 	}
 }

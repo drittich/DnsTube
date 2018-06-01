@@ -10,11 +10,13 @@ using System.Windows.Forms;
 
 namespace CloudflareDynDNS
 {
-	public partial class frmSettings : frmBaseForm
+	public partial class frmSettings : Form
 	{
-		public frmSettings()
+		public frmSettings() 
 		{
 			InitializeComponent();
+			foreach (Control c in Controls)
+				c.Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 9f, FontStyle.Regular, GraphicsUnit.Point);
 		}
 
 		void btnCancel_Click(object sender, EventArgs e)
