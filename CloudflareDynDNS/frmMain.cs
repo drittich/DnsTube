@@ -29,17 +29,6 @@ namespace CloudflareDynDNS
 			Client = new HttpClient();
 			System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
 			cfClient = new CloudflareAPI(Client);
-
-			// move this to Loop code
-			var externalAddress = Utility.GetExternalAddress(Client);
-			// Bail if failed, keeping the current address in settings
-			if (externalAddress != null)
-			{
-				if (externalAddress != Properties.Settings.Default["ExternalAddress"].ToString())
-					Utility.SaveSetting("ExternalAddress", externalAddress);
-			}
-
-			txtExternalAddress.Text = externalAddress;
 		}
 
 		void btnGo_Click(object sender, EventArgs e)
@@ -132,6 +121,33 @@ namespace CloudflareDynDNS
 		void frmMain_Load(object sender, EventArgs e)
 		{
 			Init();
+
+			// if settings are valid:
+
+			var interval = TimeSpan.FromMinutes(5);
+			TaskScheduler.Instance.ScheduleTask(interval,
+				() =>
+				{
+					var externalAddress = Utility.GetExternalAddress(Client);
+
+					// Bail if failed, keeping the current address in settings
+					if (externalAddress == null)
+						return;
+
+					if (externalAddress != Properties.Settings.Default["ExternalAddress"].ToString())
+					{
+						Utility.SaveSetting("ExternalAddress", externalAddress);
+
+						this.txtExternalAddress.Invoke((MethodInvoker)delegate
+						{
+							// Running on the UI thread
+							this.txtExternalAddress.Text = externalAddress;
+						});
+						// Back on the worker thread
+
+					// loop through DNS entries and update the ones selected that have differnt IP
+					}
+				});
 		}
 
 		void btnUpdateDNS_Click(object sender, EventArgs e)
