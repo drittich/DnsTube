@@ -38,14 +38,15 @@
 			this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.colAddress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.btnSettings = new System.Windows.Forms.Button();
+			this.btnUpdateDNS = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btnGo
 			// 
-			this.btnGo.Location = new System.Drawing.Point(51, 619);
+			this.btnGo.Location = new System.Drawing.Point(53, 619);
 			this.btnGo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnGo.Name = "btnGo";
-			this.btnGo.Size = new System.Drawing.Size(198, 41);
+			this.btnGo.Size = new System.Drawing.Size(131, 41);
 			this.btnGo.TabIndex = 0;
 			this.btnGo.Text = "Go";
 			this.btnGo.UseVisualStyleBackColor = true;
@@ -63,10 +64,10 @@
 			// 
 			// btnQuit
 			// 
-			this.btnQuit.Location = new System.Drawing.Point(549, 619);
+			this.btnQuit.Location = new System.Drawing.Point(617, 619);
 			this.btnQuit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnQuit.Name = "btnQuit";
-			this.btnQuit.Size = new System.Drawing.Size(201, 41);
+			this.btnQuit.Size = new System.Drawing.Size(131, 41);
 			this.btnQuit.TabIndex = 2;
 			this.btnQuit.Text = "Quit";
 			this.btnQuit.UseVisualStyleBackColor = true;
@@ -122,20 +123,31 @@
 			// 
 			// btnSettings
 			// 
-			this.btnSettings.Location = new System.Drawing.Point(289, 619);
+			this.btnSettings.Location = new System.Drawing.Point(241, 619);
 			this.btnSettings.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnSettings.Name = "btnSettings";
-			this.btnSettings.Size = new System.Drawing.Size(219, 41);
+			this.btnSettings.Size = new System.Drawing.Size(131, 41);
 			this.btnSettings.TabIndex = 6;
 			this.btnSettings.Text = "Settings";
 			this.btnSettings.UseVisualStyleBackColor = true;
 			this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+			// 
+			// btnUpdateDNS
+			// 
+			this.btnUpdateDNS.Location = new System.Drawing.Point(429, 619);
+			this.btnUpdateDNS.Name = "btnUpdateDNS";
+			this.btnUpdateDNS.Size = new System.Drawing.Size(131, 41);
+			this.btnUpdateDNS.TabIndex = 7;
+			this.btnUpdateDNS.Text = "Update DNS";
+			this.btnUpdateDNS.UseVisualStyleBackColor = true;
+			this.btnUpdateDNS.Click += new System.EventHandler(this.btnUpdateDNS_Click);
 			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 678);
+			this.Controls.Add(this.btnUpdateDNS);
 			this.Controls.Add(this.btnSettings);
 			this.Controls.Add(this.listViewRecords);
 			this.Controls.Add(this.txtExternalAddress);
@@ -166,6 +178,7 @@
 		private System.Windows.Forms.ColumnHeader colName;
 		private System.Windows.Forms.ColumnHeader colAddress;
 		private System.Windows.Forms.Button btnSettings;
+		private System.Windows.Forms.Button btnUpdateDNS;
 	}
 }
 

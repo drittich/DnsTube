@@ -52,5 +52,10 @@ namespace CloudflareDynDNS.Dns
 		public Result result { get; set; }
 	}
 
-
+	public class DnsUpdateRequest
+	{
+		public string type { get; set; }
+		public string name { get; set; }
+		public string content { get; set; }
+	}
 }

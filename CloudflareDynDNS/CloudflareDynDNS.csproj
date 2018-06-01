@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CloudflareAPI.cs" />
     <Compile Include="frmBaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
