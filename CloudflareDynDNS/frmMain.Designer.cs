@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.btnGo = new System.Windows.Forms.Button();
+			this.btnUpdateList = new System.Windows.Forms.Button();
 			this.txtOutput = new System.Windows.Forms.TextBox();
 			this.btnQuit = new System.Windows.Forms.Button();
 			this.lblExternalAddress = new System.Windows.Forms.Label();
@@ -38,36 +38,40 @@
 			this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.colAddress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.btnSettings = new System.Windows.Forms.Button();
-			this.btnUpdateDNS = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
-			// btnGo
+			// btnUpdateList
 			// 
-			this.btnGo.Location = new System.Drawing.Point(53, 619);
-			this.btnGo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.btnGo.Name = "btnGo";
-			this.btnGo.Size = new System.Drawing.Size(131, 41);
-			this.btnGo.TabIndex = 0;
-			this.btnGo.Text = "Go";
-			this.btnGo.UseVisualStyleBackColor = true;
-			this.btnGo.Click += new System.EventHandler(this.btnGo_Click);
+			this.btnUpdateList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnUpdateList.Location = new System.Drawing.Point(404, 625);
+			this.btnUpdateList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.btnUpdateList.Name = "btnUpdateList";
+			this.btnUpdateList.Size = new System.Drawing.Size(113, 32);
+			this.btnUpdateList.TabIndex = 0;
+			this.btnUpdateList.Text = "Fetch List";
+			this.btnUpdateList.UseVisualStyleBackColor = true;
+			this.btnUpdateList.Click += new System.EventHandler(this.btnUpdateList_Click);
 			// 
 			// txtOutput
 			// 
+			this.txtOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtOutput.Location = new System.Drawing.Point(15, 334);
 			this.txtOutput.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.txtOutput.Multiline = true;
 			this.txtOutput.Name = "txtOutput";
 			this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.txtOutput.Size = new System.Drawing.Size(772, 264);
+			this.txtOutput.Size = new System.Drawing.Size(772, 269);
 			this.txtOutput.TabIndex = 1;
 			// 
 			// btnQuit
 			// 
-			this.btnQuit.Location = new System.Drawing.Point(617, 619);
+			this.btnQuit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnQuit.Location = new System.Drawing.Point(675, 625);
 			this.btnQuit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnQuit.Name = "btnQuit";
-			this.btnQuit.Size = new System.Drawing.Size(131, 41);
+			this.btnQuit.Size = new System.Drawing.Size(113, 32);
 			this.btnQuit.TabIndex = 2;
 			this.btnQuit.Text = "Quit";
 			this.btnQuit.UseVisualStyleBackColor = true;
@@ -78,13 +82,14 @@
 			this.lblExternalAddress.AutoSize = true;
 			this.lblExternalAddress.Location = new System.Drawing.Point(11, 16);
 			this.lblExternalAddress.Name = "lblExternalAddress";
-			this.lblExternalAddress.Size = new System.Drawing.Size(119, 20);
+			this.lblExternalAddress.Size = new System.Drawing.Size(122, 20);
 			this.lblExternalAddress.TabIndex = 3;
-			this.lblExternalAddress.Text = "External Address";
+			this.lblExternalAddress.Text = "Public IP Address";
 			// 
 			// txtExternalAddress
 			// 
-			this.txtExternalAddress.Location = new System.Drawing.Point(110, 14);
+			this.txtExternalAddress.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.txtExternalAddress.Location = new System.Drawing.Point(111, 14);
 			this.txtExternalAddress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.txtExternalAddress.Name = "txtExternalAddress";
 			this.txtExternalAddress.ReadOnly = true;
@@ -93,6 +98,8 @@
 			// 
 			// listViewRecords
 			// 
+			this.listViewRecords.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.listViewRecords.CheckBoxes = true;
 			this.listViewRecords.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colUpdate,
@@ -123,40 +130,31 @@
 			// 
 			// btnSettings
 			// 
-			this.btnSettings.Location = new System.Drawing.Point(241, 619);
+			this.btnSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnSettings.Location = new System.Drawing.Point(539, 625);
 			this.btnSettings.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnSettings.Name = "btnSettings";
-			this.btnSettings.Size = new System.Drawing.Size(131, 41);
+			this.btnSettings.Size = new System.Drawing.Size(113, 32);
 			this.btnSettings.TabIndex = 6;
 			this.btnSettings.Text = "Settings";
 			this.btnSettings.UseVisualStyleBackColor = true;
 			this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
 			// 
-			// btnUpdateDNS
-			// 
-			this.btnUpdateDNS.Location = new System.Drawing.Point(429, 619);
-			this.btnUpdateDNS.Name = "btnUpdateDNS";
-			this.btnUpdateDNS.Size = new System.Drawing.Size(131, 41);
-			this.btnUpdateDNS.TabIndex = 7;
-			this.btnUpdateDNS.Text = "Update DNS";
-			this.btnUpdateDNS.UseVisualStyleBackColor = true;
-			this.btnUpdateDNS.Click += new System.EventHandler(this.btnUpdateDNS_Click);
-			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(800, 678);
-			this.Controls.Add(this.btnUpdateDNS);
+			this.ClientSize = new System.Drawing.Size(800, 670);
 			this.Controls.Add(this.btnSettings);
 			this.Controls.Add(this.listViewRecords);
 			this.Controls.Add(this.txtExternalAddress);
 			this.Controls.Add(this.lblExternalAddress);
 			this.Controls.Add(this.btnQuit);
 			this.Controls.Add(this.txtOutput);
-			this.Controls.Add(this.btnGo);
+			this.Controls.Add(this.btnUpdateList);
 			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.MinimumSize = new System.Drawing.Size(480, 600);
 			this.Name = "frmMain";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Cloudflare DynDNS";
@@ -168,7 +166,7 @@
 
 		#endregion
 
-		private System.Windows.Forms.Button btnGo;
+		private System.Windows.Forms.Button btnUpdateList;
 		private System.Windows.Forms.TextBox txtOutput;
 		private System.Windows.Forms.Button btnQuit;
 		private System.Windows.Forms.Label lblExternalAddress;
@@ -178,7 +176,6 @@
 		private System.Windows.Forms.ColumnHeader colName;
 		private System.Windows.Forms.ColumnHeader colAddress;
 		private System.Windows.Forms.Button btnSettings;
-		private System.Windows.Forms.Button btnUpdateDNS;
 	}
 }
 

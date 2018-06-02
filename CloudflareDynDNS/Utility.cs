@@ -46,5 +46,10 @@ namespace CloudflareDynDNS
 
 			return newExternalAddress;
 		}
+
+		public static string GetDateString()
+		{
+			return DateTime.Now.ToString("yyyy-MM-dd h:mm:ss tt");
+		}
 	}
 }

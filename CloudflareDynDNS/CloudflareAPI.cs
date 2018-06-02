@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using CloudflareDynDNS.Dns;
 using Newtonsoft.Json;
 using CloudflareDynDNS.Zone;
+using System.Collections.Generic;
 
 namespace CloudflareDynDNS
 {
@@ -72,6 +74,20 @@ namespace CloudflareDynDNS
 			var result = response.Content.ReadAsStringAsync().Result;
 			var ret = JsonConvert.DeserializeObject<DnsUpdateResponse>(result);
 			return ret;
+		}
+
+		public List<Dns.Result> GetAllDnsRecordsByZone()
+		{
+			var allDnsEntries = new List<Dns.Result>();
+			ListZonesResponse zones = ListZones();
+
+			foreach (var zone in zones.result)
+			{
+				var dnsRecords = ListDnsRecords(zone.id);
+				allDnsEntries.AddRange(dnsRecords.result);
+			}
+
+			return allDnsEntries;
 		}
 
 		HttpRequestMessage GetRequestMessage(HttpMethod httpMethod, string requestUri)

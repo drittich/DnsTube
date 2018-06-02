@@ -49,7 +49,7 @@
 			// 
 			// txtEmail
 			// 
-			this.txtEmail.Location = new System.Drawing.Point(104, 11);
+			this.txtEmail.Location = new System.Drawing.Point(167, 11);
 			this.txtEmail.Name = "txtEmail";
 			this.txtEmail.Size = new System.Drawing.Size(337, 27);
 			this.txtEmail.TabIndex = 1;
@@ -65,14 +65,14 @@
 			// 
 			// txtApiKey
 			// 
-			this.txtApiKey.Location = new System.Drawing.Point(104, 46);
+			this.txtApiKey.Location = new System.Drawing.Point(167, 46);
 			this.txtApiKey.Name = "txtApiKey";
 			this.txtApiKey.Size = new System.Drawing.Size(337, 27);
 			this.txtApiKey.TabIndex = 3;
 			// 
 			// btnSave
 			// 
-			this.btnSave.Location = new System.Drawing.Point(272, 132);
+			this.btnSave.Location = new System.Drawing.Point(335, 132);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 24);
 			this.btnSave.TabIndex = 4;
@@ -82,7 +82,7 @@
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.Location = new System.Drawing.Point(366, 132);
+			this.btnCancel.Location = new System.Drawing.Point(429, 132);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 24);
 			this.btnCancel.TabIndex = 5;
@@ -95,22 +95,24 @@
 			this.lblUpdateInterval.AutoSize = true;
 			this.lblUpdateInterval.Location = new System.Drawing.Point(12, 85);
 			this.lblUpdateInterval.Name = "lblUpdateInterval";
-			this.lblUpdateInterval.Size = new System.Drawing.Size(111, 20);
+			this.lblUpdateInterval.Size = new System.Drawing.Size(177, 20);
 			this.lblUpdateInterval.TabIndex = 6;
-			this.lblUpdateInterval.Text = "Update Interval";
+			this.lblUpdateInterval.Text = "Update Interval (minutes)";
 			// 
 			// txtUpdateInterval
 			// 
-			this.txtUpdateInterval.Location = new System.Drawing.Point(104, 82);
+			this.txtUpdateInterval.Location = new System.Drawing.Point(167, 82);
+			this.txtUpdateInterval.MaxLength = 4;
 			this.txtUpdateInterval.Name = "txtUpdateInterval";
 			this.txtUpdateInterval.Size = new System.Drawing.Size(159, 27);
 			this.txtUpdateInterval.TabIndex = 7;
+			this.txtUpdateInterval.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUpdateInterval_KeyPress);
 			// 
 			// frmSettings
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(462, 173);
+			this.ClientSize = new System.Drawing.Size(525, 173);
 			this.Controls.Add(this.txtUpdateInterval);
 			this.Controls.Add(this.lblUpdateInterval);
 			this.Controls.Add(this.btnCancel);
@@ -120,6 +122,9 @@
 			this.Controls.Add(this.txtEmail);
 			this.Controls.Add(this.lblEmail);
 			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "frmSettings";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Settings";

@@ -15,8 +15,6 @@ namespace CloudflareDynDNS
 		public frmSettings() 
 		{
 			InitializeComponent();
-			foreach (Control c in Controls)
-				c.Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 9f, FontStyle.Regular, GraphicsUnit.Point);
 		}
 
 		void btnCancel_Click(object sender, EventArgs e)
@@ -37,6 +35,14 @@ namespace CloudflareDynDNS
 			txtEmail.Text = Utility.GetSetting("Email");
 			txtApiKey.Text = Utility.GetSetting("ApiKey");
 			txtUpdateInterval.Text = Utility.GetSetting("UpdateInterval");
+		}
+
+		void txtUpdateInterval_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) )
+			{
+				e.Handled = true;
+			}
 		}
 	}
 }

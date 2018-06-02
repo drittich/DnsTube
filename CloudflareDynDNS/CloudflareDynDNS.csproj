@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CloudflareAPI.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="frmBaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -72,6 +73,7 @@
     <Compile Include="frmSettings.Designer.cs">
       <DependentUpon>frmSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="TaskScheduler.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Zone.cs" />
     <Compile Include="Program.cs" />
