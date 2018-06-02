@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Windows.Forms;
 using CloudflareDynDNS.Dns;
+using CloudflareDynDNS.Properties;
 using Newtonsoft.Json;
 
 namespace CloudflareDynDNS
@@ -16,6 +19,7 @@ namespace CloudflareDynDNS
 
 		HttpClient Client;
 		CloudflareAPI cfClient;
+		Settings settings;
 
 		public frmMain()
 		{
@@ -26,15 +30,19 @@ namespace CloudflareDynDNS
 		{
 			Init();
 
+			DisplayVersion();
+
 			PromptForSettings();
 
-			DisplayVersion();
+			cfClient = new CloudflareAPI(Client, settings.EmailAddress, settings.ApiKey);
 
 			UpdateList();
 
 			AppendStatusText($"Detected public IP {GetExternalAddress()}");
 
-			var interval = TimeSpan.FromMinutes(1);
+			var interval = TimeSpan.FromMinutes(settings.UpdateIntervalMinutes);
+			txtNextUpdate.Text = DateTime.Now.Add(interval).ToString("h:mm:ss tt");
+
 			TaskScheduler.Instance.ScheduleTask(interval,
 				() =>
 				{
@@ -45,30 +53,32 @@ namespace CloudflareDynDNS
 
 						var externalAddress = GetExternalAddress();
 						if (externalAddress == null)
-							return;
+							return; //bail, some kind of error getting IP
 
-						var oldExternalAddress = Properties.Settings.Default["ExternalAddress"].ToString();
+						var oldExternalAddress = settings.PublicIpAddress;
 						if (externalAddress != oldExternalAddress)
 						{
-							Utility.SaveSetting("ExternalAddress", externalAddress);
+							settings.PublicIpAddress = externalAddress;
+							settings.Save();
 
-							this.txtOutput.Invoke((MethodInvoker)delegate
+							txtOutput.Invoke((MethodInvoker)delegate
 							{
-								AppendStatusText($"Public IP changed from {oldExternalAddress} to {externalAddress}");
+								if (oldExternalAddress != null)
+									AppendStatusText($"Public IP changed from {oldExternalAddress} to {externalAddress}");
 							});
 
-							this.txtExternalAddress.Invoke((MethodInvoker)delegate
+							txtExternalAddress.Invoke((MethodInvoker)delegate
 							{
-								this.txtExternalAddress.Text = externalAddress; // Running on the UI thread
+								txtExternalAddress.Text = externalAddress; // Running on the UI thread
 							});
 
 							// loop through DNS entries and update the ones selected that have a different IP
-							var savedSelectedEntries = GetSavedSelectedEntries();
-							var entriesToUpdate = cfClient.GetAllDnsRecordsByZone().Where(d => savedSelectedEntries.Any(s => s.ZoneName == d.zone_name && s.DnsEntryName == d.name && d.content != externalAddress));
+							var entriesToUpdate = cfClient.GetAllDnsRecordsByZone().Where(d => settings.SelectedDomains
+								.Any(s => s.ZoneName == d.zone_name && s.DnsName == d.name && d.content != externalAddress));
 							foreach (var entry in entriesToUpdate)
 							{
 								cfClient.UpdateDns(entry.zone_id, entry.id, entry.name, externalAddress);
-								this.txtOutput.Invoke((MethodInvoker)delegate
+								txtOutput.Invoke((MethodInvoker)delegate
 								{
 									AppendStatusText($"Updated name [{entry.name}] in zone [{entry.zone_name}] to {externalAddress}");
 								});
@@ -77,7 +87,11 @@ namespace CloudflareDynDNS
 					}
 					catch (Exception ex)
 					{
-						AppendStatusText($"Error detecting or updating IP address: {ex.Message}");
+						AppendStatusText($"Error detecting/updating IP address: {ex.Message}");
+					}
+					finally
+					{
+						txtNextUpdate.Text = DateTime.Now.Add(interval).ToString("h:mm:ss tt");
 					}
 				});
 		}
@@ -87,9 +101,7 @@ namespace CloudflareDynDNS
 			if (!validateSettings())
 			{
 				MessageBox.Show($"Please configure your settings.");
-				var frm = new frmSettings();
-				frm.ShowDialog();
-				frm.Close();
+				DisplaySettingsForm();
 			}
 		}
 
@@ -106,10 +118,11 @@ namespace CloudflareDynDNS
 		bool validateSettings()
 		{
 			// check if settings are populate
-			int updateInterval;
-			if (string.IsNullOrWhiteSpace(Utility.GetSetting("Email")) || !Utility.GetSetting("Email").Contains("@")
-				|| string.IsNullOrWhiteSpace(Utility.GetSetting("ApiKey"))
-				|| !int.TryParse(Utility.GetSetting("UpdateInterval"), out updateInterval))
+			if (string.IsNullOrWhiteSpace(settings.EmailAddress)
+				|| !settings.EmailAddress.Contains("@")
+				|| string.IsNullOrWhiteSpace(settings.ApiKey)
+				|| settings.UpdateIntervalMinutes == 0
+				)
 				return false;
 
 			return true;
@@ -135,12 +148,11 @@ namespace CloudflareDynDNS
 
 		void Init()
 		{
+			settings = new Settings();
 			Client = new HttpClient();
 
 			// use TLS 1.2
 			System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
-
-			cfClient = new CloudflareAPI(Client);
 		}
 
 		void btnUpdateList_Click(object sender, EventArgs e)
@@ -167,7 +179,6 @@ namespace CloudflareDynDNS
 		void UpdateListView(List<Dns.Result> allDnsRecords)
 		{
 			listViewRecords.Items.Clear();
-			var savedSelectedDnsEntries = GetSavedSelectedEntries();
 
 			// group each zones records under a separate header
 			foreach (var zone in allDnsRecords.Select(d => d.zone_name).Distinct().OrderBy(z => z))
@@ -180,19 +191,14 @@ namespace CloudflareDynDNS
 					var row = new ListViewItem(group);
 					row.SubItems.Add(dnsRecord.name);
 					row.SubItems.Add(dnsRecord.content);
+					row.Tag = zone;
 
-					if (savedSelectedDnsEntries.Any(entry => entry.ZoneName == dnsRecord.zone_name && entry.DnsEntryName == dnsRecord.name))
+					if (settings.SelectedDomains.Any(entry => entry.ZoneName == dnsRecord.zone_name && entry.DnsName == dnsRecord.name))
 						row.Checked = true;
 
 					listViewRecords.Items.Add(row);
 				}
 			}
-		}
-
-		static List<SelectedDnsEntry> GetSavedSelectedEntries()
-		{
-			var ret = JsonConvert.DeserializeObject<List<SelectedDnsEntry>>(Properties.Settings.Default["SelectedDnsEntries"].ToString());
-			return ret ?? new List<SelectedDnsEntry>();
 		}
 
 		void btnQuit_Click(object sender, EventArgs e)
@@ -205,34 +211,42 @@ namespace CloudflareDynDNS
 			if (listViewRecords.FocusedItem == null)
 				return;
 
-			var savedSelectedDnsEntries = GetSavedSelectedEntries();
+			ListViewItem item = e.Item;
+			string itemDnsEntryName = item.SubItems[1].Text;
+			string itemZoneName = item.Tag.ToString();
 
-			ListViewItem listItem = e.Item;
-			string listItemDnsEntryName = listItem.SubItems[1].Text;
-			if (!listItem.Checked)
+			if (!item.Checked)
 			{
 				// Make sure to clean up any old entries in the settings
-				savedSelectedDnsEntries.RemoveAll(entry => entry.ZoneName == listItem.Group.Header && entry.DnsEntryName == listItemDnsEntryName);
+				settings.SelectedDomains.RemoveAll(entry => entry.ZoneName == itemZoneName && entry.DnsName == itemDnsEntryName);
+				settings.Save();
 			}
 			else
 			{
 				// Item has been selected by the user, store it for later
-				if (savedSelectedDnsEntries.Any(entry => entry.ZoneName == listItem.Group.Header && entry.DnsEntryName == listItemDnsEntryName))
+				if (settings.SelectedDomains.Any(entry => entry.ZoneName == itemZoneName && entry.DnsName == itemDnsEntryName))
 				{
 					// Item is already in the settings list, do nothing.
 					return;
 				}
-				savedSelectedDnsEntries.Add(new SelectedDnsEntry() { ZoneName = listItem.Group.Header, DnsEntryName = listItemDnsEntryName });
+				settings.SelectedDomains.Add(new SelectedDomain() { ZoneName = itemZoneName, DnsName = itemDnsEntryName });
+				settings.Save();
 			}
-
-			Utility.SaveSetting("SelectedDnsEntries", JsonConvert.SerializeObject(savedSelectedDnsEntries));
 		}
 
 		void btnSettings_Click(object sender, EventArgs e)
 		{
-			var frm = new frmSettings();
+			DisplaySettingsForm();
+		}
+
+		void DisplaySettingsForm()
+		{
+			var frm = new frmSettings(settings);
 			frm.ShowDialog();
 			frm.Close();
+			// reload settings
+			settings = new Settings();
+			cfClient = new CloudflareAPI(Client, settings.EmailAddress, settings.ApiKey);
 		}
 
 		void btnUpdateDNS_Click(object sender, EventArgs e)
@@ -254,6 +268,8 @@ namespace CloudflareDynDNS
 			var version = execAssembly.GetName().Version.ToString();
 			var compileDate = execAssembly.GetLinkerTime().ToString("yyyy-MM-dd");
 			AppendStatusText($"Cloudflare DynDNS v{version} ({compileDate})");
+			if (File.Exists(settings.GetSettingsFilePath()))
+				AppendStatusText($"Settings path: {settings.GetSettingsFilePath()}");
 		}
 	}
 }

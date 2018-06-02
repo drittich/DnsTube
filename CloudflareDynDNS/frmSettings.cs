@@ -12,8 +12,11 @@ namespace CloudflareDynDNS
 {
 	public partial class frmSettings : Form
 	{
-		public frmSettings() 
+		Settings settings;
+
+		public frmSettings(Settings settings2) 
 		{
+			settings = settings2;
 			InitializeComponent();
 		}
 
@@ -24,17 +27,18 @@ namespace CloudflareDynDNS
 
 		void btnSave_Click(object sender, EventArgs e)
 		{
-			Utility.SaveSetting("Email", txtEmail.Text);
-			Utility.SaveSetting("ApiKey", txtApiKey.Text);
-			Utility.SaveSetting("UpdateInterval", txtUpdateInterval.Text);
+			settings.EmailAddress = txtEmail.Text;
+			settings.ApiKey = txtApiKey.Text;
+			settings.UpdateIntervalMinutes = int.Parse(txtUpdateInterval.Text);
+			settings.Save();
 			Close();
 		}
 
 		void frmSettings_Load(object sender, EventArgs e)
 		{
-			txtEmail.Text = Utility.GetSetting("Email");
-			txtApiKey.Text = Utility.GetSetting("ApiKey");
-			txtUpdateInterval.Text = Utility.GetSetting("UpdateInterval");
+			txtEmail.Text = settings.EmailAddress;
+			txtApiKey.Text = settings.ApiKey;
+			txtUpdateInterval.Text = settings.UpdateIntervalMinutes.ToString();
 		}
 
 		void txtUpdateInterval_KeyPress(object sender, KeyPressEventArgs e)

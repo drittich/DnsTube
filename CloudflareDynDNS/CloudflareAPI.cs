@@ -18,10 +18,14 @@ namespace CloudflareDynDNS
 		public static string EndPoint = "https://api.cloudflare.com/client/v4/";
 		public HttpClient Client { get; set; }
 
-		public CloudflareAPI(HttpClient client)
+
+		public CloudflareAPI(HttpClient client, string email, string apiKey)
 		{
 			Client = client;
-			Client.BaseAddress = new Uri(EndPoint);
+			if (Client.BaseAddress == null)
+				Client.BaseAddress = new Uri(EndPoint);
+			Email = email;
+			ApiKey = apiKey;
 		}
 
 		// Ref: https://api.cloudflare.com/#zone-list-zones
@@ -93,8 +97,8 @@ namespace CloudflareDynDNS
 		HttpRequestMessage GetRequestMessage(HttpMethod httpMethod, string requestUri)
 		{
 			var req = new HttpRequestMessage(httpMethod, requestUri);
-			req.Headers.Add("X-Auth-Email", Utility.GetSetting("Email"));
-			req.Headers.Add("X-Auth-Key", Utility.GetSetting("ApiKey"));
+			req.Headers.Add("X-Auth-Email", Email);
+			req.Headers.Add("X-Auth-Key", ApiKey);
 			return req;
 		}
 	}

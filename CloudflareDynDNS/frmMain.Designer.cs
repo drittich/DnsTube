@@ -38,6 +38,8 @@
 			this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.colAddress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.btnSettings = new System.Windows.Forms.Button();
+			this.lblNextUpdate = new System.Windows.Forms.Label();
+			this.txtNextUpdate = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// btnUpdateList
@@ -140,11 +142,31 @@
 			this.btnSettings.UseVisualStyleBackColor = true;
 			this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
 			// 
+			// lblNextUpdate
+			// 
+			this.lblNextUpdate.AutoSize = true;
+			this.lblNextUpdate.Location = new System.Drawing.Point(323, 17);
+			this.lblNextUpdate.Name = "lblNextUpdate";
+			this.lblNextUpdate.Size = new System.Drawing.Size(93, 20);
+			this.lblNextUpdate.TabIndex = 7;
+			this.lblNextUpdate.Text = "Next Update";
+			// 
+			// txtNextUpdate
+			// 
+			this.txtNextUpdate.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.txtNextUpdate.Location = new System.Drawing.Point(398, 14);
+			this.txtNextUpdate.Name = "txtNextUpdate";
+			this.txtNextUpdate.ReadOnly = true;
+			this.txtNextUpdate.Size = new System.Drawing.Size(119, 27);
+			this.txtNextUpdate.TabIndex = 8;
+			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 670);
+			this.Controls.Add(this.txtNextUpdate);
+			this.Controls.Add(this.lblNextUpdate);
 			this.Controls.Add(this.btnSettings);
 			this.Controls.Add(this.listViewRecords);
 			this.Controls.Add(this.txtExternalAddress);
@@ -176,6 +198,8 @@
 		private System.Windows.Forms.ColumnHeader colName;
 		private System.Windows.Forms.ColumnHeader colAddress;
 		private System.Windows.Forms.Button btnSettings;
+		private System.Windows.Forms.Label lblNextUpdate;
+		private System.Windows.Forms.TextBox txtNextUpdate;
 	}
 }
 

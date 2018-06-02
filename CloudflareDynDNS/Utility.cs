@@ -10,18 +10,6 @@ namespace CloudflareDynDNS
 {
 	public class Utility
 	{
-		public static void SaveSetting(string key, string value)
-		{
-			Properties.Settings.Default[key] = value;
-			Properties.Settings.Default.Save();
-
-		}
-
-		public static string GetSetting(string key)
-		{
-			return Properties.Settings.Default[key]?.ToString();
-		}
-
 		public static string GetExternalAddress(HttpClient Client)
 		{
 			var req = new HttpRequestMessage(HttpMethod.Get, "http://checkip.dyndns.org");
