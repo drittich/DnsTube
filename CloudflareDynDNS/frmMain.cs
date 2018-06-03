@@ -38,9 +38,18 @@ namespace CloudflareDynDNS
 
 			UpdateList();
 
-			AppendStatusText($"Detected public IP {GetExternalAddress()}");
+			DisplayPublicIpAddress();
 
 			ScheduleUpdates();
+		}
+
+		void DisplayPublicIpAddress()
+		{
+			var externalAddress = GetExternalAddress();
+			if (externalAddress == null)
+				AppendStatusText($"Error detecting public IP address");
+			else
+				AppendStatusText($"Detected public IP {externalAddress}");
 		}
 
 		void ScheduleUpdates()
@@ -59,7 +68,10 @@ namespace CloudflareDynDNS
 
 						var externalAddress = GetExternalAddress();
 						if (externalAddress == null)
-							return; //bail, some kind of error getting IP
+						{
+							AppendStatusText($"Error detecting public IP address");
+							return; 
+						}
 
 						var oldExternalAddress = settings.PublicIpAddress;
 						if (externalAddress != oldExternalAddress)
@@ -289,7 +301,7 @@ namespace CloudflareDynDNS
 				AppendStatusText($"Settings path: {settings.GetSettingsFilePath()}");
 		}
 
-		private void frmMain_Resize(object sender, EventArgs e)
+		void frmMain_Resize(object sender, EventArgs e)
 		{
 			notifyIcon1.BalloonTipIcon = ToolTipIcon.Info;
 
@@ -305,7 +317,7 @@ namespace CloudflareDynDNS
 			}
 		}
 
-		private void notifyIcon1_Click(object sender, EventArgs e)
+		void notifyIcon1_Click(object sender, EventArgs e)
 		{
 			notifyIcon1.Visible = false;
 			this.Show();

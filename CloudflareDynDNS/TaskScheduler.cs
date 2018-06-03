@@ -6,10 +6,10 @@ namespace CloudflareDynDNS
 {
 	public class TaskScheduler
 	{
-		private static TaskScheduler _instance;
-		private List<Timer> timers = new List<Timer>();
+		static TaskScheduler _instance;
+		List<Timer> timers = new List<Timer>();
 
-		private TaskScheduler() { }
+		TaskScheduler() { }
 
 		public static TaskScheduler Instance => _instance ?? (_instance = new TaskScheduler());
 

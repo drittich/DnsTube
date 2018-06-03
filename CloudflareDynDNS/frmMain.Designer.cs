@@ -85,7 +85,7 @@
 			// lblExternalAddress
 			// 
 			this.lblExternalAddress.AutoSize = true;
-			this.lblExternalAddress.Location = new System.Drawing.Point(11, 19);
+			this.lblExternalAddress.Location = new System.Drawing.Point(11, 18);
 			this.lblExternalAddress.Name = "lblExternalAddress";
 			this.lblExternalAddress.Size = new System.Drawing.Size(122, 20);
 			this.lblExternalAddress.TabIndex = 3;
@@ -148,7 +148,7 @@
 			// lblNextUpdate
 			// 
 			this.lblNextUpdate.AutoSize = true;
-			this.lblNextUpdate.Location = new System.Drawing.Point(260, 19);
+			this.lblNextUpdate.Location = new System.Drawing.Point(260, 18);
 			this.lblNextUpdate.Name = "lblNextUpdate";
 			this.lblNextUpdate.Size = new System.Drawing.Size(93, 20);
 			this.lblNextUpdate.TabIndex = 7;

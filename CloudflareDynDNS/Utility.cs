@@ -12,32 +12,30 @@ namespace CloudflareDynDNS
 	{
 		public static string GetExternalAddress(HttpClient Client)
 		{
-			var req = new HttpRequestMessage(HttpMethod.Get, "http://checkip.dyndns.org");
+			var ret = Client.GetStringAsync("http://icanhazip.com").Result;
 
-			Client.DefaultRequestHeaders
-				  .Accept
-				  .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-			var response = Client.SendAsync(req).Result;
-			if (!response.IsSuccessStatusCode)
-				return null;
-			if (response == null)
+			if (!ValidateIPv4(ret))
 				return null;
 
-			var strResponse = response.Content.ReadAsStringAsync().Result;
-			string[] strResponse2 = strResponse.Split(':');
-			string strResponse3 = strResponse2[1].Substring(1);
-			string newExternalAddress = strResponse3.Split('<')[0];
-
-			if (newExternalAddress == null)
-				return null; 
-
-			return newExternalAddress;
+			return ret;
 		}
 
 		public static string GetDateString()
 		{
 			return DateTime.Now.ToString("yyyy-MM-dd h:mm:ss tt");
+		}
+
+		public static bool ValidateIPv4(string ipString)
+		{
+			if (String.IsNullOrWhiteSpace(ipString))
+				return false;
+
+			string[] splitValues = ipString.Split('.');
+			if (splitValues.Length != 4)
+				return false;
+
+			byte tempForParsing;
+			return splitValues.All(r => byte.TryParse(r, out tempForParsing));
 		}
 	}
 }
