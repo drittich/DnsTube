@@ -1,16 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Windows.Forms;
-using CloudflareDynDNS.Dns;
-using CloudflareDynDNS.Properties;
-using Newtonsoft.Json;
 
 namespace CloudflareDynDNS
 {
@@ -45,11 +38,11 @@ namespace CloudflareDynDNS
 
 		void DisplayPublicIpAddress()
 		{
-			var externalAddress = GetExternalAddress();
-			if (externalAddress == null)
+			var publicIpAddress = GetPublicIpAddress();
+			if (publicIpAddress == null)
 				AppendStatusText($"Error detecting public IP address");
 			else
-				AppendStatusText($"Detected public IP {externalAddress}");
+				AppendStatusText($"Detected public IP {publicIpAddress}");
 		}
 
 		void ScheduleUpdates()
@@ -66,39 +59,39 @@ namespace CloudflareDynDNS
 						if (!PreflightSettingsCheck())
 							return;
 
-						var externalAddress = GetExternalAddress();
-						if (externalAddress == null)
+						var publicIpAddress = GetPublicIpAddress();
+						if (publicIpAddress == null)
 						{
 							AppendStatusText($"Error detecting public IP address");
 							return; 
 						}
 
-						var oldExternalAddress = settings.PublicIpAddress;
-						if (externalAddress != oldExternalAddress)
+						var oldPublicIpAddress = settings.PublicIpAddress;
+						if (publicIpAddress != oldPublicIpAddress)
 						{
-							settings.PublicIpAddress = externalAddress;
+							settings.PublicIpAddress = publicIpAddress;
 							settings.Save();
 
 							txtOutput.Invoke((MethodInvoker)delegate
 							{
-								if (oldExternalAddress != null)
-									AppendStatusText($"Public IP changed from {oldExternalAddress} to {externalAddress}");
+								if (oldPublicIpAddress != null)
+									AppendStatusText($"Public IP changed from {oldPublicIpAddress} to {publicIpAddress}");
 							});
 
-							txtExternalAddress.Invoke((MethodInvoker)delegate
+							txtPublicIpAddress.Invoke((MethodInvoker)delegate
 							{
-								txtExternalAddress.Text = externalAddress; // Running on the UI thread
+								txtPublicIpAddress.Text = publicIpAddress; // Running on the UI thread
 							});
 
 							// loop through DNS entries and update the ones selected that have a different IP
 							var entriesToUpdate = cfClient.GetAllDnsRecordsByZone().Where(d => settings.SelectedDomains
-								.Any(s => s.ZoneName == d.zone_name && s.DnsName == d.name && d.content != externalAddress));
+								.Any(s => s.ZoneName == d.zone_name && s.DnsName == d.name && d.content != publicIpAddress));
 							foreach (var entry in entriesToUpdate)
 							{
-								cfClient.UpdateDns(entry.zone_id, entry.id, entry.name, externalAddress);
+								cfClient.UpdateDns(entry.zone_id, entry.id, entry.name, publicIpAddress);
 								txtOutput.Invoke((MethodInvoker)delegate
 								{
-									AppendStatusText($"Updated name [{entry.name}] in zone [{entry.zone_name}] to {externalAddress}");
+									AppendStatusText($"Updated name [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
 								});
 							}
 						}
@@ -147,21 +140,21 @@ namespace CloudflareDynDNS
 
 		}
 
-		string GetExternalAddress()
+		string GetPublicIpAddress()
 		{
-			var externalAddress = Utility.GetExternalAddress(Client);
+			var publicIpAddress = Utility.GetPublicIpAddress(Client);
 
 			// Bail if failed, keeping the current address in settings
-			if (externalAddress == null)
+			if (publicIpAddress == null)
 				return null;
 
-			txtExternalAddress.Invoke((MethodInvoker)delegate
+			txtPublicIpAddress.Invoke((MethodInvoker)delegate
 			{
-				if (txtExternalAddress.Text != externalAddress)
-					txtExternalAddress.Text = externalAddress; // Running on the UI thread
+				if (txtPublicIpAddress.Text != publicIpAddress)
+					txtPublicIpAddress.Text = publicIpAddress; // Running on the UI thread
 			});
 
-			return externalAddress;
+			return publicIpAddress;
 		}
 
 		void Init()

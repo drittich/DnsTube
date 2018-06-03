@@ -33,8 +33,8 @@
 			this.btnUpdateList = new System.Windows.Forms.Button();
 			this.txtOutput = new System.Windows.Forms.TextBox();
 			this.btnQuit = new System.Windows.Forms.Button();
-			this.lblExternalAddress = new System.Windows.Forms.Label();
-			this.txtExternalAddress = new System.Windows.Forms.TextBox();
+			this.lblPublicIpAddress = new System.Windows.Forms.Label();
+			this.txtPublicIpAddress = new System.Windows.Forms.TextBox();
 			this.listViewRecords = new System.Windows.Forms.ListView();
 			this.colUpdate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -82,24 +82,24 @@
 			this.btnQuit.UseVisualStyleBackColor = true;
 			this.btnQuit.Click += new System.EventHandler(this.btnQuit_Click);
 			// 
-			// lblExternalAddress
+			// lblPublicIpAddress
 			// 
-			this.lblExternalAddress.AutoSize = true;
-			this.lblExternalAddress.Location = new System.Drawing.Point(11, 18);
-			this.lblExternalAddress.Name = "lblExternalAddress";
-			this.lblExternalAddress.Size = new System.Drawing.Size(122, 20);
-			this.lblExternalAddress.TabIndex = 3;
-			this.lblExternalAddress.Text = "Public IP Address";
+			this.lblPublicIpAddress.AutoSize = true;
+			this.lblPublicIpAddress.Location = new System.Drawing.Point(11, 18);
+			this.lblPublicIpAddress.Name = "lblPublicIpAddress";
+			this.lblPublicIpAddress.Size = new System.Drawing.Size(122, 20);
+			this.lblPublicIpAddress.TabIndex = 3;
+			this.lblPublicIpAddress.Text = "Public IP Address";
 			// 
-			// txtExternalAddress
+			// txtPublicIpAddress
 			// 
-			this.txtExternalAddress.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.txtExternalAddress.Location = new System.Drawing.Point(111, 14);
-			this.txtExternalAddress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.txtExternalAddress.Name = "txtExternalAddress";
-			this.txtExternalAddress.ReadOnly = true;
-			this.txtExternalAddress.Size = new System.Drawing.Size(119, 27);
-			this.txtExternalAddress.TabIndex = 4;
+			this.txtPublicIpAddress.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.txtPublicIpAddress.Location = new System.Drawing.Point(111, 14);
+			this.txtPublicIpAddress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.txtPublicIpAddress.Name = "txtPublicIpAddress";
+			this.txtPublicIpAddress.ReadOnly = true;
+			this.txtPublicIpAddress.Size = new System.Drawing.Size(119, 27);
+			this.txtPublicIpAddress.TabIndex = 4;
 			// 
 			// listViewRecords
 			// 
@@ -180,8 +180,8 @@
 			this.Controls.Add(this.lblNextUpdate);
 			this.Controls.Add(this.btnSettings);
 			this.Controls.Add(this.listViewRecords);
-			this.Controls.Add(this.txtExternalAddress);
-			this.Controls.Add(this.lblExternalAddress);
+			this.Controls.Add(this.txtPublicIpAddress);
+			this.Controls.Add(this.lblPublicIpAddress);
 			this.Controls.Add(this.btnQuit);
 			this.Controls.Add(this.txtOutput);
 			this.Controls.Add(this.btnUpdateList);
@@ -204,8 +204,8 @@
 		private System.Windows.Forms.Button btnUpdateList;
 		private System.Windows.Forms.TextBox txtOutput;
 		private System.Windows.Forms.Button btnQuit;
-		private System.Windows.Forms.Label lblExternalAddress;
-		private System.Windows.Forms.TextBox txtExternalAddress;
+		private System.Windows.Forms.Label lblPublicIpAddress;
+		private System.Windows.Forms.TextBox txtPublicIpAddress;
 		private System.Windows.Forms.ListView listViewRecords;
 		private System.Windows.Forms.ColumnHeader colUpdate;
 		private System.Windows.Forms.ColumnHeader colName;

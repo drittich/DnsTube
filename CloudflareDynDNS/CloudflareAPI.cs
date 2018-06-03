@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using CloudflareDynDNS.Dns;
-using Newtonsoft.Json;
 using CloudflareDynDNS.Zone;
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace CloudflareDynDNS
 {
