@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
 			this.btnUpdateList = new System.Windows.Forms.Button();
 			this.txtOutput = new System.Windows.Forms.TextBox();
 			this.btnQuit = new System.Windows.Forms.Button();
@@ -175,6 +176,7 @@
 			this.Controls.Add(this.txtOutput);
 			this.Controls.Add(this.btnUpdateList);
 			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.MinimumSize = new System.Drawing.Size(480, 600);
 			this.Name = "frmMain";

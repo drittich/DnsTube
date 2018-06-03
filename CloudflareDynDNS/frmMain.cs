@@ -97,7 +97,7 @@ namespace CloudflareDynDNS
 					}
 					finally
 					{
-						txtNextUpdate.Text = DateTime.Now.Add(interval).ToString("h:mm:ss tt");
+						SetNextUpdateText(DateTime.Now.Add(interval));
 					}
 				});
 		}
@@ -268,6 +268,14 @@ namespace CloudflareDynDNS
 			txtOutput.Invoke((MethodInvoker)delegate
 			{
 				txtOutput.Text += $"{Utility.GetDateString()}: {s}\r\n"; // Running on the UI thread		
+			});
+		}
+
+		void SetNextUpdateText(DateTime d)
+		{
+			txtNextUpdate.Invoke((MethodInvoker)delegate
+			{
+				txtNextUpdate.Text = d.ToString("h:mm:ss tt"); // Running on the UI thread		
 			});
 		}
 
