@@ -13,7 +13,7 @@ namespace CloudflareDynDNS
 
 		public static TaskScheduler Instance => _instance ?? (_instance = new TaskScheduler());
 
-		public void ScheduleTask(TimeSpan interval, Action task, bool runImmediately = false)
+		public TaskScheduler ScheduleTask(TimeSpan interval, Action task, bool runImmediately = false)
 		{
 			var timeToFirstRun = runImmediately ? TimeSpan.Zero : interval;
 
@@ -21,8 +21,20 @@ namespace CloudflareDynDNS
 			{
 				task.Invoke();
 			}, null, timeToFirstRun, interval);
-
 			timers.Add(timer);
+
+			return Instance;
+		}
+
+		public static void StopAll()
+		{
+			// Ref: https://stackoverflow.com/a/14359490/39430
+			if (_instance != null)
+			{
+				foreach (var timer in Instance.timers)
+					timer.Change(Timeout.Infinite, Timeout.Infinite);
+				_instance = null;
+			}
 		}
 	}
 }

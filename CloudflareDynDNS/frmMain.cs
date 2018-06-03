@@ -40,9 +40,15 @@ namespace CloudflareDynDNS
 
 			AppendStatusText($"Detected public IP {GetExternalAddress()}");
 
+			ScheduleUpdates();
+		}
+
+		void ScheduleUpdates()
+		{
 			var interval = TimeSpan.FromMinutes(settings.UpdateIntervalMinutes);
 			txtNextUpdate.Text = DateTime.Now.Add(interval).ToString("h:mm:ss tt");
 
+			TaskScheduler.StopAll();
 			TaskScheduler.Instance.ScheduleTask(interval,
 				() =>
 				{
@@ -137,10 +143,10 @@ namespace CloudflareDynDNS
 			if (externalAddress == null)
 				return null;
 
-			this.txtExternalAddress.Invoke((MethodInvoker)delegate
+			txtExternalAddress.Invoke((MethodInvoker)delegate
 			{
-				if (this.txtExternalAddress.Text != externalAddress)
-					this.txtExternalAddress.Text = externalAddress; // Running on the UI thread
+				if (txtExternalAddress.Text != externalAddress)
+					txtExternalAddress.Text = externalAddress; // Running on the UI thread
 			});
 
 			return externalAddress;
@@ -246,7 +252,10 @@ namespace CloudflareDynDNS
 			frm.Close();
 			// reload settings
 			settings = new Settings();
+			// pick up new credentials if they were changed
 			cfClient = new CloudflareAPI(Client, settings.EmailAddress, settings.ApiKey);
+			// pick up new interval if it was changed
+			ScheduleUpdates(); 
 		}
 
 		void btnUpdateDNS_Click(object sender, EventArgs e)
@@ -256,9 +265,9 @@ namespace CloudflareDynDNS
 
 		void AppendStatusText(string s)
 		{
-			this.txtOutput.Invoke((MethodInvoker)delegate
+			txtOutput.Invoke((MethodInvoker)delegate
 			{
-				this.txtOutput.Text += $"{Utility.GetDateString()}: {s}\r\n"; // Running on the UI thread		
+				txtOutput.Text += $"{Utility.GetDateString()}: {s}\r\n"; // Running on the UI thread		
 			});
 		}
 

@@ -45,7 +45,7 @@
 			// btnUpdateList
 			// 
 			this.btnUpdateList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnUpdateList.Location = new System.Drawing.Point(404, 625);
+			this.btnUpdateList.Location = new System.Drawing.Point(404, 597);
 			this.btnUpdateList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnUpdateList.Name = "btnUpdateList";
 			this.btnUpdateList.Size = new System.Drawing.Size(113, 32);
@@ -64,13 +64,13 @@
 			this.txtOutput.Multiline = true;
 			this.txtOutput.Name = "txtOutput";
 			this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.txtOutput.Size = new System.Drawing.Size(772, 269);
+			this.txtOutput.Size = new System.Drawing.Size(772, 250);
 			this.txtOutput.TabIndex = 1;
 			// 
 			// btnQuit
 			// 
 			this.btnQuit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnQuit.Location = new System.Drawing.Point(675, 625);
+			this.btnQuit.Location = new System.Drawing.Point(675, 597);
 			this.btnQuit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnQuit.Name = "btnQuit";
 			this.btnQuit.Size = new System.Drawing.Size(113, 32);
@@ -82,7 +82,7 @@
 			// lblExternalAddress
 			// 
 			this.lblExternalAddress.AutoSize = true;
-			this.lblExternalAddress.Location = new System.Drawing.Point(11, 16);
+			this.lblExternalAddress.Location = new System.Drawing.Point(11, 19);
 			this.lblExternalAddress.Name = "lblExternalAddress";
 			this.lblExternalAddress.Size = new System.Drawing.Size(122, 20);
 			this.lblExternalAddress.TabIndex = 3;
@@ -95,7 +95,7 @@
 			this.txtExternalAddress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.txtExternalAddress.Name = "txtExternalAddress";
 			this.txtExternalAddress.ReadOnly = true;
-			this.txtExternalAddress.Size = new System.Drawing.Size(150, 27);
+			this.txtExternalAddress.Size = new System.Drawing.Size(119, 27);
 			this.txtExternalAddress.TabIndex = 4;
 			// 
 			// listViewRecords
@@ -133,7 +133,7 @@
 			// btnSettings
 			// 
 			this.btnSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnSettings.Location = new System.Drawing.Point(539, 625);
+			this.btnSettings.Location = new System.Drawing.Point(539, 597);
 			this.btnSettings.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnSettings.Name = "btnSettings";
 			this.btnSettings.Size = new System.Drawing.Size(113, 32);
@@ -145,7 +145,7 @@
 			// lblNextUpdate
 			// 
 			this.lblNextUpdate.AutoSize = true;
-			this.lblNextUpdate.Location = new System.Drawing.Point(323, 17);
+			this.lblNextUpdate.Location = new System.Drawing.Point(260, 19);
 			this.lblNextUpdate.Name = "lblNextUpdate";
 			this.lblNextUpdate.Size = new System.Drawing.Size(93, 20);
 			this.lblNextUpdate.TabIndex = 7;
@@ -154,7 +154,7 @@
 			// txtNextUpdate
 			// 
 			this.txtNextUpdate.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.txtNextUpdate.Location = new System.Drawing.Point(398, 14);
+			this.txtNextUpdate.Location = new System.Drawing.Point(335, 14);
 			this.txtNextUpdate.Name = "txtNextUpdate";
 			this.txtNextUpdate.ReadOnly = true;
 			this.txtNextUpdate.Size = new System.Drawing.Size(119, 27);
@@ -164,7 +164,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(800, 670);
+			this.ClientSize = new System.Drawing.Size(800, 642);
 			this.Controls.Add(this.txtNextUpdate);
 			this.Controls.Add(this.lblNextUpdate);
 			this.Controls.Add(this.btnSettings);
