@@ -288,5 +288,28 @@ namespace CloudflareDynDNS
 			if (File.Exists(settings.GetSettingsFilePath()))
 				AppendStatusText($"Settings path: {settings.GetSettingsFilePath()}");
 		}
+
+		private void frmMain_Resize(object sender, EventArgs e)
+		{
+			notifyIcon1.BalloonTipIcon = ToolTipIcon.Info;
+
+			if (FormWindowState.Minimized == this.WindowState)
+			{
+				notifyIcon1.Visible = true;
+				notifyIcon1.ShowBalloonTip(500);
+				this.Hide();
+			}
+			else if (FormWindowState.Normal == this.WindowState)
+			{
+				notifyIcon1.Visible = false;
+			}
+		}
+
+		private void notifyIcon1_Click(object sender, EventArgs e)
+		{
+			notifyIcon1.Visible = false;
+			this.Show();
+			this.WindowState = FormWindowState.Normal;
+		}
 	}
 }

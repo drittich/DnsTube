@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
 			this.btnUpdateList = new System.Windows.Forms.Button();
 			this.txtOutput = new System.Windows.Forms.TextBox();
@@ -41,6 +42,7 @@
 			this.btnSettings = new System.Windows.Forms.Button();
 			this.lblNextUpdate = new System.Windows.Forms.Label();
 			this.txtNextUpdate = new System.Windows.Forms.TextBox();
+			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.SuspendLayout();
 			// 
 			// btnUpdateList
@@ -161,6 +163,14 @@
 			this.txtNextUpdate.Size = new System.Drawing.Size(119, 27);
 			this.txtNextUpdate.TabIndex = 8;
 			// 
+			// notifyIcon1
+			// 
+			this.notifyIcon1.BalloonTipText = "Application will continue to work in the background";
+			this.notifyIcon1.BalloonTipTitle = "Cloudflare DynDNS";
+			this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+			this.notifyIcon1.Text = "Cloudflare DynDNS";
+			this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
+			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -183,6 +193,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Cloudflare DynDNS";
 			this.Load += new System.EventHandler(this.frmMain_Load);
+			this.Resize += new System.EventHandler(this.frmMain_Resize);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -202,6 +213,7 @@
 		private System.Windows.Forms.Button btnSettings;
 		private System.Windows.Forms.Label lblNextUpdate;
 		private System.Windows.Forms.TextBox txtNextUpdate;
+		private System.Windows.Forms.NotifyIcon notifyIcon1;
 	}
 }
 
