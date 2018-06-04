@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using CloudflareDynDNS.Dns;
-using CloudflareDynDNS.Zone;
+using DnsTube.Dns;
+using DnsTube.Zone;
 using Newtonsoft.Json;
 
-namespace CloudflareDynDNS
+namespace DnsTube
 {
 	public class CloudflareAPI
 	{

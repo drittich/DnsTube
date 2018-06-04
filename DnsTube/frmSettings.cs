@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace CloudflareDynDNS
+namespace DnsTube
 {
 	public partial class frmSettings : Form
 	{

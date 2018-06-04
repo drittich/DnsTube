@@ -1,4 +1,4 @@
-﻿namespace CloudflareDynDNS
+﻿namespace DnsTube
 {
 	partial class frmSettings
 	{

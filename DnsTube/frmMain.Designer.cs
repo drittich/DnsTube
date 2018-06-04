@@ -1,4 +1,4 @@
-﻿namespace CloudflareDynDNS
+﻿namespace DnsTube
 {
 	partial class frmMain
 	{
@@ -166,9 +166,9 @@
 			// notifyIcon1
 			// 
 			this.notifyIcon1.BalloonTipText = "Application will continue to work in the background";
-			this.notifyIcon1.BalloonTipTitle = "Cloudflare DynDNS";
+			this.notifyIcon1.BalloonTipTitle = "DnsTube";
 			this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-			this.notifyIcon1.Text = "Cloudflare DynDNS";
+			this.notifyIcon1.Text = "DnsTube";
 			this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
 			// 
 			// frmMain
@@ -191,7 +191,7 @@
 			this.MinimumSize = new System.Drawing.Size(480, 600);
 			this.Name = "frmMain";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "Cloudflare DynDNS";
+			this.Text = "DnsTube";
 			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.Resize += new System.EventHandler(this.frmMain_Resize);
 			this.ResumeLayout(false);

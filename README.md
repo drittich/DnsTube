@@ -1,4 +1,4 @@
-# CloudflareDynDNS
+# DnsTube
 
 A Windows client for dynamically updating Cloudflare DNS entries with your public IP address.
 

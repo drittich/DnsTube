@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CloudflareDynDNS.Dns
+namespace DnsTube.Dns
 {
 	public class DnsRecordsResponse
 	{

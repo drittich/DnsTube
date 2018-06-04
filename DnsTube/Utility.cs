@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 
-namespace CloudflareDynDNS
+namespace DnsTube
 {
 	public class Utility
 	{

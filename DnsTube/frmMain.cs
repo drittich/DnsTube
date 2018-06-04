@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Windows.Forms;
 
-namespace CloudflareDynDNS
+namespace DnsTube
 {
 	public partial class frmMain : Form
 	{
@@ -306,7 +306,7 @@ namespace CloudflareDynDNS
 			var execAssembly = System.Reflection.Assembly.GetExecutingAssembly();
 			var version = execAssembly.GetName().Version.ToString();
 			var compileDate = execAssembly.GetLinkerTime().ToString("yyyy-MM-dd");
-			AppendStatusText($"Cloudflare DynDNS v{version} ({compileDate})");
+			AppendStatusText($"DnsTube v{version} ({compileDate})");
 			if (File.Exists(settings.GetSettingsFilePath()))
 				AppendStatusText($"Settings path: {settings.GetSettingsFilePath()}");
 		}
