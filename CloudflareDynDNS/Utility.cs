@@ -8,7 +8,7 @@ namespace CloudflareDynDNS
 	{
 		public static string GetPublicIpAddress(HttpClient Client)
 		{
-			var ret = Client.GetStringAsync("http://icanhazip.com").Result;
+			var ret = Client.GetStringAsync("http://icanhazip.com").Result.Replace("\n", "");
 
 			if (!ValidateIPv4(ret))
 				return null;
