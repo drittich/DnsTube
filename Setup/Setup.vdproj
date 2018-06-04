@@ -214,7 +214,7 @@
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B805378007C94F93AE334A3772995B1D"
             {
-            "SourcePath" = "8:..\\CloudflareDynDNS\\icon-48.ico"
+            "SourcePath" = "8:..\\DnsTube\\icon-48.ico"
             "TargetName" = "8:icon-48.ico"
             "Tag" = "8:"
             "Folder" = "8:_68B1044C7CF14DE5971D74B74524943C"
@@ -249,7 +249,7 @@
                 {
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_B317283F45314D59B5C1D0261B6A65E9"
                     {
-                    "Name" = "8:Cloudflare DynDNS"
+                    "Name" = "8:DnsTube"
                     "AlwaysCreate" = "11:FALSE"
                     "Condition" = "8:"
                     "Transitive" = "11:FALSE"
@@ -298,17 +298,17 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Cloudflare DynDNS"
-        "ProductCode" = "8:{DC470750-F4C5-4A4B-A579-DA7719BA948F}"
-        "PackageCode" = "8:{D08D59A3-B66A-450C-954D-3140174CB4C8}"
+        "ProductName" = "8:DnsTube"
+        "ProductCode" = "8:{AEDA3D09-4F71-4DF8-99F4-3CA23B472046}"
+        "PackageCode" = "8:{12CF9EEB-EC61-4655-83D8-2B5BD1EF36E7}"
         "UpgradeCode" = "8:{7353A875-496B-4CF9-A573-4B383B0AA92B}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.2.1"
-        "Manufacturer" = "8:Cloudflare DynDNS"
+        "ProductVersion" = "8:0.3.0"
+        "Manufacturer" = "8:DnsTube"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
         "Title" = "8:Setup"
@@ -420,9 +420,9 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_7F7970C100A943FEB218A360ACA3C8AE"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_DA1EB1CB14D14968AA433E128C021EA4"
             {
-            "Name" = "8:Shortcut to Primary output from CloudflareDynDNS (Active)"
+            "Name" = "8:Shortcut to Primary output from DnsTube (Active)"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -431,12 +431,12 @@
             "Target" = "8:_5737AD109B904C94A22BDF0462D665FC"
             "Folder" = "8:_474B0786967A487485FA18EC576BA4A6"
             "WorkingFolder" = "8:_68B1044C7CF14DE5971D74B74524943C"
-            "Icon" = "8:_B805378007C94F93AE334A3772995B1D"
+            "Icon" = "8:"
             "Feature" = "8:"
             }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_BAA77B40C7D64F87901DBE1D4E7DB87F"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_FB15A91ACA2043D2A4B2CC5E6CEC41F3"
             {
-            "Name" = "8:Cloudflare DynDNS"
+            "Name" = "8:Shortcut to Primary output from DnsTube (Active)"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -445,7 +445,7 @@
             "Target" = "8:_5737AD109B904C94A22BDF0462D665FC"
             "Folder" = "8:_B317283F45314D59B5C1D0261B6A65E9"
             "WorkingFolder" = "8:_68B1044C7CF14DE5971D74B74524943C"
-            "Icon" = "8:_B805378007C94F93AE334A3772995B1D"
+            "Icon" = "8:"
             "Feature" = "8:"
             }
         }
@@ -849,7 +849,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5737AD109B904C94A22BDF0462D665FC"
             {
-            "SourcePath" = "8:..\\CloudflareDynDNS\\obj\\Release\\CloudflareDynDNS.exe"
+            "SourcePath" = "8:..\\DnsTube\\obj\\Debug\\DnsTube.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_68B1044C7CF14DE5971D74B74524943C"

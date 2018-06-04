@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CloudflareDynDNS.Zone
+namespace DnsTube.Zone
 {
 	public class ListZonesResponse
 	{

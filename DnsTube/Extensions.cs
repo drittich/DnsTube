@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace CloudflareDynDNS
+namespace DnsTube
 {
 	static class Extensions
 	{

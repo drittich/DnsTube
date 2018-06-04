@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace CloudflareDynDNS
+namespace DnsTube
 {
 	public class Settings : SettingsDTO
 	{
@@ -37,7 +37,7 @@ namespace CloudflareDynDNS
 			if (_getSettingsFilePath == null)
 			{
 				string localApplicationDataFilePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-				_getSettingsFilePath = Path.Combine(localApplicationDataFilePath, "CloudflareDynDNS", "config.json");
+				_getSettingsFilePath = Path.Combine(localApplicationDataFilePath, "DnsTube", "config.json");
 			}
 			return _getSettingsFilePath;
 		}
