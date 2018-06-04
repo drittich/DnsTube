@@ -85,7 +85,7 @@
 			// lblPublicIpAddress
 			// 
 			this.lblPublicIpAddress.AutoSize = true;
-			this.lblPublicIpAddress.Location = new System.Drawing.Point(11, 18);
+			this.lblPublicIpAddress.Location = new System.Drawing.Point(18, 17);
 			this.lblPublicIpAddress.Name = "lblPublicIpAddress";
 			this.lblPublicIpAddress.Size = new System.Drawing.Size(122, 20);
 			this.lblPublicIpAddress.TabIndex = 3;
@@ -94,7 +94,7 @@
 			// txtPublicIpAddress
 			// 
 			this.txtPublicIpAddress.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.txtPublicIpAddress.Location = new System.Drawing.Point(111, 14);
+			this.txtPublicIpAddress.Location = new System.Drawing.Point(118, 14);
 			this.txtPublicIpAddress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.txtPublicIpAddress.Name = "txtPublicIpAddress";
 			this.txtPublicIpAddress.ReadOnly = true;
@@ -148,7 +148,7 @@
 			// lblNextUpdate
 			// 
 			this.lblNextUpdate.AutoSize = true;
-			this.lblNextUpdate.Location = new System.Drawing.Point(260, 18);
+			this.lblNextUpdate.Location = new System.Drawing.Point(267, 17);
 			this.lblNextUpdate.Name = "lblNextUpdate";
 			this.lblNextUpdate.Size = new System.Drawing.Size(93, 20);
 			this.lblNextUpdate.TabIndex = 7;
@@ -157,7 +157,7 @@
 			// txtNextUpdate
 			// 
 			this.txtNextUpdate.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.txtNextUpdate.Location = new System.Drawing.Point(335, 14);
+			this.txtNextUpdate.Location = new System.Drawing.Point(342, 14);
 			this.txtNextUpdate.Name = "txtNextUpdate";
 			this.txtNextUpdate.ReadOnly = true;
 			this.txtNextUpdate.Size = new System.Drawing.Size(119, 27);

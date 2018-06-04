@@ -63,7 +63,7 @@ namespace CloudflareDynDNS
 						if (publicIpAddress == null)
 						{
 							AppendStatusText($"Error detecting public IP address");
-							return; 
+							return;
 						}
 
 						var oldPublicIpAddress = settings.PublicIpAddress;
@@ -84,21 +84,38 @@ namespace CloudflareDynDNS
 							});
 
 							// loop through DNS entries and update the ones selected that have a different IP
-							var entriesToUpdate = cfClient.GetAllDnsRecordsByZone().Where(d => settings.SelectedDomains
-								.Any(s => s.ZoneName == d.zone_name && s.DnsName == d.name && d.content != publicIpAddress));
+							List<Dns.Result> entriesToUpdate = null;
+							try
+							{
+								entriesToUpdate = cfClient.GetAllDnsRecordsByZone().Where(d => settings.SelectedDomains
+									.Any(s => s.ZoneName == d.zone_name && s.DnsName == d.name && d.content != publicIpAddress)).ToList();
+							}
+							catch (Exception ex)
+							{
+								AppendStatusText($"Error getting DNS records");
+								AppendStatusText(ex.Message);
+							}
+
+							if (entriesToUpdate == null)
+								return;
+
 							foreach (var entry in entriesToUpdate)
 							{
-								cfClient.UpdateDns(entry.zone_id, entry.id, entry.name, publicIpAddress);
-								txtOutput.Invoke((MethodInvoker)delegate
+								try
 								{
-									AppendStatusText($"Updated name [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
-								});
+									cfClient.UpdateDns(entry.zone_id, entry.id, entry.name, publicIpAddress);
+									txtOutput.Invoke((MethodInvoker)delegate
+									{
+										AppendStatusText($"Updated name [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
+									});
+								}
+								catch (Exception ex)
+								{
+									AppendStatusText($"Error updating [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
+									AppendStatusText(ex.Message);
+								}
 							}
 						}
-					}
-					catch (Exception ex)
-					{
-						AppendStatusText($"Error detecting/updating IP address: {ex.Message}");
 					}
 					finally
 					{
@@ -260,7 +277,7 @@ namespace CloudflareDynDNS
 			// pick up new credentials if they were changed
 			cfClient = new CloudflareAPI(Client, settings.EmailAddress, settings.ApiKey);
 			// pick up new interval if it was changed
-			ScheduleUpdates(); 
+			ScheduleUpdates();
 		}
 
 		void btnUpdateDNS_Click(object sender, EventArgs e)

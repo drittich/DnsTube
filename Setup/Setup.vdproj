@@ -40,12 +40,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A795064DF86CB9C2A7558B0516D39E76"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_5737AD109B904C94A22BDF0462D665FC"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -53,6 +47,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_2B9E5375F5948334E5BB3EB017B0B1F4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_A795064DF86CB9C2A7558B0516D39E76"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -73,6 +73,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -89,6 +97,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -267,15 +291,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Cloudflare DynDNS"
-        "ProductCode" = "8:{C1AD1355-F732-4378-8901-52D82239BBEF}"
-        "PackageCode" = "8:{A0D8BEEF-4DAD-4CCB-85E9-14D47516B3CB}"
+        "ProductCode" = "8:{E7158E13-3454-4582-9D20-73FDAEF531B3}"
+        "PackageCode" = "8:{A066A3DB-2982-452B-B214-23D729121C23}"
         "UpgradeCode" = "8:{7353A875-496B-4CF9-A573-4B383B0AA92B}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.1.2"
+        "ProductVersion" = "8:0.1.3"
         "Manufacturer" = "8:Cloudflare DynDNS"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
