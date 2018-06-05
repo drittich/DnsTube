@@ -4,7 +4,7 @@ A Windows client for dynamically updating Cloudflare DNS entries with your publi
 
 ## Building
 
-This solution was built using Visual Studio 2017. Probably best to use that version.
+This solution was built using Visual Studio 2017. It's probably best to use that version.
 
 ## Downloading
 
@@ -26,7 +26,7 @@ Next up are:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](/LICENSE) file for details.
 
 ## Acknowledgments
 
