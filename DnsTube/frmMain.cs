@@ -31,18 +31,18 @@ namespace DnsTube
 
 			UpdateList();
 
-			DisplayPublicIpAddress();
+			DisplayAndLogPublicIpAddress();
 
 			ScheduleUpdates();
 		}
 
-		void DisplayPublicIpAddress()
+		void DisplayAndLogPublicIpAddress()
 		{
 			var publicIpAddress = GetPublicIpAddress();
 			if (publicIpAddress == null)
-				AppendStatusText($"Error detecting public IP address");
+				AppendStatusTextThreadSafe($"Error detecting public IP address");
 			else
-				AppendStatusText($"Detected public IP {publicIpAddress}");
+				AppendStatusTextThreadSafe($"Detected public IP {publicIpAddress}");
 		}
 
 		void ScheduleUpdates()
@@ -62,7 +62,7 @@ namespace DnsTube
 						var publicIpAddress = GetPublicIpAddress();
 						if (publicIpAddress == null)
 						{
-							AppendStatusText($"Error detecting public IP address");
+							AppendStatusTextThreadSafe($"Error detecting public IP address");
 							return;
 						}
 
@@ -72,16 +72,10 @@ namespace DnsTube
 							settings.PublicIpAddress = publicIpAddress;
 							settings.Save();
 
-							txtOutput.Invoke((MethodInvoker)delegate
-							{
-								if (oldPublicIpAddress != null)
-									AppendStatusText($"Public IP changed from {oldPublicIpAddress} to {publicIpAddress}");
-							});
+							if (oldPublicIpAddress != null)
+								AppendStatusTextThreadSafe($"Public IP changed from {oldPublicIpAddress} to {publicIpAddress}");
 
-							txtPublicIpAddress.Invoke((MethodInvoker)delegate
-							{
-								txtPublicIpAddress.Text = publicIpAddress; // Running on the UI thread
-							});
+							DisplayPublicIpAddressThreadSafe(publicIpAddress);
 
 							// loop through DNS entries and update the ones selected that have a different IP
 							List<Dns.Result> entriesToUpdate = null;
@@ -92,8 +86,8 @@ namespace DnsTube
 							}
 							catch (Exception ex)
 							{
-								AppendStatusText($"Error getting DNS records");
-								AppendStatusText(ex.Message);
+								AppendStatusTextThreadSafe($"Error getting DNS records");
+								AppendStatusTextThreadSafe(ex.Message);
 							}
 
 							if (entriesToUpdate == null)
@@ -106,20 +100,23 @@ namespace DnsTube
 									cfClient.UpdateDns(entry.zone_id, entry.id, entry.name, publicIpAddress);
 									txtOutput.Invoke((MethodInvoker)delegate
 									{
-										AppendStatusText($"Updated name [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
+										AppendStatusTextThreadSafe($"Updated name [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
 									});
 								}
 								catch (Exception ex)
 								{
-									AppendStatusText($"Error updating [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
-									AppendStatusText(ex.Message);
+									AppendStatusTextThreadSafe($"Error updating [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
+									AppendStatusTextThreadSafe(ex.Message);
 								}
 							}
+
+							// fetch and update listview with current status of records
+							UpdateList();
 						}
 					}
 					finally
 					{
-						SetNextUpdateText(DateTime.Now.Add(interval));
+						SetNextUpdateTextThreadSafe(DateTime.Now.Add(interval));
 					}
 				});
 		}
@@ -137,7 +134,7 @@ namespace DnsTube
 		{
 			if (!validateSettings())
 			{
-				AppendStatusText($"Settings not configured");
+				AppendStatusTextThreadSafe($"Settings not configured");
 				return false;
 			}
 			return true;
@@ -159,17 +156,18 @@ namespace DnsTube
 
 		string GetPublicIpAddress()
 		{
-			var publicIpAddress = Utility.GetPublicIpAddress(Client);
+			string errorMesssage;
+			var publicIpAddress = Utility.GetPublicIpAddress(Client, out errorMesssage);
 
 			// Bail if failed, keeping the current address in settings
 			if (publicIpAddress == null)
-				return null;
-
-			txtPublicIpAddress.Invoke((MethodInvoker)delegate
 			{
-				if (txtPublicIpAddress.Text != publicIpAddress)
-					txtPublicIpAddress.Text = publicIpAddress; // Running on the UI thread
-			});
+				AppendStatusTextThreadSafe($"Error getting public IP: {errorMesssage}");
+				return null;
+			}
+
+			if (txtPublicIpAddress.Text != publicIpAddress)
+				DisplayPublicIpAddressThreadSafe(publicIpAddress);
 
 			return publicIpAddress;
 		}
@@ -200,33 +198,36 @@ namespace DnsTube
 			}
 			catch (Exception e)
 			{
-				AppendStatusText($"Error fetching list: {e.Message}");
+				AppendStatusTextThreadSafe($"Error fetching list: {e.Message}");
 			}
 		}
 
 		void UpdateListView(List<Dns.Result> allDnsRecords)
 		{
-			listViewRecords.Items.Clear();
-
-			// group each zones records under a separate header
-			foreach (var zone in allDnsRecords.Select(d => d.zone_name).Distinct().OrderBy(z => z))
+			listViewRecords.Invoke((MethodInvoker)delegate
 			{
-				var group = new ListViewGroup("Zone: " + zone);
-				listViewRecords.Groups.Add(group);
-				var zoneDnsRecords = allDnsRecords.Where(d => d.zone_name == zone);
-				foreach (var dnsRecord in zoneDnsRecords)
+				listViewRecords.Items.Clear();
+
+				// group each zones records under a separate header
+				foreach (var zone in allDnsRecords.Select(d => d.zone_name).Distinct().OrderBy(z => z))
 				{
-					var row = new ListViewItem(group);
-					row.SubItems.Add(dnsRecord.name);
-					row.SubItems.Add(dnsRecord.content);
-					row.Tag = zone;
+					var group = new ListViewGroup("Zone: " + zone);
+					listViewRecords.Groups.Add(group);
+					var zoneDnsRecords = allDnsRecords.Where(d => d.zone_name == zone);
+					foreach (var dnsRecord in zoneDnsRecords)
+					{
+						var row = new ListViewItem(group);
+						row.SubItems.Add(dnsRecord.name);
+						row.SubItems.Add(dnsRecord.content);
+						row.Tag = zone;
 
-					if (settings.SelectedDomains.Any(entry => entry.ZoneName == dnsRecord.zone_name && entry.DnsName == dnsRecord.name))
-						row.Checked = true;
+						if (settings.SelectedDomains.Any(entry => entry.ZoneName == dnsRecord.zone_name && entry.DnsName == dnsRecord.name))
+							row.Checked = true;
 
-					listViewRecords.Items.Add(row);
+						listViewRecords.Items.Add(row);
+					}
 				}
-			}
+			});
 		}
 
 		void btnQuit_Click(object sender, EventArgs e)
@@ -285,7 +286,7 @@ namespace DnsTube
 			cfClient.UpdateDns(null, null, null, null);
 		}
 
-		void AppendStatusText(string s)
+		void AppendStatusTextThreadSafe(string s)
 		{
 			txtOutput.Invoke((MethodInvoker)delegate
 			{
@@ -293,7 +294,15 @@ namespace DnsTube
 			});
 		}
 
-		void SetNextUpdateText(DateTime d)
+		void DisplayPublicIpAddressThreadSafe(string s)
+		{
+			txtPublicIpAddress.Invoke((MethodInvoker)delegate
+			{
+				txtPublicIpAddress.Text = s; // Running on the UI thread
+			});
+		}
+
+		void SetNextUpdateTextThreadSafe(DateTime d)
 		{
 			txtNextUpdate.Invoke((MethodInvoker)delegate
 			{
@@ -306,9 +315,9 @@ namespace DnsTube
 			var execAssembly = System.Reflection.Assembly.GetExecutingAssembly();
 			var version = execAssembly.GetName().Version.ToString();
 			var compileDate = execAssembly.GetLinkerTime().ToString("yyyy-MM-dd");
-			AppendStatusText($"DnsTube v{version} ({compileDate})");
+			AppendStatusTextThreadSafe($"DnsTube v{version} ({compileDate})");
 			if (File.Exists(settings.GetSettingsFilePath()))
-				AppendStatusText($"Settings path: {settings.GetSettingsFilePath()}");
+				AppendStatusTextThreadSafe($"Settings path: {settings.GetSettingsFilePath()}");
 		}
 
 		void frmMain_Resize(object sender, EventArgs e)

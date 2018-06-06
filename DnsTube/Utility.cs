@@ -6,14 +6,33 @@ namespace DnsTube
 {
 	public class Utility
 	{
-		public static string GetPublicIpAddress(HttpClient Client)
+		public static string GetPublicIpAddress(HttpClient Client, out string errorMesssage)
 		{
-			var ret = Client.GetStringAsync("http://icanhazip.com").Result.Replace("\n", "");
+			string publicIpAddress = null;
+			var maxAttempts = 3;
+			var attempts = 0;
+			errorMesssage = null;
 
-			if (!ValidateIPv4(ret))
-				return null;
+			while (publicIpAddress == null && attempts < maxAttempts)
+			{
+				try
+				{
+					attempts++;
+					var response = Client.GetStringAsync("http://icanhazip.com").Result;
+					var candidatePublicIpAddress = response.Replace("\n", "");
 
-			return ret;
+					if (!IsValidIp4Address(candidatePublicIpAddress))
+						throw new Exception($"Malformed response, expected IP address: {response}");
+
+					publicIpAddress = candidatePublicIpAddress;
+				}
+				catch (Exception e)
+				{
+					if (attempts >= maxAttempts)
+						errorMesssage = e.Message;
+				}
+			}
+			return publicIpAddress;
 		}
 
 		public static string GetDateString()
@@ -21,7 +40,7 @@ namespace DnsTube
 			return DateTime.Now.ToString("yyyy-MM-dd h:mm:ss tt");
 		}
 
-		public static bool ValidateIPv4(string ipString)
+		public static bool IsValidIp4Address(string ipString)
 		{
 			if (String.IsNullOrWhiteSpace(ipString))
 				return false;

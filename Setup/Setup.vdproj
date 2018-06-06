@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_2B9E5375F5948334E5BB3EB017B0B1F4"
+        "MsmKey" = "8:_40034F864089CD7535479D169CEC762F"
         "OwnerKey" = "8:_5737AD109B904C94A22BDF0462D665FC"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -46,7 +46,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2B9E5375F5948334E5BB3EB017B0B1F4"
+        "OwnerKey" = "8:_40034F864089CD7535479D169CEC762F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -150,14 +150,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2B9E5375F5948334E5BB3EB017B0B1F4"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_40034F864089CD7535479D169CEC762F"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2B9E5375F5948334E5BB3EB017B0B1F4"
+                    "_40034F864089CD7535479D169CEC762F"
                     {
                     "Name" = "8:Newtonsoft.Json.dll"
                     "Attributes" = "3:512"
@@ -422,7 +422,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_DA1EB1CB14D14968AA433E128C021EA4"
             {
-            "Name" = "8:Shortcut to Primary output from DnsTube (Active)"
+            "Name" = "8:DnsTube"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -436,7 +436,7 @@
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_FB15A91ACA2043D2A4B2CC5E6CEC41F3"
             {
-            "Name" = "8:Shortcut to Primary output from DnsTube (Active)"
+            "Name" = "8:DnsTube"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
