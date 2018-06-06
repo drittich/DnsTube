@@ -18,7 +18,7 @@ namespace DnsTube
 				try
 				{
 					attempts++;
-					var response = Client.GetStringAsync("http://icanhazip.com").Result;
+					var response = Client.GetStringAsync("http://ipv4.icanhazip.com/").Result;
 					var candidatePublicIpAddress = response.Replace("\n", "");
 
 					if (!IsValidIp4Address(candidatePublicIpAddress))
