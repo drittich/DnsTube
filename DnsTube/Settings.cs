@@ -36,8 +36,10 @@ namespace DnsTube
 		{
 			if (_getSettingsFilePath == null)
 			{
-				string localApplicationDataFilePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-				_getSettingsFilePath = Path.Combine(localApplicationDataFilePath, "DnsTube", "config.json");
+				string localApplicationDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+				string appDirectory = Path.Combine(localApplicationDataDirectory, "DnsTube");
+				Directory.CreateDirectory(appDirectory);
+				_getSettingsFilePath = Path.Combine(appDirectory, "config.json");
 			}
 			return _getSettingsFilePath;
 		}
