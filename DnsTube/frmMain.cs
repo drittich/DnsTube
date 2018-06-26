@@ -56,69 +56,74 @@ namespace DnsTube
 				{
 					try
 					{
-						if (!PreflightSettingsCheck())
-							return;
-
-						var publicIpAddress = GetPublicIpAddress();
-						if (publicIpAddress == null)
-						{
-							AppendStatusTextThreadSafe($"Error detecting public IP address");
-							return;
-						}
-
-						var oldPublicIpAddress = settings.PublicIpAddress;
-						if (publicIpAddress != oldPublicIpAddress)
-						{
-							settings.PublicIpAddress = publicIpAddress;
-							settings.Save();
-
-							if (oldPublicIpAddress != null)
-								AppendStatusTextThreadSafe($"Public IP changed from {oldPublicIpAddress} to {publicIpAddress}");
-
-							DisplayPublicIpAddressThreadSafe(publicIpAddress);
-
-							// loop through DNS entries and update the ones selected that have a different IP
-							List<Dns.Result> entriesToUpdate = null;
-							try
-							{
-								entriesToUpdate = cfClient.GetAllDnsRecordsByZone().Where(d => settings.SelectedDomains
-									.Any(s => s.ZoneName == d.zone_name && s.DnsName == d.name && d.content != publicIpAddress)).ToList();
-							}
-							catch (Exception ex)
-							{
-								AppendStatusTextThreadSafe($"Error getting DNS records");
-								AppendStatusTextThreadSafe(ex.Message);
-							}
-
-							if (entriesToUpdate == null)
-								return;
-
-							foreach (var entry in entriesToUpdate)
-							{
-								try
-								{
-									cfClient.UpdateDns(entry.zone_id, entry.id, entry.name, publicIpAddress);
-									txtOutput.Invoke((MethodInvoker)delegate
-									{
-										AppendStatusTextThreadSafe($"Updated name [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
-									});
-								}
-								catch (Exception ex)
-								{
-									AppendStatusTextThreadSafe($"Error updating [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
-									AppendStatusTextThreadSafe(ex.Message);
-								}
-							}
-
-							// fetch and update listview with current status of records
-							UpdateList();
-						}
+						DoUpdate();
 					}
 					finally
 					{
 						SetNextUpdateTextThreadSafe(DateTime.Now.Add(interval));
 					}
 				});
+		}
+
+		void DoUpdate()
+		{
+			if (!PreflightSettingsCheck())
+				return;
+
+			var publicIpAddress = GetPublicIpAddress();
+			if (publicIpAddress == null)
+			{
+				AppendStatusTextThreadSafe($"Error detecting public IP address");
+				return;
+			}
+
+			var oldPublicIpAddress = settings.PublicIpAddress;
+			if (publicIpAddress != oldPublicIpAddress)
+			{
+				settings.PublicIpAddress = publicIpAddress;
+				settings.Save();
+
+				if (oldPublicIpAddress != null)
+					AppendStatusTextThreadSafe($"Public IP changed from {oldPublicIpAddress} to {publicIpAddress}");
+
+				DisplayPublicIpAddressThreadSafe(publicIpAddress);
+
+				// loop through DNS entries and update the ones selected that have a different IP
+				List<Dns.Result> entriesToUpdate = null;
+				try
+				{
+					entriesToUpdate = cfClient.GetAllDnsRecordsByZone().Where(d => settings.SelectedDomains
+						.Any(s => s.ZoneName == d.zone_name && s.DnsName == d.name && d.content != publicIpAddress)).ToList();
+				}
+				catch (Exception ex)
+				{
+					AppendStatusTextThreadSafe($"Error getting DNS records");
+					AppendStatusTextThreadSafe(ex.Message);
+				}
+
+				if (entriesToUpdate == null)
+					return;
+
+				foreach (var entry in entriesToUpdate)
+				{
+					try
+					{
+						cfClient.UpdateDns(entry.zone_id, entry.id, entry.name, publicIpAddress);
+						txtOutput.Invoke((MethodInvoker)delegate
+						{
+							AppendStatusTextThreadSafe($"Updated name [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
+						});
+					}
+					catch (Exception ex)
+					{
+						AppendStatusTextThreadSafe($"Error updating [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
+						AppendStatusTextThreadSafe(ex.Message);
+					}
+				}
+
+				// fetch and update listview with current status of records
+				UpdateList();
+			}
 		}
 
 		void PromptForSettings()
@@ -314,6 +319,7 @@ namespace DnsTube
 		{
 			var execAssembly = System.Reflection.Assembly.GetExecutingAssembly();
 			var version = execAssembly.GetName().Version.ToString();
+			Text = $"DnsTube v{version}";
 			var compileDate = execAssembly.GetLinkerTime().ToString("yyyy-MM-dd");
 			AppendStatusTextThreadSafe($"DnsTube v{version} ({compileDate})");
 			if (File.Exists(settings.GetSettingsFilePath()))
@@ -341,6 +347,12 @@ namespace DnsTube
 			notifyIcon1.Visible = false;
 			this.Show();
 			this.WindowState = FormWindowState.Normal;
+		}
+
+		void btnUpdate_Click(object sender, EventArgs e)
+		{
+			AppendStatusTextThreadSafe($"Manually updating IP address");
+			DoUpdate();
 		}
 	}
 }

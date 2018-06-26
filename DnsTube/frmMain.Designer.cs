@@ -43,15 +43,16 @@
 			this.lblNextUpdate = new System.Windows.Forms.Label();
 			this.txtNextUpdate = new System.Windows.Forms.TextBox();
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+			this.btnUpdate = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btnUpdateList
 			// 
 			this.btnUpdateList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnUpdateList.Location = new System.Drawing.Point(404, 597);
+			this.btnUpdateList.Location = new System.Drawing.Point(179, 597);
 			this.btnUpdateList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnUpdateList.Name = "btnUpdateList";
-			this.btnUpdateList.Size = new System.Drawing.Size(113, 32);
+			this.btnUpdateList.Size = new System.Drawing.Size(134, 32);
 			this.btnUpdateList.TabIndex = 0;
 			this.btnUpdateList.Text = "Fetch List";
 			this.btnUpdateList.UseVisualStyleBackColor = true;
@@ -73,10 +74,10 @@
 			// btnQuit
 			// 
 			this.btnQuit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnQuit.Location = new System.Drawing.Point(675, 597);
+			this.btnQuit.Location = new System.Drawing.Point(647, 597);
 			this.btnQuit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnQuit.Name = "btnQuit";
-			this.btnQuit.Size = new System.Drawing.Size(113, 32);
+			this.btnQuit.Size = new System.Drawing.Size(134, 32);
 			this.btnQuit.TabIndex = 2;
 			this.btnQuit.Text = "Quit";
 			this.btnQuit.UseVisualStyleBackColor = true;
@@ -136,10 +137,10 @@
 			// btnSettings
 			// 
 			this.btnSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnSettings.Location = new System.Drawing.Point(539, 597);
+			this.btnSettings.Location = new System.Drawing.Point(491, 597);
 			this.btnSettings.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.btnSettings.Name = "btnSettings";
-			this.btnSettings.Size = new System.Drawing.Size(113, 32);
+			this.btnSettings.Size = new System.Drawing.Size(134, 32);
 			this.btnSettings.TabIndex = 6;
 			this.btnSettings.Text = "Settings";
 			this.btnSettings.UseVisualStyleBackColor = true;
@@ -171,11 +172,22 @@
 			this.notifyIcon1.Text = "DnsTube";
 			this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
 			// 
+			// btnUpdate
+			// 
+			this.btnUpdate.Location = new System.Drawing.Point(335, 597);
+			this.btnUpdate.Name = "btnUpdate";
+			this.btnUpdate.Size = new System.Drawing.Size(134, 32);
+			this.btnUpdate.TabIndex = 9;
+			this.btnUpdate.Text = "Manual Update";
+			this.btnUpdate.UseVisualStyleBackColor = true;
+			this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 642);
+			this.Controls.Add(this.btnUpdate);
 			this.Controls.Add(this.txtNextUpdate);
 			this.Controls.Add(this.lblNextUpdate);
 			this.Controls.Add(this.btnSettings);
@@ -191,7 +203,7 @@
 			this.MinimumSize = new System.Drawing.Size(480, 600);
 			this.Name = "frmMain";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "DnsTube";
+			this.Text = "DnsTube v0.3.3";
 			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.Resize += new System.EventHandler(this.frmMain_Resize);
 			this.ResumeLayout(false);
@@ -214,6 +226,7 @@
 		private System.Windows.Forms.Label lblNextUpdate;
 		private System.Windows.Forms.TextBox txtNextUpdate;
 		private System.Windows.Forms.NotifyIcon notifyIcon1;
+		private System.Windows.Forms.Button btnUpdate;
 	}
 }
 
