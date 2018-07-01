@@ -157,6 +157,11 @@
             "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_40034F864089CD7535479D169CEC762F"
+                    {
+                    "Name" = "8:Newtonsoft.Json.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Newtonsoft.Json.dll"
             "TargetName" = "8:"
@@ -183,6 +188,11 @@
             "AssemblyAsmDisplayName" = "8:System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_A795064DF86CB9C2A7558B0516D39E76"
+                    {
+                    "Name" = "8:System.Net.Http.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:System.Net.Http.dll"
             "TargetName" = "8:"
@@ -421,7 +431,7 @@
             "Target" = "8:_5737AD109B904C94A22BDF0462D665FC"
             "Folder" = "8:_474B0786967A487485FA18EC576BA4A6"
             "WorkingFolder" = "8:_68B1044C7CF14DE5971D74B74524943C"
-            "Icon" = "8:"
+            "Icon" = "8:_B805378007C94F93AE334A3772995B1D"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_FB15A91ACA2043D2A4B2CC5E6CEC41F3"
@@ -435,7 +445,7 @@
             "Target" = "8:_5737AD109B904C94A22BDF0462D665FC"
             "Folder" = "8:_B317283F45314D59B5C1D0261B6A65E9"
             "WorkingFolder" = "8:_68B1044C7CF14DE5971D74B74524943C"
-            "Icon" = "8:"
+            "Icon" = "8:_B805378007C94F93AE334A3772995B1D"
             "Feature" = "8:"
             }
         }
@@ -839,7 +849,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5737AD109B904C94A22BDF0462D665FC"
             {
-            "SourcePath" = "8:..\\DnsTube\\obj\\Debug\\DnsTube.exe"
+            "SourcePath" = "8:..\\DnsTube\\obj\\Release\\DnsTube.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_68B1044C7CF14DE5971D74B74524943C"
