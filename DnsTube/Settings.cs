@@ -17,6 +17,7 @@ namespace DnsTube
 				ApiKey = settings.ApiKey;
 				UpdateIntervalMinutes = settings.UpdateIntervalMinutes;
 				SelectedDomains = settings.SelectedDomains;
+				StartMinimized = settings.StartMinimized;
 			}
 			else
 			{
@@ -58,5 +59,6 @@ namespace DnsTube
 		public int UpdateIntervalMinutes { get; set; }
 		public string PublicIpAddress { get; set; }
 		public List<SelectedDomain> SelectedDomains { get; set; }
+		public bool StartMinimized { get; set; }
 	}
 }

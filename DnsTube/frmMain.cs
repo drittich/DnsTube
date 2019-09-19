@@ -17,6 +17,10 @@ namespace DnsTube
 		public frmMain()
 		{
 			InitializeComponent();
+
+			settings = new Settings();
+			if (settings.StartMinimized)
+				WindowState = FormWindowState.Minimized;
 		}
 
 		void frmMain_Load(object sender, EventArgs e)
@@ -179,7 +183,6 @@ namespace DnsTube
 
 		void Init()
 		{
-			settings = new Settings();
 			Client = new HttpClient();
 
 			// use TLS 1.2

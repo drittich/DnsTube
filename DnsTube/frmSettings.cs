@@ -7,7 +7,7 @@ namespace DnsTube
 	{
 		Settings settings;
 
-		public frmSettings(Settings settings2) 
+		public frmSettings(Settings settings2)
 		{
 			settings = settings2;
 			InitializeComponent();
@@ -23,6 +23,7 @@ namespace DnsTube
 			settings.EmailAddress = txtEmail.Text;
 			settings.ApiKey = txtApiKey.Text;
 			settings.UpdateIntervalMinutes = int.Parse(txtUpdateInterval.Text);
+			settings.StartMinimized = chkStartMinimized.Checked;
 			settings.Save();
 			Close();
 		}
@@ -32,11 +33,12 @@ namespace DnsTube
 			txtEmail.Text = settings.EmailAddress;
 			txtApiKey.Text = settings.ApiKey;
 			txtUpdateInterval.Text = settings.UpdateIntervalMinutes.ToString();
+			chkStartMinimized.Checked = settings.StartMinimized;
 		}
 
 		void txtUpdateInterval_KeyPress(object sender, KeyPressEventArgs e)
 		{
-			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) )
+			if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
 			{
 				e.Handled = true;
 			}
