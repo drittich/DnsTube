@@ -39,12 +39,12 @@
 			this.colUpdate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.colAddress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.colProxied = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.btnSettings = new System.Windows.Forms.Button();
 			this.lblNextUpdate = new System.Windows.Forms.Label();
 			this.txtNextUpdate = new System.Windows.Forms.TextBox();
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.btnUpdate = new System.Windows.Forms.Button();
-			this.colProxied = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.SuspendLayout();
 			// 
 			// btnUpdateList
@@ -137,6 +137,10 @@
 			this.colAddress.Text = "Address";
 			this.colAddress.Width = 300;
 			// 
+			// colProxied
+			// 
+			this.colProxied.Text = "Proxied";
+			// 
 			// btnSettings
 			// 
 			this.btnSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -185,10 +189,6 @@
 			this.btnUpdate.UseVisualStyleBackColor = true;
 			this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
 			// 
-			// colProxied
-			// 
-			this.colProxied.Text = "Proxied";
-			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
@@ -210,7 +210,7 @@
 			this.MinimumSize = new System.Drawing.Size(480, 600);
 			this.Name = "frmMain";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "DnsTube v0.3.4";
+			this.Text = "DnsTube v0.4";
 			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.Resize += new System.EventHandler(this.frmMain_Resize);
 			this.ResumeLayout(false);

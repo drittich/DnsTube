@@ -15,14 +15,14 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_40034F864089CD7535479D169CEC762F"
-        "OwnerKey" = "8:_5737AD109B904C94A22BDF0462D665FC"
+        "MsmKey" = "8:_5737AD109B904C94A22BDF0462D665FC"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_5737AD109B904C94A22BDF0462D665FC"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_A3143E2407FE0E771F4757D13AB54F9D"
+        "OwnerKey" = "8:_5737AD109B904C94A22BDF0462D665FC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -46,7 +46,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_40034F864089CD7535479D169CEC762F"
+        "OwnerKey" = "8:_A3143E2407FE0E771F4757D13AB54F9D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -150,14 +150,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_40034F864089CD7535479D169CEC762F"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A3143E2407FE0E771F4757D13AB54F9D"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_40034F864089CD7535479D169CEC762F"
+                    "_A3143E2407FE0E771F4757D13AB54F9D"
                     {
                     "Name" = "8:Newtonsoft.Json.dll"
                     "Attributes" = "3:512"
@@ -299,15 +299,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DnsTube"
-        "ProductCode" = "8:{AB5C1F84-CFC4-4A57-8D6D-569B3C2857C3}"
-        "PackageCode" = "8:{176A4720-3AD0-4990-B81A-92FED049DD39}"
+        "ProductCode" = "8:{BD2DD953-552D-43A5-928C-8F4B9C68787D}"
+        "PackageCode" = "8:{628636A7-2190-4E22-BF2F-A59651708C68}"
         "UpgradeCode" = "8:{7353A875-496B-4CF9-A573-4B383B0AA92B}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.3.3"
+        "ProductVersion" = "8:0.4"
         "Manufacturer" = "8:DnsTube"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
