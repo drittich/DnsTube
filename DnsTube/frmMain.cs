@@ -112,7 +112,7 @@ namespace DnsTube
 				{
 					try
 					{
-						cfClient.UpdateDns(entry.zone_id, entry.id, entry.name, publicIpAddress);
+						cfClient.UpdateDns(entry.zone_id, entry.id, entry.name, publicIpAddress, entry.proxied);
 						txtOutput.Invoke((MethodInvoker)delegate
 						{
 							AppendStatusTextThreadSafe($"Updated name [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
@@ -227,6 +227,7 @@ namespace DnsTube
 						var row = new ListViewItem(group);
 						row.SubItems.Add(dnsRecord.name);
 						row.SubItems.Add(dnsRecord.content);
+						row.SubItems.Add(dnsRecord.proxied ? "Yes" : "No");
 						row.Tag = zone;
 
 						if (settings.SelectedDomains.Any(entry => entry.ZoneName == dnsRecord.zone_name && entry.DnsName == dnsRecord.name))
@@ -287,11 +288,6 @@ namespace DnsTube
 			cfClient = new CloudflareAPI(Client, settings.EmailAddress, settings.ApiKey);
 			// pick up new interval if it was changed
 			ScheduleUpdates();
-		}
-
-		void btnUpdateDNS_Click(object sender, EventArgs e)
-		{
-			cfClient.UpdateDns(null, null, null, null);
 		}
 
 		void AppendStatusTextThreadSafe(string s)

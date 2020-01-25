@@ -44,6 +44,7 @@
 			this.txtNextUpdate = new System.Windows.Forms.TextBox();
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.btnUpdate = new System.Windows.Forms.Button();
+			this.colProxied = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.SuspendLayout();
 			// 
 			// btnUpdateList
@@ -88,7 +89,7 @@
 			this.lblPublicIpAddress.AutoSize = true;
 			this.lblPublicIpAddress.Location = new System.Drawing.Point(18, 17);
 			this.lblPublicIpAddress.Name = "lblPublicIpAddress";
-			this.lblPublicIpAddress.Size = new System.Drawing.Size(122, 20);
+			this.lblPublicIpAddress.Size = new System.Drawing.Size(149, 25);
 			this.lblPublicIpAddress.TabIndex = 3;
 			this.lblPublicIpAddress.Text = "Public IP Address";
 			// 
@@ -99,7 +100,7 @@
 			this.txtPublicIpAddress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.txtPublicIpAddress.Name = "txtPublicIpAddress";
 			this.txtPublicIpAddress.ReadOnly = true;
-			this.txtPublicIpAddress.Size = new System.Drawing.Size(119, 27);
+			this.txtPublicIpAddress.Size = new System.Drawing.Size(119, 31);
 			this.txtPublicIpAddress.TabIndex = 4;
 			// 
 			// listViewRecords
@@ -110,7 +111,9 @@
 			this.listViewRecords.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colUpdate,
             this.colName,
-            this.colAddress});
+            this.colAddress,
+            this.colProxied});
+			this.listViewRecords.HideSelection = false;
 			this.listViewRecords.Location = new System.Drawing.Point(15, 49);
 			this.listViewRecords.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.listViewRecords.Name = "listViewRecords";
@@ -151,7 +154,7 @@
 			this.lblNextUpdate.AutoSize = true;
 			this.lblNextUpdate.Location = new System.Drawing.Point(267, 17);
 			this.lblNextUpdate.Name = "lblNextUpdate";
-			this.lblNextUpdate.Size = new System.Drawing.Size(93, 20);
+			this.lblNextUpdate.Size = new System.Drawing.Size(111, 25);
 			this.lblNextUpdate.TabIndex = 7;
 			this.lblNextUpdate.Text = "Next Update";
 			// 
@@ -161,7 +164,7 @@
 			this.txtNextUpdate.Location = new System.Drawing.Point(342, 14);
 			this.txtNextUpdate.Name = "txtNextUpdate";
 			this.txtNextUpdate.ReadOnly = true;
-			this.txtNextUpdate.Size = new System.Drawing.Size(119, 27);
+			this.txtNextUpdate.Size = new System.Drawing.Size(119, 31);
 			this.txtNextUpdate.TabIndex = 8;
 			// 
 			// notifyIcon1
@@ -182,9 +185,13 @@
 			this.btnUpdate.UseVisualStyleBackColor = true;
 			this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
 			// 
+			// colProxied
+			// 
+			this.colProxied.Text = "Proxied";
+			// 
 			// frmMain
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 642);
 			this.Controls.Add(this.btnUpdate);
@@ -227,6 +234,7 @@
 		private System.Windows.Forms.TextBox txtNextUpdate;
 		private System.Windows.Forms.NotifyIcon notifyIcon1;
 		private System.Windows.Forms.Button btnUpdate;
+		private System.Windows.Forms.ColumnHeader colProxied;
 	}
 }
 

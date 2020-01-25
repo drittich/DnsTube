@@ -62,9 +62,9 @@ namespace DnsTube
 		}
 
 		// Ref: https://api.cloudflare.com/#dns-records-for-a-zone-update-dns-record
-		public DnsUpdateResponse UpdateDns(string zoneIdentifier, string dnsRecordIdentifier, string dnsRecordName, string content)
+		public DnsUpdateResponse UpdateDns(string zoneIdentifier, string dnsRecordIdentifier, string dnsRecordName, string content, bool proxied)
 		{
-			var dnsUpdateRequest = new DnsUpdateRequest() { type = "A", name = dnsRecordName, content = content };
+			var dnsUpdateRequest = new DnsUpdateRequest() { type = "A", name = dnsRecordName, content = content, proxied = proxied };
 
 			HttpResponseMessage response = null;
 
