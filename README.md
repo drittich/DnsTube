@@ -4,7 +4,7 @@ A Windows client for dynamically updating Cloudflare DNS entries with your publi
 
 ## Building
 
-This solution was built using Visual Studio 2017. It's probably best to use that version.
+This solution was built using Visual Studio 2019. It's probably best to use that version. The Microsoft Visual Studio Installer Projects extension was used to make the Setup project work in VS2019.
 
 ## Downloading
 
@@ -30,4 +30,4 @@ This project is licensed under the MIT License - see the [LICENSE](/LICENSE) fil
 
 ## Acknowledgments
 
-Some of the UI was inspired by [CloudFlare-DDNS-Updater](https://github.com/birkett/CloudFlare-DDNS-Updater). That project was never updated for Cloudflare's new API, thus this was born.
+Some of the UI was inspired by [CloudFlare-DDNS-Updater](https://github.com/birkett/CloudFlare-DDNS-Updater). 
