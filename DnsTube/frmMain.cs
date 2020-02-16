@@ -19,8 +19,6 @@ namespace DnsTube
 			InitializeComponent();
 
 			settings = new Settings();
-			if (settings.StartMinimized)
-				WindowState = FormWindowState.Minimized;
 		}
 
 		void frmMain_Load(object sender, EventArgs e)
@@ -31,7 +29,7 @@ namespace DnsTube
 
 			PromptForSettings();
 
-			cfClient = new CloudflareAPI(Client, settings.EmailAddress, settings.ApiKey);
+			cfClient = new CloudflareAPI(Client, settings);
 
 			UpdateList();
 
@@ -154,13 +152,13 @@ namespace DnsTube
 			// check if settings are populate
 			if (string.IsNullOrWhiteSpace(settings.EmailAddress)
 				|| !settings.EmailAddress.Contains("@")
-				|| string.IsNullOrWhiteSpace(settings.ApiKey)
+				|| (!settings.IsUsingToken && string.IsNullOrWhiteSpace(settings.ApiKey))
+				|| (settings.IsUsingToken && string.IsNullOrWhiteSpace(settings.ApiToken))
 				|| settings.UpdateIntervalMinutes == 0
 				)
 				return false;
-
+			
 			return true;
-
 		}
 
 		string GetPublicIpAddress()
@@ -183,6 +181,12 @@ namespace DnsTube
 
 		void Init()
 		{
+			if (settings.StartMinimized)
+			{
+				//Hide();
+				WindowState = FormWindowState.Minimized;
+			}
+
 			Client = new HttpClient();
 
 			// use TLS 1.2
@@ -207,6 +211,8 @@ namespace DnsTube
 			catch (Exception e)
 			{
 				AppendStatusTextThreadSafe($"Error fetching list: {e.Message}");
+				if (settings.IsUsingToken && e.Message.Contains("403 (Forbidden)"))
+					AppendStatusTextThreadSafe($"Make sure your token has Zone:Read permissions. See https://dash.cloudflare.com/profile/api-tokens to configure.");
 			}
 		}
 
@@ -285,7 +291,7 @@ namespace DnsTube
 			// reload settings
 			settings = new Settings();
 			// pick up new credentials if they were changed
-			cfClient = new CloudflareAPI(Client, settings.EmailAddress, settings.ApiKey);
+			cfClient = new CloudflareAPI(Client, settings);
 			// pick up new interval if it was changed
 			ScheduleUpdates();
 		}
@@ -334,6 +340,7 @@ namespace DnsTube
 				notifyIcon1.Visible = true;
 				notifyIcon1.ShowBalloonTip(500);
 				this.Hide();
+				this.ShowInTaskbar = false;
 			}
 			else if (FormWindowState.Normal == this.WindowState)
 			{
@@ -345,6 +352,7 @@ namespace DnsTube
 		{
 			notifyIcon1.Visible = false;
 			this.Show();
+			this.ShowInTaskbar = true;
 			this.WindowState = FormWindowState.Normal;
 		}
 

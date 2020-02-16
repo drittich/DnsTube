@@ -89,7 +89,7 @@
 			this.lblPublicIpAddress.AutoSize = true;
 			this.lblPublicIpAddress.Location = new System.Drawing.Point(18, 17);
 			this.lblPublicIpAddress.Name = "lblPublicIpAddress";
-			this.lblPublicIpAddress.Size = new System.Drawing.Size(149, 25);
+			this.lblPublicIpAddress.Size = new System.Drawing.Size(98, 15);
 			this.lblPublicIpAddress.TabIndex = 3;
 			this.lblPublicIpAddress.Text = "Public IP Address";
 			// 
@@ -100,7 +100,7 @@
 			this.txtPublicIpAddress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.txtPublicIpAddress.Name = "txtPublicIpAddress";
 			this.txtPublicIpAddress.ReadOnly = true;
-			this.txtPublicIpAddress.Size = new System.Drawing.Size(119, 31);
+			this.txtPublicIpAddress.Size = new System.Drawing.Size(119, 23);
 			this.txtPublicIpAddress.TabIndex = 4;
 			// 
 			// listViewRecords
@@ -158,7 +158,7 @@
 			this.lblNextUpdate.AutoSize = true;
 			this.lblNextUpdate.Location = new System.Drawing.Point(267, 17);
 			this.lblNextUpdate.Name = "lblNextUpdate";
-			this.lblNextUpdate.Size = new System.Drawing.Size(111, 25);
+			this.lblNextUpdate.Size = new System.Drawing.Size(73, 15);
 			this.lblNextUpdate.TabIndex = 7;
 			this.lblNextUpdate.Text = "Next Update";
 			// 
@@ -168,7 +168,7 @@
 			this.txtNextUpdate.Location = new System.Drawing.Point(342, 14);
 			this.txtNextUpdate.Name = "txtNextUpdate";
 			this.txtNextUpdate.ReadOnly = true;
-			this.txtNextUpdate.Size = new System.Drawing.Size(119, 31);
+			this.txtNextUpdate.Size = new System.Drawing.Size(119, 23);
 			this.txtNextUpdate.TabIndex = 8;
 			// 
 			// notifyIcon1
@@ -191,7 +191,7 @@
 			// 
 			// frmMain
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 642);
 			this.Controls.Add(this.btnUpdate);
@@ -210,7 +210,7 @@
 			this.MinimumSize = new System.Drawing.Size(480, 600);
 			this.Name = "frmMain";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "DnsTube v0.4";
+			this.Text = "DnsTube v0.5";
 			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.Resize += new System.EventHandler(this.frmMain_Resize);
 			this.ResumeLayout(false);

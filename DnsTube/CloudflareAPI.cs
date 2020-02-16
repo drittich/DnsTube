@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -11,20 +12,16 @@ namespace DnsTube
 {
 	public class CloudflareAPI
 	{
-		public string ApiKey { get; set; }
-		public string Email { get; set; }
-
+		private Settings settings;
 		public static string EndPoint = "https://api.cloudflare.com/client/v4/";
 		public HttpClient Client { get; set; }
 
-
-		public CloudflareAPI(HttpClient client, string email, string apiKey)
+		public CloudflareAPI(HttpClient client, Settings settings)
 		{
 			Client = client;
 			if (Client.BaseAddress == null)
 				Client.BaseAddress = new Uri(EndPoint);
-			Email = email;
-			ApiKey = apiKey;
+			this.settings = settings;
 		}
 
 		// Ref: https://api.cloudflare.com/#zone-list-zones
@@ -37,9 +34,10 @@ namespace DnsTube
 				  .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 			var response = Client.SendAsync(req).Result;
-			response.EnsureSuccessStatusCode(); // throws if response.IsSuccessStatusCode == false
-
 			var result = response.Content.ReadAsStringAsync().Result;
+
+			ValidateCloudflareResult(response, result, "list zones");
+
 			var ret = JsonConvert.DeserializeObject<Zone.ListZonesResponse>(result);
 			return ret;
 		}
@@ -54,11 +52,28 @@ namespace DnsTube
 			var req = GetRequestMessage(HttpMethod.Get, $"zones/{zoneIdentifier}/dns_records?type=A&page=1&per_page=100&order=name&direction=asc&match=all");
 
 			var response = Client.SendAsync(req).Result;
-			response.EnsureSuccessStatusCode(); // throws if response.IsSuccessStatusCode == false
-
 			var result = response.Content.ReadAsStringAsync().Result;
+
+			ValidateCloudflareResult(response, result, "list DNS records");
+
 			var ret = JsonConvert.DeserializeObject<DnsRecordsResponse>(result);
 			return ret;
+		}
+
+		private void ValidateCloudflareResult(HttpResponseMessage response, string result, string action)
+		{
+			if (!response.IsSuccessStatusCode)
+			{
+				if (settings.IsUsingToken)
+				{
+					throw new Exception($"Unable to {action}. Token permissions should be similar to [All zones - Zone:Read, DNS:Edit]");
+				}
+				else
+				{
+					var cfError = JsonConvert.DeserializeObject<CloudflareApiError>(result);
+					throw new Exception(cfError.errors?.FirstOrDefault().message);
+				}
+			}
 		}
 
 		// Ref: https://api.cloudflare.com/#dns-records-for-a-zone-update-dns-record
@@ -72,9 +87,10 @@ namespace DnsTube
 			req.Content = new StringContent(JsonConvert.SerializeObject(dnsUpdateRequest), Encoding.UTF8, "application/json");
 
 			response = Client.SendAsync(req).Result;
-			response.EnsureSuccessStatusCode(); // throws if response.IsSuccessStatusCode == false
-
 			var result = response.Content.ReadAsStringAsync().Result;
+
+			ValidateCloudflareResult(response, result, "update DNS");
+
 			var ret = JsonConvert.DeserializeObject<DnsUpdateResponse>(result);
 			return ret;
 		}
@@ -96,9 +112,32 @@ namespace DnsTube
 		HttpRequestMessage GetRequestMessage(HttpMethod httpMethod, string requestUri)
 		{
 			var req = new HttpRequestMessage(httpMethod, requestUri);
-			req.Headers.Add("X-Auth-Email", Email);
-			req.Headers.Add("X-Auth-Key", ApiKey);
+
+			if (settings.IsUsingToken)
+			{
+				req.Headers.Add("Authorization", " Bearer " + settings.ApiToken);
+			}
+			else
+			{
+				req.Headers.Add("X-Auth-Key", settings.ApiKey);
+				req.Headers.Add("X-Auth-Email", settings.EmailAddress);
+			}
 			return req;
+		}
+	}
+
+
+	public class CloudflareApiError
+	{
+		public bool success { get; set; }
+		public Error[] errors { get; set; }
+		public object[] messages { get; set; }
+		public object result { get; set; }
+
+		public class Error
+		{
+			public int code { get; set; }
+			public string message { get; set; }
 		}
 	}
 }

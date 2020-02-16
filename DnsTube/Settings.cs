@@ -14,7 +14,9 @@ namespace DnsTube
 				string json = File.ReadAllText(GetSettingsFilePath());
 				var settings = JsonConvert.DeserializeObject<SettingsDTO>(json);
 				EmailAddress = settings.EmailAddress;
+				IsUsingToken = settings.IsUsingToken;
 				ApiKey = settings.ApiKey;
+				ApiToken = settings.ApiToken;
 				UpdateIntervalMinutes = settings.UpdateIntervalMinutes;
 				SelectedDomains = settings.SelectedDomains;
 				StartMinimized = settings.StartMinimized;
@@ -23,6 +25,7 @@ namespace DnsTube
 			{
 				UpdateIntervalMinutes = 30;
 				SelectedDomains = new List<SelectedDomain>();
+				IsUsingToken = true;
 			}
 		}
 
@@ -55,7 +58,9 @@ namespace DnsTube
 	public class SettingsDTO
 	{
 		public string EmailAddress { get; set; }
+		public bool IsUsingToken { get; set; }
 		public string ApiKey { get; set; }
+		public string ApiToken { get; set; }
 		public int UpdateIntervalMinutes { get; set; }
 		public string PublicIpAddress { get; set; }
 		public List<SelectedDomain> SelectedDomains { get; set; }
