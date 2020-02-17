@@ -299,15 +299,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DnsTube"
-        "ProductCode" = "8:{22A208C4-E349-48F7-A55F-D6039248C7CB}"
-        "PackageCode" = "8:{CA01E6DF-C48C-437C-8A1D-1F08B1F8F588}"
+        "ProductCode" = "8:{274C17F1-C65C-45CC-A30C-72F250C34494}"
+        "PackageCode" = "8:{48C65BD6-C6CF-478D-9977-C29534A73AEE}"
         "UpgradeCode" = "8:{7353A875-496B-4CF9-A573-4B383B0AA92B}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.6b"
+        "ProductVersion" = "8:0.6"
         "Manufacturer" = "8:DnsTube"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -849,7 +849,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5737AD109B904C94A22BDF0462D665FC"
             {
-            "SourcePath" = "8:..\\DnsTube\\obj\\Debug\\DnsTube.exe"
+            "SourcePath" = "8:..\\DnsTube\\obj\\Release\\DnsTube.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_68B1044C7CF14DE5971D74B74524943C"
