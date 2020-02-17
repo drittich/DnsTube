@@ -33,8 +33,8 @@
 			this.btnUpdateList = new System.Windows.Forms.Button();
 			this.txtOutput = new System.Windows.Forms.TextBox();
 			this.btnQuit = new System.Windows.Forms.Button();
-			this.lblPublicIpAddress = new System.Windows.Forms.Label();
-			this.txtPublicIpAddress = new System.Windows.Forms.TextBox();
+			this.lblPublicIpv4Address = new System.Windows.Forms.Label();
+			this.txtPublicIpv4 = new System.Windows.Forms.TextBox();
 			this.listViewRecords = new System.Windows.Forms.ListView();
 			this.colUpdate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -45,6 +45,8 @@
 			this.txtNextUpdate = new System.Windows.Forms.TextBox();
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.btnUpdate = new System.Windows.Forms.Button();
+			this.txtPublicIpv6 = new System.Windows.Forms.TextBox();
+			this.lblPublicIpv6Address = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// btnUpdateList
@@ -84,24 +86,25 @@
 			this.btnQuit.UseVisualStyleBackColor = true;
 			this.btnQuit.Click += new System.EventHandler(this.btnQuit_Click);
 			// 
-			// lblPublicIpAddress
+			// lblPublicIpv4Address
 			// 
-			this.lblPublicIpAddress.AutoSize = true;
-			this.lblPublicIpAddress.Location = new System.Drawing.Point(18, 17);
-			this.lblPublicIpAddress.Name = "lblPublicIpAddress";
-			this.lblPublicIpAddress.Size = new System.Drawing.Size(98, 15);
-			this.lblPublicIpAddress.TabIndex = 3;
-			this.lblPublicIpAddress.Text = "Public IP Address";
+			this.lblPublicIpv4Address.AutoSize = true;
+			this.lblPublicIpv4Address.Location = new System.Drawing.Point(12, 17);
+			this.lblPublicIpv4Address.Name = "lblPublicIpv4Address";
+			this.lblPublicIpv4Address.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+			this.lblPublicIpv4Address.Size = new System.Drawing.Size(68, 15);
+			this.lblPublicIpv4Address.TabIndex = 3;
+			this.lblPublicIpv4Address.Text = "Public IPv4";
 			// 
-			// txtPublicIpAddress
+			// txtPublicIpv4
 			// 
-			this.txtPublicIpAddress.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.txtPublicIpAddress.Location = new System.Drawing.Point(118, 14);
-			this.txtPublicIpAddress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.txtPublicIpAddress.Name = "txtPublicIpAddress";
-			this.txtPublicIpAddress.ReadOnly = true;
-			this.txtPublicIpAddress.Size = new System.Drawing.Size(119, 23);
-			this.txtPublicIpAddress.TabIndex = 4;
+			this.txtPublicIpv4.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.txtPublicIpv4.Location = new System.Drawing.Point(86, 14);
+			this.txtPublicIpv4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.txtPublicIpv4.Name = "txtPublicIpv4";
+			this.txtPublicIpv4.ReadOnly = true;
+			this.txtPublicIpv4.Size = new System.Drawing.Size(119, 23);
+			this.txtPublicIpv4.TabIndex = 4;
 			// 
 			// listViewRecords
 			// 
@@ -156,7 +159,7 @@
 			// lblNextUpdate
 			// 
 			this.lblNextUpdate.AutoSize = true;
-			this.lblNextUpdate.Location = new System.Drawing.Point(267, 17);
+			this.lblNextUpdate.Location = new System.Drawing.Point(589, 17);
 			this.lblNextUpdate.Name = "lblNextUpdate";
 			this.lblNextUpdate.Size = new System.Drawing.Size(73, 15);
 			this.lblNextUpdate.TabIndex = 7;
@@ -165,7 +168,7 @@
 			// txtNextUpdate
 			// 
 			this.txtNextUpdate.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.txtNextUpdate.Location = new System.Drawing.Point(342, 14);
+			this.txtNextUpdate.Location = new System.Drawing.Point(668, 14);
 			this.txtNextUpdate.Name = "txtNextUpdate";
 			this.txtNextUpdate.ReadOnly = true;
 			this.txtNextUpdate.Size = new System.Drawing.Size(119, 23);
@@ -189,18 +192,39 @@
 			this.btnUpdate.UseVisualStyleBackColor = true;
 			this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
 			// 
+			// txtPublicIpv6
+			// 
+			this.txtPublicIpv6.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.txtPublicIpv6.Location = new System.Drawing.Point(296, 14);
+			this.txtPublicIpv6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.txtPublicIpv6.Name = "txtPublicIpv6";
+			this.txtPublicIpv6.ReadOnly = true;
+			this.txtPublicIpv6.Size = new System.Drawing.Size(278, 23);
+			this.txtPublicIpv6.TabIndex = 11;
+			// 
+			// lblPublicIpv6Address
+			// 
+			this.lblPublicIpv6Address.AutoSize = true;
+			this.lblPublicIpv6Address.Location = new System.Drawing.Point(225, 17);
+			this.lblPublicIpv6Address.Name = "lblPublicIpv6Address";
+			this.lblPublicIpv6Address.Size = new System.Drawing.Size(65, 15);
+			this.lblPublicIpv6Address.TabIndex = 10;
+			this.lblPublicIpv6Address.Text = "Public IPv6";
+			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 642);
+			this.Controls.Add(this.txtPublicIpv6);
+			this.Controls.Add(this.lblPublicIpv6Address);
 			this.Controls.Add(this.btnUpdate);
 			this.Controls.Add(this.txtNextUpdate);
 			this.Controls.Add(this.lblNextUpdate);
 			this.Controls.Add(this.btnSettings);
 			this.Controls.Add(this.listViewRecords);
-			this.Controls.Add(this.txtPublicIpAddress);
-			this.Controls.Add(this.lblPublicIpAddress);
+			this.Controls.Add(this.txtPublicIpv4);
+			this.Controls.Add(this.lblPublicIpv4Address);
 			this.Controls.Add(this.btnQuit);
 			this.Controls.Add(this.txtOutput);
 			this.Controls.Add(this.btnUpdateList);
@@ -210,7 +234,7 @@
 			this.MinimumSize = new System.Drawing.Size(480, 600);
 			this.Name = "frmMain";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "DnsTube v0.5";
+			this.Text = "DnsTube v0.6b";
 			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.Resize += new System.EventHandler(this.frmMain_Resize);
 			this.ResumeLayout(false);
@@ -223,8 +247,8 @@
 		private System.Windows.Forms.Button btnUpdateList;
 		private System.Windows.Forms.TextBox txtOutput;
 		private System.Windows.Forms.Button btnQuit;
-		private System.Windows.Forms.Label lblPublicIpAddress;
-		private System.Windows.Forms.TextBox txtPublicIpAddress;
+		private System.Windows.Forms.Label lblPublicIpv4Address;
+		private System.Windows.Forms.TextBox txtPublicIpv4;
 		private System.Windows.Forms.ListView listViewRecords;
 		private System.Windows.Forms.ColumnHeader colUpdate;
 		private System.Windows.Forms.ColumnHeader colName;
@@ -235,6 +259,8 @@
 		private System.Windows.Forms.NotifyIcon notifyIcon1;
 		private System.Windows.Forms.Button btnUpdate;
 		private System.Windows.Forms.ColumnHeader colProxied;
+		private System.Windows.Forms.TextBox txtPublicIpv6;
+		private System.Windows.Forms.Label lblPublicIpv6Address;
 	}
 }
 

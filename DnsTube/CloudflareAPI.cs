@@ -43,13 +43,14 @@ namespace DnsTube
 		}
 
 		// Ref: https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records
-		public DnsRecordsResponse ListDnsRecords(string zoneIdentifier)
+		public DnsRecordsResponse ListDnsRecords(IpSupport protocol, string zoneIdentifier)
 		{
 			Client.DefaultRequestHeaders
 				.Accept
 				.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-			var req = GetRequestMessage(HttpMethod.Get, $"zones/{zoneIdentifier}/dns_records?type=A&page=1&per_page=100&order=name&direction=asc&match=all");
+			var recordType = protocol == IpSupport.IPv4 ? "A" : "AAAA";
+			var req = GetRequestMessage(HttpMethod.Get, $"zones/{zoneIdentifier}/dns_records?type={recordType}&page=1&per_page=100&order=name&direction=asc&match=all");
 
 			var response = Client.SendAsync(req).Result;
 			var result = response.Content.ReadAsStringAsync().Result;
@@ -77,11 +78,12 @@ namespace DnsTube
 		}
 
 		// Ref: https://api.cloudflare.com/#dns-records-for-a-zone-update-dns-record
-		public DnsUpdateResponse UpdateDns(string zoneIdentifier, string dnsRecordIdentifier, string dnsRecordName, string content, bool proxied)
+		public DnsUpdateResponse UpdateDns(IpSupport protocol, string zoneIdentifier, string dnsRecordIdentifier, string dnsRecordName, string content, bool proxied)
 		{
-			var dnsUpdateRequest = new DnsUpdateRequest() { type = "A", name = dnsRecordName, content = content, proxied = proxied };
+			var recordType = protocol == IpSupport.IPv4 ? "A" : "AAAA";
+			var dnsUpdateRequest = new DnsUpdateRequest() { type = recordType, name = dnsRecordName, content = content, proxied = proxied };
 
-			HttpResponseMessage response = null;
+			HttpResponseMessage response;
 
 			HttpRequestMessage req = GetRequestMessage(HttpMethod.Put, $"zones/{zoneIdentifier}/dns_records/{dnsRecordIdentifier}");
 			req.Content = new StringContent(JsonConvert.SerializeObject(dnsUpdateRequest), Encoding.UTF8, "application/json");
@@ -89,7 +91,7 @@ namespace DnsTube
 			response = Client.SendAsync(req).Result;
 			var result = response.Content.ReadAsStringAsync().Result;
 
-			ValidateCloudflareResult(response, result, "update DNS");
+			ValidateCloudflareResult(response, result, $"update {protocol.ToString()} DNS");
 
 			var ret = JsonConvert.DeserializeObject<DnsUpdateResponse>(result);
 			return ret;
@@ -102,11 +104,19 @@ namespace DnsTube
 
 			foreach (var zone in zones.result)
 			{
-				var dnsRecords = ListDnsRecords(zone.id);
-				allDnsEntries.AddRange(dnsRecords.result);
+				if (settings.ProtocolSupport != IpSupport.IPv6)
+				{
+					var dnsRecords = ListDnsRecords(IpSupport.IPv4, zone.id);
+					allDnsEntries.AddRange(dnsRecords.result);
+				}
+				if (settings.ProtocolSupport != IpSupport.IPv4)
+				{
+					var dnsRecords = ListDnsRecords(IpSupport.IPv6, zone.id);
+					allDnsEntries.AddRange(dnsRecords.result);
+				}
 			}
 
-			return allDnsEntries;
+			return allDnsEntries.Distinct().ToList();
 		}
 
 		HttpRequestMessage GetRequestMessage(HttpMethod httpMethod, string requestUri)

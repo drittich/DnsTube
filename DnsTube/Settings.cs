@@ -20,12 +20,14 @@ namespace DnsTube
 				UpdateIntervalMinutes = settings.UpdateIntervalMinutes;
 				SelectedDomains = settings.SelectedDomains;
 				StartMinimized = settings.StartMinimized;
+				ProtocolSupport = settings.ProtocolSupport;
 			}
 			else
 			{
 				UpdateIntervalMinutes = 30;
 				SelectedDomains = new List<SelectedDomain>();
 				IsUsingToken = true;
+				ProtocolSupport = IpSupport.IPv4;
 			}
 		}
 
@@ -62,8 +64,15 @@ namespace DnsTube
 		public string ApiKey { get; set; }
 		public string ApiToken { get; set; }
 		public int UpdateIntervalMinutes { get; set; }
-		public string PublicIpAddress { get; set; }
+		public string PublicIpv4Address { get; set; }
+		public string PublicIpv6Address { get; set; }
 		public List<SelectedDomain> SelectedDomains { get; set; }
 		public bool StartMinimized { get; set; }
+		public IpSupport ProtocolSupport { get; set; }
+	}
+
+	public enum IpSupport
+	{
+		IPv4, IPv6, IPv4AndIPv6
 	}
 }

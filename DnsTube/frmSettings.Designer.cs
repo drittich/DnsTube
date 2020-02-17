@@ -45,6 +45,14 @@
 			this.rbUseApiToken = new System.Windows.Forms.RadioButton();
 			this.label3 = new System.Windows.Forms.Label();
 			this.lnkCloudflare = new System.Windows.Forms.LinkLabel();
+			this.lblProtocol = new System.Windows.Forms.Label();
+			this.rbProtocolIPv4 = new System.Windows.Forms.RadioButton();
+			this.rbProtocolIPv6 = new System.Windows.Forms.RadioButton();
+			this.rbProtocolIPv4AndIPv6 = new System.Windows.Forms.RadioButton();
+			this.panAuth = new System.Windows.Forms.Panel();
+			this.panProtocol = new System.Windows.Forms.Panel();
+			this.panAuth.SuspendLayout();
+			this.panProtocol.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// lblEmail
@@ -81,7 +89,7 @@
 			// 
 			// btnSave
 			// 
-			this.btnSave.Location = new System.Drawing.Point(278, 167);
+			this.btnSave.Location = new System.Drawing.Point(278, 198);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 24);
 			this.btnSave.TabIndex = 8;
@@ -91,7 +99,7 @@
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.Location = new System.Drawing.Point(372, 167);
+			this.btnCancel.Location = new System.Drawing.Point(372, 198);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 24);
 			this.btnCancel.TabIndex = 9;
@@ -102,7 +110,7 @@
 			// lblUpdateInterval
 			// 
 			this.lblUpdateInterval.AutoSize = true;
-			this.lblUpdateInterval.Location = new System.Drawing.Point(13, 105);
+			this.lblUpdateInterval.Location = new System.Drawing.Point(13, 136);
 			this.lblUpdateInterval.Name = "lblUpdateInterval";
 			this.lblUpdateInterval.Size = new System.Drawing.Size(87, 15);
 			this.lblUpdateInterval.TabIndex = 6;
@@ -110,7 +118,7 @@
 			// 
 			// txtUpdateInterval
 			// 
-			this.txtUpdateInterval.Location = new System.Drawing.Point(106, 102);
+			this.txtUpdateInterval.Location = new System.Drawing.Point(106, 133);
 			this.txtUpdateInterval.MaxLength = 4;
 			this.txtUpdateInterval.Name = "txtUpdateInterval";
 			this.txtUpdateInterval.Size = new System.Drawing.Size(109, 23);
@@ -120,7 +128,7 @@
 			// chkStartMinimized
 			// 
 			this.chkStartMinimized.AutoSize = true;
-			this.chkStartMinimized.Location = new System.Drawing.Point(106, 134);
+			this.chkStartMinimized.Location = new System.Drawing.Point(106, 165);
 			this.chkStartMinimized.Name = "chkStartMinimized";
 			this.chkStartMinimized.Size = new System.Drawing.Size(109, 19);
 			this.chkStartMinimized.TabIndex = 7;
@@ -131,7 +139,7 @@
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(221, 105);
+			this.label1.Location = new System.Drawing.Point(221, 136);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(58, 15);
 			this.label1.TabIndex = 10;
@@ -156,7 +164,7 @@
 			// rbUseApiKey
 			// 
 			this.rbUseApiKey.AutoSize = true;
-			this.rbUseApiKey.Location = new System.Drawing.Point(107, 42);
+			this.rbUseApiKey.Location = new System.Drawing.Point(107, 9);
 			this.rbUseApiKey.Name = "rbUseApiKey";
 			this.rbUseApiKey.Size = new System.Drawing.Size(65, 19);
 			this.rbUseApiKey.TabIndex = 2;
@@ -168,7 +176,7 @@
 			// rbUseApiToken
 			// 
 			this.rbUseApiToken.AutoSize = true;
-			this.rbUseApiToken.Location = new System.Drawing.Point(188, 42);
+			this.rbUseApiToken.Location = new System.Drawing.Point(188, 9);
 			this.rbUseApiToken.Name = "rbUseApiToken";
 			this.rbUseApiToken.Size = new System.Drawing.Size(77, 19);
 			this.rbUseApiToken.TabIndex = 3;
@@ -180,7 +188,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(12, 44);
+			this.label3.Location = new System.Drawing.Point(11, 11);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(79, 15);
 			this.label3.TabIndex = 15;
@@ -189,7 +197,7 @@
 			// lnkCloudflare
 			// 
 			this.lnkCloudflare.AutoSize = true;
-			this.lnkCloudflare.Location = new System.Drawing.Point(291, 44);
+			this.lnkCloudflare.Location = new System.Drawing.Point(291, 11);
 			this.lnkCloudflare.Name = "lnkCloudflare";
 			this.lnkCloudflare.Size = new System.Drawing.Size(126, 15);
 			this.lnkCloudflare.TabIndex = 16;
@@ -197,15 +205,78 @@
 			this.lnkCloudflare.Text = "Cloudflare auth config";
 			this.lnkCloudflare.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
 			// 
+			// lblProtocol
+			// 
+			this.lblProtocol.AutoSize = true;
+			this.lblProtocol.Location = new System.Drawing.Point(12, 12);
+			this.lblProtocol.Name = "lblProtocol";
+			this.lblProtocol.Size = new System.Drawing.Size(52, 15);
+			this.lblProtocol.TabIndex = 17;
+			this.lblProtocol.Text = "Protocol";
+			// 
+			// rbProtocol1
+			// 
+			this.rbProtocolIPv4.AutoSize = true;
+			this.rbProtocolIPv4.Location = new System.Drawing.Point(107, 10);
+			this.rbProtocolIPv4.Name = "rbProtocol1";
+			this.rbProtocolIPv4.Size = new System.Drawing.Size(47, 19);
+			this.rbProtocolIPv4.TabIndex = 18;
+			this.rbProtocolIPv4.TabStop = true;
+			this.rbProtocolIPv4.Tag = "0";
+			this.rbProtocolIPv4.Text = "IPv4";
+			this.rbProtocolIPv4.UseVisualStyleBackColor = true;
+			// 
+			// rbProtocol2
+			// 
+			this.rbProtocolIPv6.AutoSize = true;
+			this.rbProtocolIPv6.Location = new System.Drawing.Point(188, 10);
+			this.rbProtocolIPv6.Name = "rbProtocol2";
+			this.rbProtocolIPv6.Size = new System.Drawing.Size(47, 19);
+			this.rbProtocolIPv6.TabIndex = 19;
+			this.rbProtocolIPv6.TabStop = true;
+			this.rbProtocolIPv6.Tag = "1";
+			this.rbProtocolIPv6.Text = "IPv6";
+			this.rbProtocolIPv6.UseVisualStyleBackColor = true;
+			// 
+			// rbProtocol3
+			// 
+			this.rbProtocolIPv4AndIPv6.AutoSize = true;
+			this.rbProtocolIPv4AndIPv6.Location = new System.Drawing.Point(277, 10);
+			this.rbProtocolIPv4AndIPv6.Name = "rbProtocol3";
+			this.rbProtocolIPv4AndIPv6.Size = new System.Drawing.Size(50, 19);
+			this.rbProtocolIPv4AndIPv6.TabIndex = 20;
+			this.rbProtocolIPv4AndIPv6.TabStop = true;
+			this.rbProtocolIPv4AndIPv6.Tag = "2";
+			this.rbProtocolIPv4AndIPv6.Text = "Both";
+			this.rbProtocolIPv4AndIPv6.UseVisualStyleBackColor = true;
+			// 
+			// panAuth
+			// 
+			this.panAuth.Controls.Add(this.lnkCloudflare);
+			this.panAuth.Controls.Add(this.rbUseApiKey);
+			this.panAuth.Controls.Add(this.rbUseApiToken);
+			this.panAuth.Controls.Add(this.label3);
+			this.panAuth.Location = new System.Drawing.Point(1, 32);
+			this.panAuth.Name = "panAuth";
+			this.panAuth.Size = new System.Drawing.Size(468, 42);
+			this.panAuth.TabIndex = 21;
+			// 
+			// panProtocol
+			// 
+			this.panProtocol.Controls.Add(this.rbProtocolIPv4AndIPv6);
+			this.panProtocol.Controls.Add(this.lblProtocol);
+			this.panProtocol.Controls.Add(this.rbProtocolIPv4);
+			this.panProtocol.Controls.Add(this.rbProtocolIPv6);
+			this.panProtocol.Location = new System.Drawing.Point(1, 91);
+			this.panProtocol.Name = "panProtocol";
+			this.panProtocol.Size = new System.Drawing.Size(468, 42);
+			this.panProtocol.TabIndex = 22;
+			// 
 			// frmSettings
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(467, 203);
-			this.Controls.Add(this.lnkCloudflare);
-			this.Controls.Add(this.label3);
-			this.Controls.Add(this.rbUseApiToken);
-			this.Controls.Add(this.rbUseApiKey);
+			this.ClientSize = new System.Drawing.Size(467, 241);
 			this.Controls.Add(this.txtApiToken);
 			this.Controls.Add(this.lblApiToken);
 			this.Controls.Add(this.label1);
@@ -218,6 +289,8 @@
 			this.Controls.Add(this.lblApiKey);
 			this.Controls.Add(this.txtEmail);
 			this.Controls.Add(this.lblEmail);
+			this.Controls.Add(this.panAuth);
+			this.Controls.Add(this.panProtocol);
 			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -227,6 +300,10 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Settings";
 			this.Load += new System.EventHandler(this.frmSettings_Load);
+			this.panAuth.ResumeLayout(false);
+			this.panAuth.PerformLayout();
+			this.panProtocol.ResumeLayout(false);
+			this.panProtocol.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -250,5 +327,11 @@
 		private System.Windows.Forms.RadioButton rbUseApiToken;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.LinkLabel lnkCloudflare;
+		private System.Windows.Forms.Label lblProtocol;
+		private System.Windows.Forms.RadioButton rbProtocolIPv4;
+		private System.Windows.Forms.RadioButton rbProtocolIPv6;
+		private System.Windows.Forms.RadioButton rbProtocolIPv4AndIPv6;
+		private System.Windows.Forms.Panel panAuth;
+		private System.Windows.Forms.Panel panProtocol;
 	}
 }

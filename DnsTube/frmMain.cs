@@ -40,11 +40,22 @@ namespace DnsTube
 
 		void DisplayAndLogPublicIpAddress()
 		{
-			var publicIpAddress = GetPublicIpAddress();
-			if (publicIpAddress == null)
-				AppendStatusTextThreadSafe($"Error detecting public IP address");
-			else
-				AppendStatusTextThreadSafe($"Detected public IP {publicIpAddress}");
+			if (settings.ProtocolSupport != IpSupport.IPv6)
+			{
+				var publicIpv4Address = GetPublicIpAddress(IpSupport.IPv4);
+				if (publicIpv4Address == null)
+					AppendStatusTextThreadSafe($"Error detecting public IPv4 address");
+				else
+					AppendStatusTextThreadSafe($"Detected public IPv4 {publicIpv4Address}");
+			}
+			if (settings.ProtocolSupport != IpSupport.IPv4)
+			{
+				var publicIpv6Address = GetPublicIpAddress(IpSupport.IPv6);
+				if (publicIpv6Address == null)
+					AppendStatusTextThreadSafe($"Error detecting public IPv6 address");
+				else
+					AppendStatusTextThreadSafe($"Detected public IPv6 {publicIpv6Address}");
+			}
 		}
 
 		void ScheduleUpdates()
@@ -72,23 +83,42 @@ namespace DnsTube
 			if (!PreflightSettingsCheck())
 				return;
 
-			var publicIpAddress = GetPublicIpAddress();
+			var updatedAddress = false;
+			if (settings.ProtocolSupport != IpSupport.IPv6)
+				if (UpdateCloudflareDns(IpSupport.IPv4))
+					updatedAddress = true;
+
+			if (settings.ProtocolSupport != IpSupport.IPv4)
+				if (UpdateCloudflareDns(IpSupport.IPv6))
+					updatedAddress = true;
+
+			// fetch and update listview with current status of records if necessary
+			if (updatedAddress)
+				UpdateList();
+		}
+
+		private bool UpdateCloudflareDns(IpSupport protocol)
+		{
+			var publicIpAddress = GetPublicIpAddress(protocol);
 			if (publicIpAddress == null)
 			{
-				AppendStatusTextThreadSafe($"Error detecting public IP address");
-				return;
+				AppendStatusTextThreadSafe($"Error detecting public {protocol.ToString()} address");
+				return false;
 			}
 
-			var oldPublicIpAddress = settings.PublicIpAddress;
+			var oldPublicIpAddress = protocol == IpSupport.IPv4 ? settings.PublicIpv4Address : settings.PublicIpv6Address;
 			if (publicIpAddress != oldPublicIpAddress)
 			{
-				settings.PublicIpAddress = publicIpAddress;
+				if (protocol == IpSupport.IPv4)
+					settings.PublicIpv4Address = publicIpAddress;
+				else
+					settings.PublicIpv6Address = publicIpAddress;
 				settings.Save();
 
 				if (oldPublicIpAddress != null)
-					AppendStatusTextThreadSafe($"Public IP changed from {oldPublicIpAddress} to {publicIpAddress}");
+					AppendStatusTextThreadSafe($"Public {protocol.ToString()} changed from {oldPublicIpAddress} to {publicIpAddress}");
 
-				DisplayPublicIpAddressThreadSafe(publicIpAddress);
+				DisplayPublicIpAddressThreadSafe(protocol, publicIpAddress);
 
 				// loop through DNS entries and update the ones selected that have a different IP
 				List<Dns.Result> entriesToUpdate = null;
@@ -104,13 +134,13 @@ namespace DnsTube
 				}
 
 				if (entriesToUpdate == null)
-					return;
+					return false;
 
 				foreach (var entry in entriesToUpdate)
 				{
 					try
 					{
-						cfClient.UpdateDns(entry.zone_id, entry.id, entry.name, publicIpAddress, entry.proxied);
+						cfClient.UpdateDns(protocol, entry.zone_id, entry.id, entry.name, publicIpAddress, entry.proxied);
 						txtOutput.Invoke((MethodInvoker)delegate
 						{
 							AppendStatusTextThreadSafe($"Updated name [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
@@ -122,10 +152,10 @@ namespace DnsTube
 						AppendStatusTextThreadSafe(ex.Message);
 					}
 				}
-
-				// fetch and update listview with current status of records
-				UpdateList();
+				return true;
 			}
+
+			return false;
 		}
 
 		void PromptForSettings()
@@ -157,24 +187,24 @@ namespace DnsTube
 				|| settings.UpdateIntervalMinutes == 0
 				)
 				return false;
-			
+
 			return true;
 		}
 
-		string GetPublicIpAddress()
+		string GetPublicIpAddress(IpSupport protocol)
 		{
 			string errorMesssage;
-			var publicIpAddress = Utility.GetPublicIpAddress(Client, out errorMesssage);
+			var publicIpAddress = Utility.GetPublicIpAddress(protocol, Client, out errorMesssage);
 
-			// Bail if failed, keeping the current address in settings
+			// Abort if we get an error, keeping the current address in settings
 			if (publicIpAddress == null)
 			{
-				AppendStatusTextThreadSafe($"Error getting public IP: {errorMesssage}");
+				AppendStatusTextThreadSafe($"Error getting public {protocol.ToString()}: {errorMesssage}");
 				return null;
 			}
 
-			if (txtPublicIpAddress.Text != publicIpAddress)
-				DisplayPublicIpAddressThreadSafe(publicIpAddress);
+			if ((protocol == IpSupport.IPv4 && txtPublicIpv4.Text != publicIpAddress) || (protocol == IpSupport.IPv6 && txtPublicIpv6.Text != publicIpAddress))
+				DisplayPublicIpAddressThreadSafe(protocol, publicIpAddress);
 
 			return publicIpAddress;
 		}
@@ -191,6 +221,17 @@ namespace DnsTube
 
 			// use TLS 1.2
 			System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
+
+			SetProtocolUiEnabled();
+		}
+
+		private void SetProtocolUiEnabled()
+		{
+			lblPublicIpv4Address.Enabled = settings.ProtocolSupport != IpSupport.IPv6;
+			txtPublicIpv4.Enabled = settings.ProtocolSupport != IpSupport.IPv6;
+
+			lblPublicIpv6Address.Enabled = settings.ProtocolSupport != IpSupport.IPv4;
+			txtPublicIpv6.Enabled = settings.ProtocolSupport != IpSupport.IPv4;
 		}
 
 		void btnUpdateList_Click(object sender, EventArgs e)
@@ -290,6 +331,9 @@ namespace DnsTube
 			frm.Close();
 			// reload settings
 			settings = new Settings();
+			
+			SetProtocolUiEnabled();
+			
 			// pick up new credentials if they were changed
 			cfClient = new CloudflareAPI(Client, settings);
 			// pick up new interval if it was changed
@@ -304,11 +348,12 @@ namespace DnsTube
 			});
 		}
 
-		void DisplayPublicIpAddressThreadSafe(string s)
+		void DisplayPublicIpAddressThreadSafe(IpSupport protocol, string s)
 		{
-			txtPublicIpAddress.Invoke((MethodInvoker)delegate
+			TextBox input = protocol == IpSupport.IPv4 ? txtPublicIpv4 : txtPublicIpv6;
+			input.Invoke((MethodInvoker)delegate
 			{
-				txtPublicIpAddress.Text = s; // Running on the UI thread
+				input.Text = s; // Running on the UI thread
 			});
 		}
 
