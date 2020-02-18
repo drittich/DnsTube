@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -14,10 +13,12 @@ namespace DnsTube
 	public partial class frmMain : Form
 	{
 
-		HttpClient Client;
+		HttpClient httpClient;
 		CloudflareAPI cfClient;
 		Settings settings;
 		TelemetryClient tc = new TelemetryClient();
+		string RELEASE_TAG = "v0.6.0";
+		string AI_INSTRUMENTATION_KEY = "";
 
 		public frmMain()
 		{
@@ -34,7 +35,7 @@ namespace DnsTube
 
 			PromptForSettings();
 
-			cfClient = new CloudflareAPI(Client, settings);
+			cfClient = new CloudflareAPI(httpClient, settings);
 
 			UpdateList();
 
@@ -201,7 +202,7 @@ namespace DnsTube
 		string GetPublicIpAddress(IpSupport protocol)
 		{
 			string errorMesssage;
-			var publicIpAddress = Utility.GetPublicIpAddress(protocol, Client, out errorMesssage);
+			var publicIpAddress = Utility.GetPublicIpAddress(protocol, httpClient, out errorMesssage);
 
 			// Abort if we get an error, keeping the current address in settings
 			if (publicIpAddress == null)
@@ -224,17 +225,26 @@ namespace DnsTube
 				WindowState = FormWindowState.Minimized;
 			}
 
-			Client = new HttpClient();
+			httpClient = new HttpClient();
 
 			// use TLS 1.2
 			System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
 
 			SetProtocolUiEnabled();
-			TelemetryConfiguration.Active.InstrumentationKey = ConfigurationManager.AppSettings.Get("InstrumentationKey");
+			TelemetryConfiguration.Active.InstrumentationKey = AI_INSTRUMENTATION_KEY;
 			TelemetryConfiguration.Active.TelemetryInitializers.Add(new MyTelemetryInitializer());
 			tc.Context.Session.Id = Guid.NewGuid().ToString();
 			tc.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
 			tc.TrackPageView("frmMain");
+
+			var release = Utility.GetLatestRelease(tc);
+			if (release.tag_name != RELEASE_TAG && !settings.SkipCheckForNewReleases)
+			{
+				if (MessageBox.Show($"A new version of DnsTube is available for download. \n\nClick Yes to view the latest release, or No to ignore.", "DnsTube Update Available", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+				{
+					System.Diagnostics.Process.Start("https://github.com/drittich/DnsTube/releases/latest");
+				}
+			}
 		}
 
 		private void SetProtocolUiEnabled()
@@ -350,7 +360,7 @@ namespace DnsTube
 			SetProtocolUiEnabled();
 
 			// pick up new credentials if they were changed
-			cfClient = new CloudflareAPI(Client, settings);
+			cfClient = new CloudflareAPI(httpClient, settings);
 			// pick up new interval if it was changed
 			ScheduleUpdates();
 		}

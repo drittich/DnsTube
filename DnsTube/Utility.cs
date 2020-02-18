@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using Microsoft.ApplicationInsights;
+using Newtonsoft.Json;
 
 namespace DnsTube
 {
@@ -35,6 +37,26 @@ namespace DnsTube
 				}
 			}
 			return publicIpAddress;
+		}
+
+		public static GithubRelease GetLatestRelease(TelemetryClient tc)
+		{
+			var url = "https://api.github.com/repos/drittich/DnsTube/releases/latest";
+
+			GithubRelease release = null;
+			using (var client = new HttpClient())
+				try
+				{
+					client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+					client.DefaultRequestHeaders.UserAgent.TryParseAdd("request");
+					var response = client.GetStringAsync(url).Result;
+					release = JsonConvert.DeserializeObject<GithubRelease>(response);
+				}
+				catch (Exception e)
+				{
+					tc.TrackException(e);
+				}
+			return release;
 		}
 
 		public static string GetDateString()

@@ -22,6 +22,7 @@ namespace DnsTube
 				SelectedDomains = settings.SelectedDomains;
 				StartMinimized = settings.StartMinimized;
 				ProtocolSupport = settings.ProtocolSupport;
+				SkipCheckForNewReleases = settings.SkipCheckForNewReleases;
 			}
 			else
 			{
@@ -69,6 +70,7 @@ namespace DnsTube
 		public string PublicIpv6Address { get; set; }
 		public List<SelectedDomain> SelectedDomains { get; set; }
 		public bool StartMinimized { get; set; }
+		public bool SkipCheckForNewReleases { get; set; }
 		public IpSupport ProtocolSupport { get; set; }
 	}
 

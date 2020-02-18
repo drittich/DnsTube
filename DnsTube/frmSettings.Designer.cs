@@ -51,6 +51,7 @@
 			this.rbProtocolIPv4AndIPv6 = new System.Windows.Forms.RadioButton();
 			this.panAuth = new System.Windows.Forms.Panel();
 			this.panProtocol = new System.Windows.Forms.Panel();
+			this.chkNotifyOfUpdates = new System.Windows.Forms.CheckBox();
 			this.panAuth.SuspendLayout();
 			this.panProtocol.SuspendLayout();
 			this.SuspendLayout();
@@ -89,7 +90,7 @@
 			// 
 			// btnSave
 			// 
-			this.btnSave.Location = new System.Drawing.Point(278, 198);
+			this.btnSave.Location = new System.Drawing.Point(278, 223);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 24);
 			this.btnSave.TabIndex = 8;
@@ -99,7 +100,7 @@
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.Location = new System.Drawing.Point(372, 198);
+			this.btnCancel.Location = new System.Drawing.Point(372, 223);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 24);
 			this.btnCancel.TabIndex = 9;
@@ -132,7 +133,7 @@
 			this.chkStartMinimized.Name = "chkStartMinimized";
 			this.chkStartMinimized.Size = new System.Drawing.Size(109, 19);
 			this.chkStartMinimized.TabIndex = 7;
-			this.chkStartMinimized.Text = "Start Minimized";
+			this.chkStartMinimized.Text = "Start minimized";
 			this.chkStartMinimized.UseVisualStyleBackColor = true;
 			this.chkStartMinimized.CheckedChanged += new System.EventHandler(this.chkStartMinimized_CheckedChanged);
 			// 
@@ -214,11 +215,11 @@
 			this.lblProtocol.TabIndex = 17;
 			this.lblProtocol.Text = "Protocol";
 			// 
-			// rbProtocol1
+			// rbProtocolIPv4
 			// 
 			this.rbProtocolIPv4.AutoSize = true;
 			this.rbProtocolIPv4.Location = new System.Drawing.Point(107, 10);
-			this.rbProtocolIPv4.Name = "rbProtocol1";
+			this.rbProtocolIPv4.Name = "rbProtocolIPv4";
 			this.rbProtocolIPv4.Size = new System.Drawing.Size(47, 19);
 			this.rbProtocolIPv4.TabIndex = 18;
 			this.rbProtocolIPv4.TabStop = true;
@@ -226,11 +227,11 @@
 			this.rbProtocolIPv4.Text = "IPv4";
 			this.rbProtocolIPv4.UseVisualStyleBackColor = true;
 			// 
-			// rbProtocol2
+			// rbProtocolIPv6
 			// 
 			this.rbProtocolIPv6.AutoSize = true;
 			this.rbProtocolIPv6.Location = new System.Drawing.Point(188, 10);
-			this.rbProtocolIPv6.Name = "rbProtocol2";
+			this.rbProtocolIPv6.Name = "rbProtocolIPv6";
 			this.rbProtocolIPv6.Size = new System.Drawing.Size(47, 19);
 			this.rbProtocolIPv6.TabIndex = 19;
 			this.rbProtocolIPv6.TabStop = true;
@@ -238,11 +239,11 @@
 			this.rbProtocolIPv6.Text = "IPv6";
 			this.rbProtocolIPv6.UseVisualStyleBackColor = true;
 			// 
-			// rbProtocol3
+			// rbProtocolIPv4AndIPv6
 			// 
 			this.rbProtocolIPv4AndIPv6.AutoSize = true;
 			this.rbProtocolIPv4AndIPv6.Location = new System.Drawing.Point(277, 10);
-			this.rbProtocolIPv4AndIPv6.Name = "rbProtocol3";
+			this.rbProtocolIPv4AndIPv6.Name = "rbProtocolIPv4AndIPv6";
 			this.rbProtocolIPv4AndIPv6.Size = new System.Drawing.Size(50, 19);
 			this.rbProtocolIPv4AndIPv6.TabIndex = 20;
 			this.rbProtocolIPv4AndIPv6.TabStop = true;
@@ -272,11 +273,22 @@
 			this.panProtocol.Size = new System.Drawing.Size(468, 42);
 			this.panProtocol.TabIndex = 22;
 			// 
+			// chkNotifyOfUpdates
+			// 
+			this.chkNotifyOfUpdates.AutoSize = true;
+			this.chkNotifyOfUpdates.Location = new System.Drawing.Point(106, 190);
+			this.chkNotifyOfUpdates.Name = "chkNotifyOfUpdates";
+			this.chkNotifyOfUpdates.Size = new System.Drawing.Size(138, 19);
+			this.chkNotifyOfUpdates.TabIndex = 23;
+			this.chkNotifyOfUpdates.Text = "Notify about updates";
+			this.chkNotifyOfUpdates.UseVisualStyleBackColor = true;
+			// 
 			// frmSettings
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(467, 241);
+			this.ClientSize = new System.Drawing.Size(467, 266);
+			this.Controls.Add(this.chkNotifyOfUpdates);
 			this.Controls.Add(this.txtApiToken);
 			this.Controls.Add(this.lblApiToken);
 			this.Controls.Add(this.label1);
@@ -333,5 +345,6 @@
 		private System.Windows.Forms.RadioButton rbProtocolIPv4AndIPv6;
 		private System.Windows.Forms.Panel panAuth;
 		private System.Windows.Forms.Panel panProtocol;
+		private System.Windows.Forms.CheckBox chkNotifyOfUpdates;
 	}
 }
