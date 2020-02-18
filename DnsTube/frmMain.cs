@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Windows.Forms;
+
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace DnsTube
 {
@@ -13,6 +17,7 @@ namespace DnsTube
 		HttpClient Client;
 		CloudflareAPI cfClient;
 		Settings settings;
+		TelemetryClient tc = new TelemetryClient();
 
 		public frmMain()
 		{
@@ -131,6 +136,7 @@ namespace DnsTube
 				{
 					AppendStatusTextThreadSafe($"Error getting DNS records");
 					AppendStatusTextThreadSafe(ex.Message);
+					tc.TrackException(ex);
 				}
 
 				if (entriesToUpdate == null)
@@ -150,6 +156,7 @@ namespace DnsTube
 					{
 						AppendStatusTextThreadSafe($"Error updating [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
 						AppendStatusTextThreadSafe(ex.Message);
+						tc.TrackException(ex);
 					}
 				}
 				return true;
@@ -223,6 +230,11 @@ namespace DnsTube
 			System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
 
 			SetProtocolUiEnabled();
+			TelemetryConfiguration.Active.InstrumentationKey = ConfigurationManager.AppSettings.Get("InstrumentationKey");
+			TelemetryConfiguration.Active.TelemetryInitializers.Add(new MyTelemetryInitializer());
+			tc.Context.Session.Id = Guid.NewGuid().ToString();
+			tc.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
+			tc.TrackPageView("frmMain");
 		}
 
 		private void SetProtocolUiEnabled()
@@ -237,6 +249,8 @@ namespace DnsTube
 		void btnUpdateList_Click(object sender, EventArgs e)
 		{
 			UpdateList();
+			tc.TrackEvent("btnUpdateList_Click");
+
 		}
 
 		void UpdateList()
@@ -254,6 +268,7 @@ namespace DnsTube
 				AppendStatusTextThreadSafe($"Error fetching list: {e.Message}");
 				if (settings.IsUsingToken && e.Message.Contains("403 (Forbidden)"))
 					AppendStatusTextThreadSafe($"Make sure your token has Zone:Read permissions. See https://dash.cloudflare.com/profile/api-tokens to configure.");
+				tc.TrackException(e);
 			}
 		}
 
@@ -326,14 +341,14 @@ namespace DnsTube
 
 		void DisplaySettingsForm()
 		{
-			var frm = new frmSettings(settings);
+			var frm = new frmSettings(settings, tc);
 			frm.ShowDialog();
 			frm.Close();
 			// reload settings
 			settings = new Settings();
-			
+
 			SetProtocolUiEnabled();
-			
+
 			// pick up new credentials if they were changed
 			cfClient = new CloudflareAPI(Client, settings);
 			// pick up new interval if it was changed
@@ -405,6 +420,20 @@ namespace DnsTube
 		{
 			AppendStatusTextThreadSafe($"Manually updating IP address");
 			DoUpdate();
+			tc.TrackEvent("btnUpdate_Click");
+		}
+
+		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+		{
+			e.Cancel = true;
+
+			if (tc != null)
+			{
+				tc.Flush();
+				// Allow time for flushing:
+				System.Threading.Thread.Sleep(1000);
+			}
+			base.OnClosing(e);
 		}
 	}
 }

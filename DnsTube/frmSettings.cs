@@ -2,15 +2,19 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 
+using Microsoft.ApplicationInsights;
+
 namespace DnsTube
 {
 	public partial class frmSettings : Form
 	{
 		Settings settings;
+		TelemetryClient tc;
 
-		public frmSettings(Settings settings)
+		public frmSettings(Settings settings, TelemetryClient tc)
 		{
 			this.settings = settings;
+			this.tc = tc;
 			InitializeComponent();
 		}
 
@@ -55,6 +59,8 @@ namespace DnsTube
 			rbProtocolIPv4AndIPv6.Checked = settings.ProtocolSupport == IpSupport.IPv4AndIPv6;
 
 			HandleAuthDisplay();
+
+			tc.TrackPageView("frmSettings");
 		}
 
 		void txtUpdateInterval_KeyPress(object sender, KeyPressEventArgs e)
