@@ -6,7 +6,7 @@ A Windows client for dynamically updating Cloudflare DNS entries with your publi
 
 * Can update IPv4 (A) records, IPv6 records (AAAA), or both
 * Support both Cloudflare API keys and tokens
-* Supports tokens scoped to specific zones
+* Supports API tokens scoped to specific zones
 * Does updates on an adjustable timer, e.g., every 30 minutes
 * Supports minimize on load, check for updates
 
