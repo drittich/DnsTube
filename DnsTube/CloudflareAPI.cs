@@ -26,8 +26,12 @@ namespace DnsTube
 			this.settings = settings;
 		}
 
-		// Ref: https://api.cloudflare.com/#zone-list-zones
-		public ListZonesResponse ListZones()
+		/// <summary>
+		/// Returns a list of zone IDs
+		/// Ref: https://api.cloudflare.com/#zone-list-zones
+		/// </summary>
+		/// <returns></returns>
+		public List<string> ListZoneIDs()
 		{
 			HttpRequestMessage req = GetRequestMessage(HttpMethod.Get, "zones?status=active&page=1&per_page=50&order=name&direction=asc&match=all");
 
@@ -40,7 +44,7 @@ namespace DnsTube
 
 			ValidateCloudflareResult(response, result, "list zones");
 
-			var ret = JsonConvert.DeserializeObject<Zone.ListZonesResponse>(result);
+			var ret = JsonConvert.DeserializeObject<Zone.ListZonesResponse>(result).result.Select(z => z.id).ToList();
 			return ret;
 		}
 
@@ -69,7 +73,7 @@ namespace DnsTube
 			{
 				if (settings.IsUsingToken)
 				{
-					throw new Exception($"Unable to {action}. Token permissions should be similar to [All zones - Zone:Read, DNS:Edit]");
+					throw new Exception($"Unable to {action}. If you are updating all zones, token permissions should be similar to [All zones - Zone:Read, DNS:Edit]. If your token only has permissions for specific zones, click Settings and configure the Zone IDs with a comma-separated list.");
 				}
 				else
 				{
@@ -101,19 +105,22 @@ namespace DnsTube
 
 		public List<Dns.Result> GetAllDnsRecordsByZone()
 		{
-			var allDnsEntries = new List<Dns.Result>();
-			ListZonesResponse zones = ListZones();
+			var zoneIDs = settings.ZoneIDs.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+			if (!zoneIDs.Any())
+				zoneIDs = ListZoneIDs();
 
-			foreach (var zone in zones.result)
+			var allDnsEntries = new List<Dns.Result>();
+
+			foreach (var zoneID in zoneIDs)
 			{
 				if (settings.ProtocolSupport != IpSupport.IPv6)
 				{
-					var dnsRecords = ListDnsRecords(IpSupport.IPv4, zone.id);
+					var dnsRecords = ListDnsRecords(IpSupport.IPv4, zoneID);
 					allDnsEntries.AddRange(dnsRecords.result);
 				}
 				if (settings.ProtocolSupport != IpSupport.IPv4)
 				{
-					var dnsRecords = ListDnsRecords(IpSupport.IPv6, zone.id);
+					var dnsRecords = ListDnsRecords(IpSupport.IPv6, zoneID);
 					allDnsEntries.AddRange(dnsRecords.result);
 				}
 			}

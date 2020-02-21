@@ -23,6 +23,7 @@ namespace DnsTube
 				StartMinimized = settings.StartMinimized;
 				ProtocolSupport = settings.ProtocolSupport;
 				SkipCheckForNewReleases = settings.SkipCheckForNewReleases;
+				ZoneIDs = settings.ZoneIDs ?? "";
 			}
 			else
 			{
@@ -30,6 +31,7 @@ namespace DnsTube
 				SelectedDomains = new List<SelectedDomain>();
 				IsUsingToken = true;
 				ProtocolSupport = IpSupport.IPv4;
+				ZoneIDs = "";
 			}
 		}
 
@@ -72,6 +74,7 @@ namespace DnsTube
 		public bool StartMinimized { get; set; }
 		public bool SkipCheckForNewReleases { get; set; }
 		public IpSupport ProtocolSupport { get; set; }
+		public string ZoneIDs { get; set; }
 	}
 
 	public enum IpSupport

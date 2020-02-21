@@ -33,6 +33,7 @@ namespace DnsTube
 			settings.StartMinimized = chkStartMinimized.Checked;
 			settings.SkipCheckForNewReleases = !chkNotifyOfUpdates.Checked;
 			settings.ProtocolSupport = GetProtocol();
+			settings.ZoneIDs = txtZoneIDs.Text;
 			settings.Save();
 			Close();
 		}
@@ -59,6 +60,7 @@ namespace DnsTube
 			rbProtocolIPv4.Checked = settings.ProtocolSupport == IpSupport.IPv4;
 			rbProtocolIPv6.Checked = settings.ProtocolSupport == IpSupport.IPv6;
 			rbProtocolIPv4AndIPv6.Checked = settings.ProtocolSupport == IpSupport.IPv4AndIPv6;
+			txtZoneIDs.Text = settings.ZoneIDs;
 
 			HandleAuthDisplay();
 

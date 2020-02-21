@@ -43,7 +43,7 @@
 			this.lblApiToken = new System.Windows.Forms.Label();
 			this.rbUseApiKey = new System.Windows.Forms.RadioButton();
 			this.rbUseApiToken = new System.Windows.Forms.RadioButton();
-			this.label3 = new System.Windows.Forms.Label();
+			this.lblAuthorization = new System.Windows.Forms.Label();
 			this.lnkCloudflare = new System.Windows.Forms.LinkLabel();
 			this.lblProtocol = new System.Windows.Forms.Label();
 			this.rbProtocolIPv4 = new System.Windows.Forms.RadioButton();
@@ -52,6 +52,8 @@
 			this.panAuth = new System.Windows.Forms.Panel();
 			this.panProtocol = new System.Windows.Forms.Panel();
 			this.chkNotifyOfUpdates = new System.Windows.Forms.CheckBox();
+			this.lblZoneIDs = new System.Windows.Forms.Label();
+			this.txtZoneIDs = new System.Windows.Forms.TextBox();
 			this.panAuth.SuspendLayout();
 			this.panProtocol.SuspendLayout();
 			this.SuspendLayout();
@@ -67,9 +69,9 @@
 			// 
 			// txtEmail
 			// 
-			this.txtEmail.Location = new System.Drawing.Point(107, 11);
+			this.txtEmail.Location = new System.Drawing.Point(106, 11);
 			this.txtEmail.Name = "txtEmail";
-			this.txtEmail.Size = new System.Drawing.Size(340, 23);
+			this.txtEmail.Size = new System.Drawing.Size(349, 23);
 			this.txtEmail.TabIndex = 1;
 			// 
 			// lblApiKey
@@ -85,25 +87,26 @@
 			// 
 			this.txtApiKey.Location = new System.Drawing.Point(106, 70);
 			this.txtApiKey.Name = "txtApiKey";
-			this.txtApiKey.Size = new System.Drawing.Size(341, 23);
-			this.txtApiKey.TabIndex = 5;
+			this.txtApiKey.PasswordChar = '*';
+			this.txtApiKey.Size = new System.Drawing.Size(349, 23);
+			this.txtApiKey.TabIndex = 4;
 			// 
 			// btnSave
 			// 
-			this.btnSave.Location = new System.Drawing.Point(278, 223);
+			this.btnSave.Location = new System.Drawing.Point(278, 255);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 24);
-			this.btnSave.TabIndex = 8;
+			this.btnSave.TabIndex = 13;
 			this.btnSave.Text = "Save";
 			this.btnSave.UseVisualStyleBackColor = true;
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.Location = new System.Drawing.Point(372, 223);
+			this.btnCancel.Location = new System.Drawing.Point(372, 255);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 24);
-			this.btnCancel.TabIndex = 9;
+			this.btnCancel.TabIndex = 14;
 			this.btnCancel.Text = "Cancel";
 			this.btnCancel.UseVisualStyleBackColor = true;
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -111,7 +114,7 @@
 			// lblUpdateInterval
 			// 
 			this.lblUpdateInterval.AutoSize = true;
-			this.lblUpdateInterval.Location = new System.Drawing.Point(13, 136);
+			this.lblUpdateInterval.Location = new System.Drawing.Point(13, 168);
 			this.lblUpdateInterval.Name = "lblUpdateInterval";
 			this.lblUpdateInterval.Size = new System.Drawing.Size(87, 15);
 			this.lblUpdateInterval.TabIndex = 6;
@@ -119,20 +122,20 @@
 			// 
 			// txtUpdateInterval
 			// 
-			this.txtUpdateInterval.Location = new System.Drawing.Point(106, 133);
+			this.txtUpdateInterval.Location = new System.Drawing.Point(106, 165);
 			this.txtUpdateInterval.MaxLength = 4;
 			this.txtUpdateInterval.Name = "txtUpdateInterval";
 			this.txtUpdateInterval.Size = new System.Drawing.Size(109, 23);
-			this.txtUpdateInterval.TabIndex = 6;
+			this.txtUpdateInterval.TabIndex = 10;
 			this.txtUpdateInterval.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUpdateInterval_KeyPress);
 			// 
 			// chkStartMinimized
 			// 
 			this.chkStartMinimized.AutoSize = true;
-			this.chkStartMinimized.Location = new System.Drawing.Point(106, 165);
+			this.chkStartMinimized.Location = new System.Drawing.Point(106, 197);
 			this.chkStartMinimized.Name = "chkStartMinimized";
 			this.chkStartMinimized.Size = new System.Drawing.Size(109, 19);
-			this.chkStartMinimized.TabIndex = 7;
+			this.chkStartMinimized.TabIndex = 11;
 			this.chkStartMinimized.Text = "Start minimized";
 			this.chkStartMinimized.UseVisualStyleBackColor = true;
 			this.chkStartMinimized.CheckedChanged += new System.EventHandler(this.chkStartMinimized_CheckedChanged);
@@ -140,7 +143,7 @@
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(221, 136);
+			this.label1.Location = new System.Drawing.Point(221, 168);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(58, 15);
 			this.label1.TabIndex = 10;
@@ -150,8 +153,9 @@
 			// 
 			this.txtApiToken.Location = new System.Drawing.Point(106, 70);
 			this.txtApiToken.Name = "txtApiToken";
-			this.txtApiToken.Size = new System.Drawing.Size(341, 23);
-			this.txtApiToken.TabIndex = 4;
+			this.txtApiToken.PasswordChar = '*';
+			this.txtApiToken.Size = new System.Drawing.Size(349, 23);
+			this.txtApiToken.TabIndex = 5;
 			// 
 			// lblApiToken
 			// 
@@ -186,14 +190,14 @@
 			this.rbUseApiToken.UseVisualStyleBackColor = true;
 			this.rbUseApiToken.CheckedChanged += new System.EventHandler(this.rbUseApiKeyOrToken_CheckedChanged);
 			// 
-			// label3
+			// lblAuthorization
 			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(11, 11);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(79, 15);
-			this.label3.TabIndex = 15;
-			this.label3.Text = "Authorization";
+			this.lblAuthorization.AutoSize = true;
+			this.lblAuthorization.Location = new System.Drawing.Point(11, 11);
+			this.lblAuthorization.Name = "lblAuthorization";
+			this.lblAuthorization.Size = new System.Drawing.Size(79, 15);
+			this.lblAuthorization.TabIndex = 15;
+			this.lblAuthorization.Text = "Authorization";
 			// 
 			// lnkCloudflare
 			// 
@@ -221,7 +225,7 @@
 			this.rbProtocolIPv4.Location = new System.Drawing.Point(107, 10);
 			this.rbProtocolIPv4.Name = "rbProtocolIPv4";
 			this.rbProtocolIPv4.Size = new System.Drawing.Size(47, 19);
-			this.rbProtocolIPv4.TabIndex = 18;
+			this.rbProtocolIPv4.TabIndex = 7;
 			this.rbProtocolIPv4.TabStop = true;
 			this.rbProtocolIPv4.Tag = "0";
 			this.rbProtocolIPv4.Text = "IPv4";
@@ -233,7 +237,7 @@
 			this.rbProtocolIPv6.Location = new System.Drawing.Point(188, 10);
 			this.rbProtocolIPv6.Name = "rbProtocolIPv6";
 			this.rbProtocolIPv6.Size = new System.Drawing.Size(47, 19);
-			this.rbProtocolIPv6.TabIndex = 19;
+			this.rbProtocolIPv6.TabIndex = 8;
 			this.rbProtocolIPv6.TabStop = true;
 			this.rbProtocolIPv6.Tag = "1";
 			this.rbProtocolIPv6.Text = "IPv6";
@@ -245,7 +249,7 @@
 			this.rbProtocolIPv4AndIPv6.Location = new System.Drawing.Point(277, 10);
 			this.rbProtocolIPv4AndIPv6.Name = "rbProtocolIPv4AndIPv6";
 			this.rbProtocolIPv4AndIPv6.Size = new System.Drawing.Size(50, 19);
-			this.rbProtocolIPv4AndIPv6.TabIndex = 20;
+			this.rbProtocolIPv4AndIPv6.TabIndex = 9;
 			this.rbProtocolIPv4AndIPv6.TabStop = true;
 			this.rbProtocolIPv4AndIPv6.Tag = "2";
 			this.rbProtocolIPv4AndIPv6.Text = "Both";
@@ -256,7 +260,7 @@
 			this.panAuth.Controls.Add(this.lnkCloudflare);
 			this.panAuth.Controls.Add(this.rbUseApiKey);
 			this.panAuth.Controls.Add(this.rbUseApiToken);
-			this.panAuth.Controls.Add(this.label3);
+			this.panAuth.Controls.Add(this.lblAuthorization);
 			this.panAuth.Location = new System.Drawing.Point(1, 32);
 			this.panAuth.Name = "panAuth";
 			this.panAuth.Size = new System.Drawing.Size(468, 42);
@@ -268,7 +272,7 @@
 			this.panProtocol.Controls.Add(this.lblProtocol);
 			this.panProtocol.Controls.Add(this.rbProtocolIPv4);
 			this.panProtocol.Controls.Add(this.rbProtocolIPv6);
-			this.panProtocol.Location = new System.Drawing.Point(1, 91);
+			this.panProtocol.Location = new System.Drawing.Point(1, 123);
 			this.panProtocol.Name = "panProtocol";
 			this.panProtocol.Size = new System.Drawing.Size(468, 42);
 			this.panProtocol.TabIndex = 22;
@@ -276,18 +280,36 @@
 			// chkNotifyOfUpdates
 			// 
 			this.chkNotifyOfUpdates.AutoSize = true;
-			this.chkNotifyOfUpdates.Location = new System.Drawing.Point(106, 190);
+			this.chkNotifyOfUpdates.Location = new System.Drawing.Point(106, 222);
 			this.chkNotifyOfUpdates.Name = "chkNotifyOfUpdates";
 			this.chkNotifyOfUpdates.Size = new System.Drawing.Size(138, 19);
-			this.chkNotifyOfUpdates.TabIndex = 23;
+			this.chkNotifyOfUpdates.TabIndex = 12;
 			this.chkNotifyOfUpdates.Text = "Notify about updates";
 			this.chkNotifyOfUpdates.UseVisualStyleBackColor = true;
+			// 
+			// lblZoneIDs
+			// 
+			this.lblZoneIDs.AutoSize = true;
+			this.lblZoneIDs.Location = new System.Drawing.Point(13, 105);
+			this.lblZoneIDs.Name = "lblZoneIDs";
+			this.lblZoneIDs.Size = new System.Drawing.Size(53, 15);
+			this.lblZoneIDs.TabIndex = 24;
+			this.lblZoneIDs.Text = "Zone IDs";
+			// 
+			// txtZoneIDs
+			// 
+			this.txtZoneIDs.Location = new System.Drawing.Point(106, 102);
+			this.txtZoneIDs.Name = "txtZoneIDs";
+			this.txtZoneIDs.Size = new System.Drawing.Size(349, 23);
+			this.txtZoneIDs.TabIndex = 6;
 			// 
 			// frmSettings
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(467, 266);
+			this.ClientSize = new System.Drawing.Size(467, 295);
+			this.Controls.Add(this.txtZoneIDs);
+			this.Controls.Add(this.lblZoneIDs);
 			this.Controls.Add(this.chkNotifyOfUpdates);
 			this.Controls.Add(this.txtApiToken);
 			this.Controls.Add(this.lblApiToken);
@@ -337,7 +359,7 @@
 		private System.Windows.Forms.Label lblApiToken;
 		private System.Windows.Forms.RadioButton rbUseApiKey;
 		private System.Windows.Forms.RadioButton rbUseApiToken;
-		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.Label lblAuthorization;
 		private System.Windows.Forms.LinkLabel lnkCloudflare;
 		private System.Windows.Forms.Label lblProtocol;
 		private System.Windows.Forms.RadioButton rbProtocolIPv4;
@@ -346,5 +368,7 @@
 		private System.Windows.Forms.Panel panAuth;
 		private System.Windows.Forms.Panel panProtocol;
 		private System.Windows.Forms.CheckBox chkNotifyOfUpdates;
+		private System.Windows.Forms.Label lblZoneIDs;
+		private System.Windows.Forms.TextBox txtZoneIDs;
 	}
 }
