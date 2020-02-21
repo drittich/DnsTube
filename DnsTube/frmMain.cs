@@ -18,6 +18,7 @@ namespace DnsTube
 		Settings settings;
 		TelemetryClient tc = new TelemetryClient();
 		string RELEASE_TAG = "v0.7.0";
+		string AI_INSTRUMENTATION_KEY = "";
 
 		public frmMain()
 		{
