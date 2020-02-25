@@ -17,7 +17,7 @@ namespace DnsTube
 		CloudflareAPI cfClient;
 		Settings settings;
 		TelemetryClient tc = new TelemetryClient();
-		string RELEASE_TAG = "v0.7.0";
+		string RELEASE_TAG = "v0.7.1";
 		string AI_INSTRUMENTATION_KEY = "";
 
 		public frmMain()
@@ -238,7 +238,7 @@ namespace DnsTube
 			tc.TrackPageView("frmMain");
 
 			var release = Utility.GetLatestRelease(tc);
-			if (release.tag_name != RELEASE_TAG && !settings.SkipCheckForNewReleases)
+			if (release != null && release.tag_name != RELEASE_TAG && !settings.SkipCheckForNewReleases)
 			{
 				if (MessageBox.Show($"A new version of DnsTube is available for download. \n\nClick Yes to view the latest release, or No to ignore.", "DnsTube Update Available", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
 				{
