@@ -92,7 +92,7 @@
 			this.lblPublicIpv4Address.Location = new System.Drawing.Point(12, 17);
 			this.lblPublicIpv4Address.Name = "lblPublicIpv4Address";
 			this.lblPublicIpv4Address.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-			this.lblPublicIpv4Address.Size = new System.Drawing.Size(68, 15);
+			this.lblPublicIpv4Address.Size = new System.Drawing.Size(101, 25);
 			this.lblPublicIpv4Address.TabIndex = 3;
 			this.lblPublicIpv4Address.Text = "Public IPv4";
 			// 
@@ -103,7 +103,7 @@
 			this.txtPublicIpv4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.txtPublicIpv4.Name = "txtPublicIpv4";
 			this.txtPublicIpv4.ReadOnly = true;
-			this.txtPublicIpv4.Size = new System.Drawing.Size(119, 23);
+			this.txtPublicIpv4.Size = new System.Drawing.Size(119, 31);
 			this.txtPublicIpv4.TabIndex = 4;
 			// 
 			// listViewRecords
@@ -161,7 +161,7 @@
 			this.lblNextUpdate.AutoSize = true;
 			this.lblNextUpdate.Location = new System.Drawing.Point(589, 17);
 			this.lblNextUpdate.Name = "lblNextUpdate";
-			this.lblNextUpdate.Size = new System.Drawing.Size(73, 15);
+			this.lblNextUpdate.Size = new System.Drawing.Size(111, 25);
 			this.lblNextUpdate.TabIndex = 7;
 			this.lblNextUpdate.Text = "Next Update";
 			// 
@@ -171,7 +171,7 @@
 			this.txtNextUpdate.Location = new System.Drawing.Point(668, 14);
 			this.txtNextUpdate.Name = "txtNextUpdate";
 			this.txtNextUpdate.ReadOnly = true;
-			this.txtNextUpdate.Size = new System.Drawing.Size(119, 23);
+			this.txtNextUpdate.Size = new System.Drawing.Size(119, 31);
 			this.txtNextUpdate.TabIndex = 8;
 			// 
 			// notifyIcon1
@@ -199,7 +199,7 @@
 			this.txtPublicIpv6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.txtPublicIpv6.Name = "txtPublicIpv6";
 			this.txtPublicIpv6.ReadOnly = true;
-			this.txtPublicIpv6.Size = new System.Drawing.Size(278, 23);
+			this.txtPublicIpv6.Size = new System.Drawing.Size(278, 31);
 			this.txtPublicIpv6.TabIndex = 11;
 			// 
 			// lblPublicIpv6Address
@@ -207,13 +207,13 @@
 			this.lblPublicIpv6Address.AutoSize = true;
 			this.lblPublicIpv6Address.Location = new System.Drawing.Point(225, 17);
 			this.lblPublicIpv6Address.Name = "lblPublicIpv6Address";
-			this.lblPublicIpv6Address.Size = new System.Drawing.Size(65, 15);
+			this.lblPublicIpv6Address.Size = new System.Drawing.Size(98, 25);
 			this.lblPublicIpv6Address.TabIndex = 10;
 			this.lblPublicIpv6Address.Text = "Public IPv6";
 			// 
 			// frmMain
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 642);
 			this.Controls.Add(this.txtPublicIpv6);

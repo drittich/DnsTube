@@ -17,7 +17,7 @@ namespace DnsTube
 		CloudflareAPI cfClient;
 		Settings settings;
 		TelemetryClient tc = new TelemetryClient();
-		string RELEASE_TAG = "v0.7.1";
+		string RELEASE_TAG = "v0.7.2";
 		string AI_INSTRUMENTATION_KEY = "";
 
 		public frmMain()
@@ -435,8 +435,8 @@ namespace DnsTube
 
 		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
 		{
-			e.Cancel = true;
-
+			TaskScheduler.StopAll();
+			
 			if (tc != null)
 			{
 				tc.Flush();
