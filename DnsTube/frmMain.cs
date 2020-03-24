@@ -415,6 +415,7 @@ namespace DnsTube
 			else if (FormWindowState.Normal == this.WindowState)
 			{
 				notifyIcon1.Visible = false;
+				this.ShowInTaskbar = true;
 			}
 		}
 
