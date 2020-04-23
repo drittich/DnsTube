@@ -18,7 +18,7 @@ namespace DnsTube
 		CloudflareAPI cfClient;
 		Settings settings;
 		TelemetryClient tc = new TelemetryClient();
-		string RELEASE_TAG = "v0.7.2";
+		string RELEASE_TAG = "v0.7.3";
 		string AI_INSTRUMENTATION_KEY = "";
 
 		public frmMain()
