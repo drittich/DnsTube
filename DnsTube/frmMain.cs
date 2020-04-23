@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
+using Newtonsoft.Json;
 
 namespace DnsTube
 {
@@ -90,10 +91,12 @@ namespace DnsTube
 				return;
 
 			var updatedAddress = false;
+			// if IPv6-only support was not specified, do the IPv4 update
 			if (settings.ProtocolSupport != IpSupport.IPv6)
 				if (UpdateCloudflareDns(IpSupport.IPv4))
 					updatedAddress = true;
 
+			// if IPv4-only support was not specified, do the IPv6 update
 			if (settings.ProtocolSupport != IpSupport.IPv4)
 				if (UpdateCloudflareDns(IpSupport.IPv6))
 					updatedAddress = true;
@@ -128,10 +131,15 @@ namespace DnsTube
 
 				// loop through DNS entries and update the ones selected that have a different IP
 				List<Dns.Result> entriesToUpdate = null;
+				var dnsRecordType = protocol == IpSupport.IPv4 ? "A" : "AAAA";
 				try
 				{
-					entriesToUpdate = cfClient.GetAllDnsRecordsByZone().Where(d => settings.SelectedDomains
-						.Any(s => s.ZoneName == d.zone_name && s.DnsName == d.name && d.content != publicIpAddress)).ToList();
+					var allRecordsByZone = cfClient.GetAllDnsRecordsByZone();
+
+					entriesToUpdate = allRecordsByZone.Where(d => settings.SelectedDomains.Any(s =>
+						s.ZoneName == d.zone_name && s.DnsName == d.name)
+							&& d.content != publicIpAddress
+							&& d.type == dnsRecordType).ToList();
 				}
 				catch (Exception ex)
 				{
@@ -436,7 +444,7 @@ namespace DnsTube
 		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
 		{
 			TaskScheduler.StopAll();
-			
+
 			if (tc != null)
 			{
 				tc.Flush();
