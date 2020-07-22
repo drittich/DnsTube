@@ -1,7 +1,11 @@
 # Build Instructions
 
-The .csproj file has been configured to build a self-contained, single-file win-x64 binary. To build, go to a command prompt in the project folder, and run
+To build, go to a command prompt in the solution folder, and run one of:
 
-```dotnet publish -r win-x64 -c Release --self-contained true`
 
-This will create a binary within `bin\Release\netcoreapp3.1\win-x64\publish`.
+|File|Description|
+|-|-|
+|build-debug.bat|Builds a self-contained debug version of the app in `bin\Debug\Standalone`|
+|build-debug-portable.bat|Builds a self-contained portable debug version of the app in `bin\Debug\Portable`|
+|build-release.bat|Builds a self-contained release version of the app in `bin\Release\Standalone`|
+|build-release-portable.bat|Builds a self-contained portable release version of the app in `bin\Release\Portable`|
