@@ -11,7 +11,7 @@ namespace DnsTube
 		[STAThread]
 		static void Main()
 		{
-			Application.SetHighDpiMode(HighDpiMode.SystemAware);
+			Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new frmMain());
