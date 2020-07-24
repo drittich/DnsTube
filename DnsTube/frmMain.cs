@@ -5,13 +5,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Windows.Forms;
 
-using Newtonsoft.Json;
-
 namespace DnsTube
 {
 	public partial class frmMain : Form
 	{
-
 		HttpClient httpClient;
 		CloudflareAPI cfClient;
 		Settings settings;

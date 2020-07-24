@@ -6,7 +6,6 @@ using System.Net.Http.Headers;
 using System.Text;
 
 using DnsTube.Dns;
-using DnsTube.Zone;
 
 using Newtonsoft.Json;
 
