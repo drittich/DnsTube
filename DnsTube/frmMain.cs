@@ -5,8 +5,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Windows.Forms;
 
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.Extensibility;
 using Newtonsoft.Json;
 
 namespace DnsTube
@@ -17,9 +15,7 @@ namespace DnsTube
 		HttpClient httpClient;
 		CloudflareAPI cfClient;
 		Settings settings;
-		TelemetryClient tc = new TelemetryClient();
 		string RELEASE_TAG = "v0.7.3";
-		string AI_INSTRUMENTATION_KEY = "";
 
 		public frmMain()
 		{
@@ -145,7 +141,6 @@ namespace DnsTube
 				{
 					AppendStatusTextThreadSafe($"Error getting DNS records");
 					AppendStatusTextThreadSafe(ex.Message);
-					tc.TrackException(ex);
 				}
 
 				if (entriesToUpdate == null)
@@ -165,7 +160,6 @@ namespace DnsTube
 					{
 						AppendStatusTextThreadSafe($"Error updating [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
 						AppendStatusTextThreadSafe(ex.Message);
-						tc.TrackException(ex);
 					}
 				}
 				return true;
@@ -239,13 +233,8 @@ namespace DnsTube
 			System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
 
 			SetProtocolUiEnabled();
-			TelemetryConfiguration.Active.InstrumentationKey = AI_INSTRUMENTATION_KEY;
-			TelemetryConfiguration.Active.TelemetryInitializers.Add(new MyTelemetryInitializer());
-			tc.Context.Session.Id = Guid.NewGuid().ToString();
-			tc.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
-			tc.TrackPageView("frmMain");
 
-			var release = Utility.GetLatestRelease(tc);
+			var release = Utility.GetLatestRelease();
 			if (release != null && release.tag_name != RELEASE_TAG && !settings.SkipCheckForNewReleases)
 			{
 				if (MessageBox.Show($"A new version of DnsTube is available for download. \n\nClick Yes to view the latest release, or No to ignore.", "DnsTube Update Available", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
@@ -267,8 +256,6 @@ namespace DnsTube
 		void btnUpdateList_Click(object sender, EventArgs e)
 		{
 			UpdateList();
-			tc.TrackEvent("btnUpdateList_Click");
-
 		}
 
 		void UpdateList()
@@ -286,7 +273,6 @@ namespace DnsTube
 				AppendStatusTextThreadSafe($"Error fetching list: {e.Message}");
 				if (settings.IsUsingToken && e.Message.Contains("403 (Forbidden)"))
 					AppendStatusTextThreadSafe($"Make sure your token has Zone:Read permissions. See https://dash.cloudflare.com/profile/api-tokens to configure.");
-				tc.TrackException(e);
 			}
 		}
 
@@ -359,7 +345,7 @@ namespace DnsTube
 
 		void DisplaySettingsForm()
 		{
-			var frm = new frmSettings(settings, tc);
+			var frm = new frmSettings(settings);
 			frm.ShowDialog();
 			frm.Close();
 			// reload settings
@@ -438,19 +424,12 @@ namespace DnsTube
 		{
 			AppendStatusTextThreadSafe($"Manually updating IP address");
 			DoUpdate();
-			tc.TrackEvent("btnUpdate_Click");
 		}
 
 		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
 		{
 			TaskScheduler.StopAll();
 
-			if (tc != null)
-			{
-				tc.Flush();
-				// Allow time for flushing:
-				System.Threading.Thread.Sleep(1000);
-			}
 			base.OnClosing(e);
 		}
 	}

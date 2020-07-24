@@ -2,19 +2,15 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 
-using Microsoft.ApplicationInsights;
-
 namespace DnsTube
 {
 	public partial class frmSettings : Form
 	{
 		Settings settings;
-		TelemetryClient tc;
 
-		public frmSettings(Settings settings, TelemetryClient tc)
+		public frmSettings(Settings settings)
 		{
 			this.settings = settings;
-			this.tc = tc;
 			InitializeComponent();
 		}
 
@@ -63,8 +59,6 @@ namespace DnsTube
 			txtZoneIDs.Text = settings.ZoneIDs;
 
 			HandleAuthDisplay();
-
-			tc.TrackPageView("frmSettings");
 		}
 
 		void txtUpdateInterval_KeyPress(object sender, KeyPressEventArgs e)
