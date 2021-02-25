@@ -32,37 +32,65 @@ namespace DnsTube
 		/// <returns></returns>
 		public List<string> ListZoneIDs()
 		{
-			HttpRequestMessage req = GetRequestMessage(HttpMethod.Get, "zones?status=active&page=1&per_page=50&order=name&direction=asc&match=all");
+			List<string> ret = new List<string>();
+			int pageSize = 50;
+			int pageNumber = 1;
+			int totalPages;
 
-			Client.DefaultRequestHeaders
-				  .Accept
-				  .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+			do
+			{
+				HttpRequestMessage req = GetRequestMessage(HttpMethod.Get, $"zones?status=active&page={pageNumber}&per_page={pageSize}&order=name&direction=asc&match=all");
 
-			var response = Client.SendAsync(req).Result;
-			var result = response.Content.ReadAsStringAsync().Result;
+				Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-			ValidateCloudflareResult(response, result, "list zones");
+				var response = Client.SendAsync(req).Result;
+				var result = response.Content.ReadAsStringAsync().Result;
 
-			var ret = JsonConvert.DeserializeObject<Zone.ListZonesResponse>(result).result.Select(z => z.id).ToList();
+				ValidateCloudflareResult(response, result, "list zones");
+
+				var zoneListResponse = JsonConvert.DeserializeObject<Zone.ListZonesResponse>(result);
+
+				int totalRecords = zoneListResponse.result_info.total_count;
+				totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+				ret.AddRange(zoneListResponse.result.Select(z => z.id));
+
+				pageNumber++;
+			} while (pageNumber <= totalPages);
+
 			return ret;
 		}
 
 		// Ref: https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records
-		public DnsRecordsResponse ListDnsRecords(IpSupport protocol, string zoneIdentifier)
+		public IEnumerable<Result> ListDnsRecords(IpSupport protocol, string zoneIdentifier)
 		{
-			Client.DefaultRequestHeaders
-				.Accept
-				.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+			var ret = new List<Result>();
+			int pageSize = 100;
+			int pageNumber = 1;
+			int totalPages;
 
-			var recordType = protocol == IpSupport.IPv4 ? "A" : "AAAA";
-			var req = GetRequestMessage(HttpMethod.Get, $"zones/{zoneIdentifier}/dns_records?type={recordType}&page=1&per_page=100&order=name&direction=asc&match=all");
+			do
+			{
+				Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-			var response = Client.SendAsync(req).Result;
-			var result = response.Content.ReadAsStringAsync().Result;
+				var recordType = protocol == IpSupport.IPv4 ? "A" : "AAAA";
+				var req = GetRequestMessage(HttpMethod.Get, $"zones/{zoneIdentifier}/dns_records?type={recordType}&page={pageNumber}&per_page={pageSize}&order=name&direction=asc&match=all");
 
-			ValidateCloudflareResult(response, result, "list DNS records");
+				var response = Client.SendAsync(req).Result;
+				var result = response.Content.ReadAsStringAsync().Result;
 
-			var ret = JsonConvert.DeserializeObject<DnsRecordsResponse>(result);
+				ValidateCloudflareResult(response, result, "list DNS records");
+
+				var dnsRecordsResponse = JsonConvert.DeserializeObject<DnsRecordsResponse>(result);
+
+				int totalRecords = dnsRecordsResponse.result_info.total_count;
+				totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+				ret.AddRange(dnsRecordsResponse.result);
+
+				pageNumber++;
+			} while (pageNumber <= totalPages);
+
 			return ret;
 		}
 
@@ -115,12 +143,12 @@ namespace DnsTube
 				if (settings.ProtocolSupport != IpSupport.IPv6)
 				{
 					var dnsRecords = ListDnsRecords(IpSupport.IPv4, zoneID);
-					allDnsEntries.AddRange(dnsRecords.result);
+					allDnsEntries.AddRange(dnsRecords);
 				}
 				if (settings.ProtocolSupport != IpSupport.IPv4)
 				{
 					var dnsRecords = ListDnsRecords(IpSupport.IPv6, zoneID);
-					allDnsEntries.AddRange(dnsRecords.result);
+					allDnsEntries.AddRange(dnsRecords);
 				}
 			}
 
