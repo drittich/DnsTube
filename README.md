@@ -2,6 +2,8 @@
 
 A Windows client for dynamically updating Cloudflare DNS entries with your public IP address.
 
+![image](https://user-images.githubusercontent.com/1222810/109327857-ca1e3600-7826-11eb-95d1-36f589ef0e0b.png)
+
 ## Features
 
 * Can update IPv4 (A) records, IPv6 records (AAAA), or both
