@@ -25,6 +25,11 @@ This solution was built using Visual Studio 2019. It's probably best to use that
 
 Head over to the [Releases](https://github.com/drittich/DnsTube/releases/latest) page to download the latest binary.
 
+## The Name
+
+We all know the internet is a [series of tubes](https://en.wikipedia.org/wiki/Series_of_tubes). This application uses those very same tubes to update your DNS.
+
+
 ## Contributing
 
 Contributions are welcome!
