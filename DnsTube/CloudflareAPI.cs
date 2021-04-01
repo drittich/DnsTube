@@ -154,6 +154,9 @@ namespace DnsTube
 
 				var txtRecords = GetRecordsByType(zoneID, "TXT");
 				allDnsEntries.AddRange(txtRecords);
+
+				var spfRecords = GetRecordsByType(zoneID, "SPF");
+				allDnsEntries.AddRange(spfRecords);
 			}
 
 			return allDnsEntries.Distinct().ToList();

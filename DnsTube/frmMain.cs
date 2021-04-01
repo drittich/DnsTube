@@ -35,7 +35,21 @@ namespace DnsTube
 
 			DisplayAndLogPublicIpAddress();
 
+			ValidateSelectedDomains();
+
 			ScheduleUpdates();
+		}
+
+		private void ValidateSelectedDomains()
+		{
+			// handle old settings where we did not save Type, or nothing selected at all
+			if (!settings.SelectedDomains.Any(entry => entry.Type != null))
+			{
+				MessageBox.Show("Please select the entries that you would like to update");
+
+				// remove invalid entries
+				settings.SelectedDomains.RemoveAll(entry => entry.Type == null);
+			}
 		}
 
 		void DisplayAndLogPublicIpAddress()
@@ -130,7 +144,9 @@ namespace DnsTube
 					var allRecordsByZone = cfClient.GetAllDnsRecordsByZone();
 
 					entriesToUpdate = allRecordsByZone.Where(d => settings.SelectedDomains.Any(s =>
-						s.ZoneName == d.zone_name && s.DnsName == d.name)
+						s.ZoneName == d.zone_name 
+						&& s.DnsName == d.name
+						&& s.Type == d.type)
 							&& d.content != publicIpAddress
 							&& d.type == dnsRecordType).ToList();
 				}
@@ -288,12 +304,16 @@ namespace DnsTube
 					foreach (var dnsRecord in zoneDnsRecords)
 					{
 						var row = new ListViewItem(group);
+						row.SubItems.Add(dnsRecord.type);
 						row.SubItems.Add(dnsRecord.name);
 						row.SubItems.Add(dnsRecord.content);
 						row.SubItems.Add(dnsRecord.proxied ? "Yes" : "No");
 						row.Tag = zone;
 
-						if (settings.SelectedDomains.Any(entry => entry.ZoneName == dnsRecord.zone_name && entry.DnsName == dnsRecord.name))
+						if (settings.SelectedDomains.Any(entry => 
+								entry.ZoneName == dnsRecord.zone_name 
+								&& entry.DnsName == dnsRecord.name
+								&& entry.Type == dnsRecord.type))
 							row.Checked = true;
 
 						listViewRecords.Items.Add(row);
@@ -313,24 +333,25 @@ namespace DnsTube
 				return;
 
 			ListViewItem item = e.Item;
-			string itemDnsEntryName = item.SubItems[1].Text;
+			string itemDnsEntryName = item.SubItems[colName.Index].Text;
 			string itemZoneName = item.Tag.ToString();
+			string itemType = item.SubItems[colType.Index].Text;
 
 			if (!item.Checked)
 			{
 				// Make sure to clean up any old entries in the settings
-				settings.SelectedDomains.RemoveAll(entry => entry.ZoneName == itemZoneName && entry.DnsName == itemDnsEntryName);
+				settings.SelectedDomains.RemoveAll(entry => entry.ZoneName == itemZoneName && entry.DnsName == itemDnsEntryName && entry.Type == itemType);
 				settings.Save();
 			}
 			else
 			{
 				// Item has been selected by the user, store it for later
-				if (settings.SelectedDomains.Any(entry => entry.ZoneName == itemZoneName && entry.DnsName == itemDnsEntryName))
+				if (settings.SelectedDomains.Any(entry => entry.ZoneName == itemZoneName && entry.DnsName == itemDnsEntryName && entry.Type == itemType))
 				{
 					// Item is already in the settings list, do nothing.
 					return;
 				}
-				settings.SelectedDomains.Add(new SelectedDomain() { ZoneName = itemZoneName, DnsName = itemDnsEntryName });
+				settings.SelectedDomains.Add(new SelectedDomain() { ZoneName = itemZoneName, DnsName = itemDnsEntryName, Type = itemType });
 				settings.Save();
 			}
 		}

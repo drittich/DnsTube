@@ -36,10 +36,10 @@
 			this.lblPublicIpv4Address = new System.Windows.Forms.Label();
 			this.txtPublicIpv4 = new System.Windows.Forms.TextBox();
 			this.listViewRecords = new System.Windows.Forms.ListView();
-			this.colUpdate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.colName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.colAddress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.colProxied = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.colUpdate = new System.Windows.Forms.ColumnHeader();
+			this.colName = new System.Windows.Forms.ColumnHeader();
+			this.colAddress = new System.Windows.Forms.ColumnHeader();
+			this.colProxied = new System.Windows.Forms.ColumnHeader();
 			this.btnSettings = new System.Windows.Forms.Button();
 			this.lblNextUpdate = new System.Windows.Forms.Label();
 			this.txtNextUpdate = new System.Windows.Forms.TextBox();
@@ -47,6 +47,7 @@
 			this.btnUpdate = new System.Windows.Forms.Button();
 			this.txtPublicIpv6 = new System.Windows.Forms.TextBox();
 			this.lblPublicIpv6Address = new System.Windows.Forms.Label();
+			this.colType = new System.Windows.Forms.ColumnHeader();
 			this.SuspendLayout();
 			// 
 			// btnUpdateList
@@ -92,7 +93,7 @@
 			this.lblPublicIpv4Address.Location = new System.Drawing.Point(12, 17);
 			this.lblPublicIpv4Address.Name = "lblPublicIpv4Address";
 			this.lblPublicIpv4Address.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-			this.lblPublicIpv4Address.Size = new System.Drawing.Size(101, 25);
+			this.lblPublicIpv4Address.Size = new System.Drawing.Size(68, 15);
 			this.lblPublicIpv4Address.TabIndex = 3;
 			this.lblPublicIpv4Address.Text = "Public IPv4";
 			// 
@@ -103,7 +104,7 @@
 			this.txtPublicIpv4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.txtPublicIpv4.Name = "txtPublicIpv4";
 			this.txtPublicIpv4.ReadOnly = true;
-			this.txtPublicIpv4.Size = new System.Drawing.Size(119, 31);
+			this.txtPublicIpv4.Size = new System.Drawing.Size(119, 23);
 			this.txtPublicIpv4.TabIndex = 4;
 			// 
 			// listViewRecords
@@ -113,6 +114,7 @@
 			this.listViewRecords.CheckBoxes = true;
 			this.listViewRecords.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colUpdate,
+            this.colType,
             this.colName,
             this.colAddress,
             this.colProxied});
@@ -161,7 +163,7 @@
 			this.lblNextUpdate.AutoSize = true;
 			this.lblNextUpdate.Location = new System.Drawing.Point(589, 17);
 			this.lblNextUpdate.Name = "lblNextUpdate";
-			this.lblNextUpdate.Size = new System.Drawing.Size(111, 25);
+			this.lblNextUpdate.Size = new System.Drawing.Size(73, 15);
 			this.lblNextUpdate.TabIndex = 7;
 			this.lblNextUpdate.Text = "Next Update";
 			// 
@@ -171,7 +173,7 @@
 			this.txtNextUpdate.Location = new System.Drawing.Point(668, 14);
 			this.txtNextUpdate.Name = "txtNextUpdate";
 			this.txtNextUpdate.ReadOnly = true;
-			this.txtNextUpdate.Size = new System.Drawing.Size(119, 31);
+			this.txtNextUpdate.Size = new System.Drawing.Size(119, 23);
 			this.txtNextUpdate.TabIndex = 8;
 			// 
 			// notifyIcon1
@@ -200,7 +202,7 @@
 			this.txtPublicIpv6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.txtPublicIpv6.Name = "txtPublicIpv6";
 			this.txtPublicIpv6.ReadOnly = true;
-			this.txtPublicIpv6.Size = new System.Drawing.Size(278, 31);
+			this.txtPublicIpv6.Size = new System.Drawing.Size(278, 23);
 			this.txtPublicIpv6.TabIndex = 11;
 			// 
 			// lblPublicIpv6Address
@@ -208,13 +210,18 @@
 			this.lblPublicIpv6Address.AutoSize = true;
 			this.lblPublicIpv6Address.Location = new System.Drawing.Point(225, 17);
 			this.lblPublicIpv6Address.Name = "lblPublicIpv6Address";
-			this.lblPublicIpv6Address.Size = new System.Drawing.Size(98, 25);
+			this.lblPublicIpv6Address.Size = new System.Drawing.Size(65, 15);
 			this.lblPublicIpv6Address.TabIndex = 10;
 			this.lblPublicIpv6Address.Text = "Public IPv6";
 			// 
+			// colType
+			// 
+			this.colType.Text = "Type";
+			this.colType.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			// 
 			// frmMain
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 642);
 			this.Controls.Add(this.txtPublicIpv6);
@@ -229,7 +236,7 @@
 			this.Controls.Add(this.btnQuit);
 			this.Controls.Add(this.txtOutput);
 			this.Controls.Add(this.btnUpdateList);
-			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.MinimumSize = new System.Drawing.Size(480, 600);
@@ -261,6 +268,7 @@
 		private System.Windows.Forms.ColumnHeader colProxied;
 		private System.Windows.Forms.TextBox txtPublicIpv6;
 		private System.Windows.Forms.Label lblPublicIpv6Address;
+		private System.Windows.Forms.ColumnHeader colType;
 	}
 }
 
