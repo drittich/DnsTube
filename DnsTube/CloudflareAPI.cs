@@ -62,18 +62,18 @@ namespace DnsTube
 		}
 
 		// Ref: https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records
-		public IEnumerable<Result> ListDnsRecords(IpSupport protocol, string zoneIdentifier)
+		private List<Result> GetRecordsByType(string zoneIdentifier, string recordType)
 		{
-			var ret = new List<Result>();
 			int pageSize = 100;
 			int pageNumber = 1;
 			int totalPages;
+
+			var ret = new List<Result>();
 
 			do
 			{
 				Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-				var recordType = protocol == IpSupport.IPv4 ? "A" : "AAAA";
 				var req = GetRequestMessage(HttpMethod.Get, $"zones/{zoneIdentifier}/dns_records?type={recordType}&page={pageNumber}&per_page={pageSize}&order=name&direction=asc&match=all");
 
 				var response = Client.SendAsync(req).Result;
@@ -142,14 +142,18 @@ namespace DnsTube
 			{
 				if (settings.ProtocolSupport != IpSupport.IPv6)
 				{
-					var dnsRecords = ListDnsRecords(IpSupport.IPv4, zoneID);
-					allDnsEntries.AddRange(dnsRecords);
+					var aRecords = GetRecordsByType(zoneID, "A");
+					allDnsEntries.AddRange(aRecords);
 				}
+
 				if (settings.ProtocolSupport != IpSupport.IPv4)
 				{
-					var dnsRecords = ListDnsRecords(IpSupport.IPv6, zoneID);
-					allDnsEntries.AddRange(dnsRecords);
+					var aaaaRecords = GetRecordsByType(zoneID, "AAAA");
+					allDnsEntries.AddRange(aaaaRecords);
 				}
+
+				var txtRecords = GetRecordsByType(zoneID, "TXT");
+				allDnsEntries.AddRange(txtRecords);
 			}
 
 			return allDnsEntries.Distinct().ToList();
