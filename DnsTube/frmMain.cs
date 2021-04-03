@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace DnsTube
 {
 	public partial class frmMain : Form
 	{
-		HttpClient httpClient;
-		CloudflareAPI cfClient;
-		Settings settings;
-		string RELEASE_TAG = "v0.7.3";
+		private HttpClient httpClient;
+		private CloudflareAPI cfClient;
+		private Settings settings;
+		private string RELEASE_TAG = "v0.7.3";
 
 		public frmMain()
 		{
@@ -21,7 +22,7 @@ namespace DnsTube
 			settings = new Settings();
 		}
 
-		void frmMain_Load(object sender, EventArgs e)
+		private void frmMain_Load(object sender, EventArgs e)
 		{
 			Init();
 
@@ -52,7 +53,7 @@ namespace DnsTube
 			}
 		}
 
-		void DisplayAndLogPublicIpAddress()
+		private void DisplayAndLogPublicIpAddress()
 		{
 			if (settings.ProtocolSupport != IpSupport.IPv6)
 			{
@@ -72,7 +73,7 @@ namespace DnsTube
 			}
 		}
 
-		void ScheduleUpdates()
+		private void ScheduleUpdates()
 		{
 			var interval = TimeSpan.FromMinutes(settings.UpdateIntervalMinutes);
 			txtNextUpdate.Text = DateTime.Now.Add(interval).ToString("h:mm:ss tt");
@@ -92,7 +93,7 @@ namespace DnsTube
 				});
 		}
 
-		void DoUpdate()
+		private void DoUpdate()
 		{
 			if (!PreflightSettingsCheck())
 				return;
@@ -118,7 +119,7 @@ namespace DnsTube
 			var publicIpAddress = GetPublicIpAddress(protocol);
 			if (publicIpAddress == null)
 			{
-				AppendStatusTextThreadSafe($"Error detecting public {protocol.ToString()} address");
+				AppendStatusTextThreadSafe($"Error detecting public {protocol} address");
 				return false;
 			}
 
@@ -132,23 +133,27 @@ namespace DnsTube
 				settings.Save();
 
 				if (oldPublicIpAddress != null)
-					AppendStatusTextThreadSafe($"Public {protocol.ToString()} changed from {oldPublicIpAddress} to {publicIpAddress}");
+					AppendStatusTextThreadSafe($"Public {protocol} changed from {oldPublicIpAddress} to {publicIpAddress}");
 
 				DisplayPublicIpAddressThreadSafe(protocol, publicIpAddress);
 
-				// loop through DNS entries and update the ones selected that have a different IP
-				List<Dns.Result> entriesToUpdate = null;
-				var dnsRecordType = protocol == IpSupport.IPv4 ? "A" : "AAAA";
+				var typesToUpdateForThisProtocol = new List<string> {
+					"SPF",
+					"TXT",
+					protocol == IpSupport.IPv4 ? "A" : "AAAA"
+				};
+
+				// Get requested entries to update
+				List<Dns.Result> potentialEntriesToUpdate = null;
 				try
 				{
 					var allRecordsByZone = cfClient.GetAllDnsRecordsByZone();
 
-					entriesToUpdate = allRecordsByZone.Where(d => settings.SelectedDomains.Any(s =>
-						s.ZoneName == d.zone_name 
+					potentialEntriesToUpdate = allRecordsByZone.Where(d => settings.SelectedDomains.Any(s =>
+						s.ZoneName == d.zone_name
 						&& s.DnsName == d.name
 						&& s.Type == d.type)
-							&& d.content != publicIpAddress
-							&& d.type == dnsRecordType).ToList();
+						&& typesToUpdateForThisProtocol.Contains(d.type)).ToList();
 				}
 				catch (Exception ex)
 				{
@@ -156,22 +161,33 @@ namespace DnsTube
 					AppendStatusTextThreadSafe(ex.Message);
 				}
 
-				if (entriesToUpdate == null)
+				// TODO:determine which ones need updating
+
+				if (potentialEntriesToUpdate == null || !potentialEntriesToUpdate.Any())
 					return false;
 
-				foreach (var entry in entriesToUpdate)
+				foreach (var entry in potentialEntriesToUpdate)
 				{
+					string content;
+					if (entry.type == "SPF" || entry.type == "TXT")
+						content = UpdateContent(protocol, entry.content, publicIpAddress);
+					else
+						content = publicIpAddress;
+
+					if (entry.content == content)
+						continue;
+
 					try
 					{
-						cfClient.UpdateDns(protocol, entry.zone_id, entry.id, entry.name, publicIpAddress, entry.proxied);
+						cfClient.UpdateDns(protocol, entry.zone_id, entry.id, entry.type, entry.name, content, entry.proxied);
 						txtOutput.Invoke((MethodInvoker)delegate
 						{
-							AppendStatusTextThreadSafe($"Updated name [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
+							AppendStatusTextThreadSafe($"Updated {entry.type} record [{entry.name}] in zone [{entry.zone_name}] to {content}");
 						});
 					}
 					catch (Exception ex)
 					{
-						AppendStatusTextThreadSafe($"Error updating [{entry.name}] in zone [{entry.zone_name}] to {publicIpAddress}");
+						AppendStatusTextThreadSafe($"Error updating [{entry.type}] record [{entry.name}] in zone [{entry.zone_name}] to {content}");
 						AppendStatusTextThreadSafe(ex.Message);
 					}
 				}
@@ -181,7 +197,7 @@ namespace DnsTube
 			return false;
 		}
 
-		void PromptForSettings()
+		private void PromptForSettings()
 		{
 			if (!validateSettings())
 			{
@@ -190,7 +206,7 @@ namespace DnsTube
 			}
 		}
 
-		bool PreflightSettingsCheck()
+		private bool PreflightSettingsCheck()
 		{
 			if (!validateSettings())
 			{
@@ -200,7 +216,7 @@ namespace DnsTube
 			return true;
 		}
 
-		bool validateSettings()
+		private bool validateSettings()
 		{
 			// check if settings are populate
 			if (string.IsNullOrWhiteSpace(settings.EmailAddress)
@@ -214,7 +230,7 @@ namespace DnsTube
 			return true;
 		}
 
-		string GetPublicIpAddress(IpSupport protocol)
+		private string GetPublicIpAddress(IpSupport protocol)
 		{
 			string errorMesssage;
 			var publicIpAddress = Utility.GetPublicIpAddress(protocol, httpClient, out errorMesssage);
@@ -232,7 +248,7 @@ namespace DnsTube
 			return publicIpAddress;
 		}
 
-		void Init()
+		private void Init()
 		{
 			if (settings.StartMinimized)
 			{
@@ -266,12 +282,12 @@ namespace DnsTube
 			txtPublicIpv6.Enabled = settings.ProtocolSupport != IpSupport.IPv4;
 		}
 
-		void btnUpdateList_Click(object sender, EventArgs e)
+		private void btnUpdateList_Click(object sender, EventArgs e)
 		{
 			UpdateList();
 		}
 
-		void UpdateList()
+		private void UpdateList()
 		{
 			if (!PreflightSettingsCheck())
 				return;
@@ -289,7 +305,7 @@ namespace DnsTube
 			}
 		}
 
-		void UpdateListView(List<Dns.Result> allDnsRecords)
+		private void UpdateListView(List<Dns.Result> allDnsRecords)
 		{
 			listViewRecords.Invoke((MethodInvoker)delegate
 			{
@@ -310,8 +326,8 @@ namespace DnsTube
 						row.SubItems.Add(dnsRecord.proxied ? "Yes" : "No");
 						row.Tag = zone;
 
-						if (settings.SelectedDomains.Any(entry => 
-								entry.ZoneName == dnsRecord.zone_name 
+						if (settings.SelectedDomains.Any(entry =>
+								entry.ZoneName == dnsRecord.zone_name
 								&& entry.DnsName == dnsRecord.name
 								&& entry.Type == dnsRecord.type))
 							row.Checked = true;
@@ -322,12 +338,12 @@ namespace DnsTube
 			});
 		}
 
-		void btnQuit_Click(object sender, EventArgs e)
+		private void btnQuit_Click(object sender, EventArgs e)
 		{
 			Application.Exit();
 		}
 
-		void listViewRecords_ItemChecked(object sender, ItemCheckedEventArgs e)
+		private void listViewRecords_ItemChecked(object sender, ItemCheckedEventArgs e)
 		{
 			if (listViewRecords.FocusedItem == null)
 				return;
@@ -356,12 +372,12 @@ namespace DnsTube
 			}
 		}
 
-		void btnSettings_Click(object sender, EventArgs e)
+		private void btnSettings_Click(object sender, EventArgs e)
 		{
 			DisplaySettingsForm();
 		}
 
-		void DisplaySettingsForm()
+		private void DisplaySettingsForm()
 		{
 			var frm = new frmSettings(settings);
 			frm.ShowDialog();
@@ -377,15 +393,15 @@ namespace DnsTube
 			ScheduleUpdates();
 		}
 
-		void AppendStatusTextThreadSafe(string s)
+		private void AppendStatusTextThreadSafe(string s)
 		{
 			txtOutput.Invoke((MethodInvoker)delegate
 			{
-				txtOutput.Text += $"{Utility.GetDateString()}: {s}\r\n"; // Running on the UI thread		
+				txtOutput.Text += $"{Utility.GetDateString()}: {s}\r\n"; // Running on the UI thread
 			});
 		}
 
-		void DisplayPublicIpAddressThreadSafe(IpSupport protocol, string s)
+		private void DisplayPublicIpAddressThreadSafe(IpSupport protocol, string s)
 		{
 			TextBox input = protocol == IpSupport.IPv4 ? txtPublicIpv4 : txtPublicIpv6;
 			input.Invoke((MethodInvoker)delegate
@@ -394,15 +410,15 @@ namespace DnsTube
 			});
 		}
 
-		void SetNextUpdateTextThreadSafe(DateTime d)
+		private void SetNextUpdateTextThreadSafe(DateTime d)
 		{
 			txtNextUpdate.Invoke((MethodInvoker)delegate
 			{
-				txtNextUpdate.Text = d.ToString("h:mm:ss tt"); // Running on the UI thread		
+				txtNextUpdate.Text = d.ToString("h:mm:ss tt"); // Running on the UI thread
 			});
 		}
 
-		void DisplayVersion()
+		private void DisplayVersion()
 		{
 			var execAssembly = System.Reflection.Assembly.GetExecutingAssembly();
 			var version = execAssembly.GetName().Version.ToString();
@@ -413,7 +429,7 @@ namespace DnsTube
 				AppendStatusTextThreadSafe($"Settings path: {settings.GetSettingsFilePath()}");
 		}
 
-		void frmMain_Resize(object sender, EventArgs e)
+		private void frmMain_Resize(object sender, EventArgs e)
 		{
 			notifyIcon1.BalloonTipIcon = ToolTipIcon.Info;
 
@@ -430,7 +446,7 @@ namespace DnsTube
 			}
 		}
 
-		void notifyIcon1_Click(object sender, EventArgs e)
+		private void notifyIcon1_Click(object sender, EventArgs e)
 		{
 			notifyIcon1.Visible = false;
 			this.Show();
@@ -438,7 +454,7 @@ namespace DnsTube
 			this.WindowState = FormWindowState.Normal;
 		}
 
-		void btnUpdate_Click(object sender, EventArgs e)
+		private void btnUpdate_Click(object sender, EventArgs e)
 		{
 			AppendStatusTextThreadSafe($"Manually updating IP address");
 			DoUpdate();
@@ -449,6 +465,25 @@ namespace DnsTube
 			TaskScheduler.StopAll();
 
 			base.OnClosing(e);
+		}
+
+		private const string ipv4Regex = @"\b(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\b";
+		private const string ipv6Regex = @"\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*";
+
+		private string UpdateContent(IpSupport protocol, string content, string publicIpAddress)
+		{
+			// we need explicit protocol in this method
+			if (protocol == IpSupport.IPv4AndIPv6)
+				throw new ArgumentOutOfRangeException();
+
+			var newContent = content;
+
+			if (protocol == IpSupport.IPv4)
+				newContent = Regex.Replace(newContent, ipv4Regex, publicIpAddress);
+			else if (protocol == IpSupport.IPv6)
+				newContent = Regex.Replace(newContent, ipv6Regex, publicIpAddress);
+
+			return newContent;
 		}
 	}
 }
