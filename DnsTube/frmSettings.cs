@@ -94,14 +94,10 @@ namespace DnsTube
 			}
 		}
 
-		private void chkStartMinimized_CheckedChanged(object sender, EventArgs e)
-		{
-
-		}
-
 		private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			Process.Start("https://dash.cloudflare.com/profile/api-tokens");
+			var url = "https://dash.cloudflare.com/profile/api-tokens";
+			Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
 		}
 	}
 }

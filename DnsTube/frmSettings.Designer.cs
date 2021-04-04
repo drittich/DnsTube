@@ -138,7 +138,6 @@
 			this.chkStartMinimized.TabIndex = 11;
 			this.chkStartMinimized.Text = "Start minimized";
 			this.chkStartMinimized.UseVisualStyleBackColor = true;
-			this.chkStartMinimized.CheckedChanged += new System.EventHandler(this.chkStartMinimized_CheckedChanged);
 			// 
 			// label1
 			// 

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace DnsTube
 {
@@ -13,7 +12,7 @@ namespace DnsTube
 			if (File.Exists(GetSettingsFilePath()))
 			{
 				string json = File.ReadAllText(GetSettingsFilePath());
-				var settings = JsonConvert.DeserializeObject<SettingsDTO>(json);
+				var settings = JsonSerializer.Deserialize<SettingsDTO>(json);
 				EmailAddress = settings.EmailAddress;
 				IsUsingToken = settings.IsUsingToken;
 				ApiKey = settings.ApiKey;
@@ -37,11 +36,12 @@ namespace DnsTube
 
 		public void Save()
 		{
-			string json = JsonConvert.SerializeObject(this, Formatting.Indented);
+			string json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
 			File.WriteAllText(GetSettingsFilePath(), json);
 		}
 
-		string _getSettingsFilePath;
+		private string _getSettingsFilePath;
+
 		public string GetSettingsFilePath()
 		{
 			if (_getSettingsFilePath == null)

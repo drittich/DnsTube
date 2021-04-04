@@ -423,8 +423,7 @@ namespace DnsTube
 			var execAssembly = System.Reflection.Assembly.GetExecutingAssembly();
 			var version = execAssembly.GetName().Version.ToString();
 			Text = $"DnsTube v{version}";
-			var compileDate = execAssembly.GetLinkerTime().ToString("yyyy-MM-dd");
-			AppendStatusTextThreadSafe($"DnsTube v{version} ({compileDate})");
+			AppendStatusTextThreadSafe(Text);
 			if (File.Exists(settings.GetSettingsFilePath()))
 				AppendStatusTextThreadSafe($"Settings path: {settings.GetSettingsFilePath()}");
 		}

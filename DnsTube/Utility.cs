@@ -2,8 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
-
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace DnsTube
 {
@@ -50,7 +49,7 @@ namespace DnsTube
 					client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 					client.DefaultRequestHeaders.UserAgent.TryParseAdd("request");
 					var response = client.GetStringAsync(url).Result;
-					release = JsonConvert.DeserializeObject<GithubRelease>(response);
+					release = JsonSerializer.Deserialize<GithubRelease>(response);
 				}
 				catch { }
 			return release;

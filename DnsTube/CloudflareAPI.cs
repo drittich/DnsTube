@@ -4,10 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 
 using DnsTube.Dns;
-
-using Newtonsoft.Json;
 
 namespace DnsTube
 {
@@ -48,7 +47,7 @@ namespace DnsTube
 
 				ValidateCloudflareResult(response, result, "list zones");
 
-				var zoneListResponse = JsonConvert.DeserializeObject<Zone.ListZonesResponse>(result);
+				var zoneListResponse = JsonSerializer.Deserialize<Zone.ListZonesResponse>(result);
 
 				int totalRecords = zoneListResponse.result_info.total_count;
 				totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
@@ -81,7 +80,7 @@ namespace DnsTube
 
 				ValidateCloudflareResult(response, result, "list DNS records");
 
-				var dnsRecordsResponse = JsonConvert.DeserializeObject<DnsRecordsResponse>(result);
+				var dnsRecordsResponse = JsonSerializer.Deserialize<DnsRecordsResponse>(result);
 
 				int totalRecords = dnsRecordsResponse.result_info.total_count;
 				totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
@@ -104,7 +103,7 @@ namespace DnsTube
 				}
 				else
 				{
-					var cfError = JsonConvert.DeserializeObject<CloudflareApiError>(result);
+					var cfError = JsonSerializer.Deserialize<CloudflareApiError>(result);
 					throw new Exception(cfError.errors?.FirstOrDefault().message);
 				}
 			}
@@ -118,14 +117,14 @@ namespace DnsTube
 			HttpResponseMessage response;
 
 			HttpRequestMessage req = GetRequestMessage(HttpMethod.Put, $"zones/{zoneIdentifier}/dns_records/{dnsRecordIdentifier}");
-			req.Content = new StringContent(JsonConvert.SerializeObject(dnsUpdateRequest), Encoding.UTF8, "application/json");
+			req.Content = new StringContent(JsonSerializer.Serialize(dnsUpdateRequest), Encoding.UTF8, "application/json");
 
 			response = Client.SendAsync(req).Result;
 			var result = response.Content.ReadAsStringAsync().Result;
 
 			ValidateCloudflareResult(response, result, $"update {protocol} DNS");
 
-			var ret = JsonConvert.DeserializeObject<DnsUpdateResponse>(result);
+			var ret = JsonSerializer.Deserialize<DnsUpdateResponse>(result);
 			return ret;
 		}
 
