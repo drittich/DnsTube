@@ -21,10 +21,10 @@ A Windows client for dynamically updating Cloudflare DNS entries with your publi
 
 You have four executables to choose from, and you can extract and copy the application files to a folder of your choice. (DnsTube requires .NET 5, so you may be prompted to install it if you choose a non-self-contained version.)
 
-- DnsTube--vX.X.X.7z: normal application, requires .NET 5 runtime to be installed
-- DnsTube-SelfContained--vX.X.X.7z: normal self-contained application, does not require .NET 5 runtime to be installed
-- DnsTube-Portable--vX.X.X.7z: portable application, requires .NET 5 runtime to be installed
-- DnsTube-Portable-SelfContained--vX.X.X.7z: portable self-contained application, does not require .NET 5 runtime to be installed
+- DnsTube-vX.X.X.7z: normal application, requires .NET 5 runtime to be installed
+- DnsTube-SelfContained-vX.X.X.7z: normal self-contained application, does not require .NET 5 runtime to be installed
+- DnsTube-Portable-vX.X.X.7z: portable application, requires .NET 5 runtime to be installed
+- DnsTube-Portable-SelfContained-vX.X.X.7z: portable self-contained application, does not require .NET 5 runtime to be installed
 
 ## Building
 
