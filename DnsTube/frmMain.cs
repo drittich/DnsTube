@@ -36,7 +36,8 @@ namespace DnsTube
 
 			DisplayAndLogPublicIpAddress();
 
-			ValidateSelectedDomains();
+			if (validateSettings())
+				ValidateSelectedDomains();
 
 			ScheduleUpdates();
 		}
