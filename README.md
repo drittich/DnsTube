@@ -2,11 +2,11 @@
 
 A Windows client for dynamically updating Cloudflare DNS entries with your public IP address.
 
-![image](https://user-images.githubusercontent.com/1222810/109327857-ca1e3600-7826-11eb-95d1-36f589ef0e0b.png)
+![image](https://user-images.githubusercontent.com/1222810/113607965-e5474700-9617-11eb-917a-1f80aad9c039.png)
 
 ## Features
 
-* Can update IPv4 (A) records, IPv6 records (AAAA), or both
+* Can update A (IPv4), AAAA (IPv6), SPF, and TXT records.
 * Support both Cloudflare API keys and tokens
 * Supports API tokens scoped to specific zones
 * Does updates on an adjustable timer, e.g., every 30 minutes
@@ -15,11 +15,20 @@ A Windows client for dynamically updating Cloudflare DNS entries with your publi
 ### Notes
 
 1. DnsTube only updates existing Cloudflare records. It will not create or remove records.
-2. DnsTube must currently be run as a logged-in user. The next release will support running it as a service.
+2. DnsTube must currently be run as a logged-in user. A future release will support running it as a service.
+
+## Installation
+
+You have four executables to choose from, and you can extract and copy the application files to a folder of your choice. (DnsTube requires .NET 5, so you may be prompted to install it if you choose a non-self-contained version.)
+
+- DnsTube--vX.X.X.7z: normal application, requires .NET 5 runtime to be installed
+- DnsTube-SelfContained--vX.X.X.7z: normal self-contained application, does not require .NET 5 runtime to be installed
+- DnsTube-Portable--vX.X.X.7z: portable application, requires .NET 5 runtime to be installed
+- DnsTube-Portable-SelfContained--vX.X.X.7z: portable self-contained application, does not require .NET 5 runtime to be installed
 
 ## Building
 
-This solution was built using Visual Studio 2019. It's probably best to use that version. The Microsoft Visual Studio Installer Projects extension was used to make the Setup project work in VS2019.
+This solution was built using Visual Studio 2019. It's probably best to use that version. 
 
 ## Downloading
 
