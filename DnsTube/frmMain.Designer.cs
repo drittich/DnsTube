@@ -43,7 +43,6 @@
 			this.btnSettings = new System.Windows.Forms.Button();
 			this.lblNextUpdate = new System.Windows.Forms.Label();
 			this.txtNextUpdate = new System.Windows.Forms.TextBox();
-			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.btnUpdate = new System.Windows.Forms.Button();
 			this.txtPublicIpv6 = new System.Windows.Forms.TextBox();
 			this.lblPublicIpv6Address = new System.Windows.Forms.Label();
@@ -176,14 +175,6 @@
 			this.txtNextUpdate.Size = new System.Drawing.Size(119, 23);
 			this.txtNextUpdate.TabIndex = 8;
 			// 
-			// notifyIcon1
-			// 
-			this.notifyIcon1.BalloonTipText = "Application will continue to work in the background";
-			this.notifyIcon1.BalloonTipTitle = "DnsTube";
-			this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-			this.notifyIcon1.Text = "DnsTube";
-			this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
-			// 
 			// btnUpdate
 			// 
 			this.btnUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -243,7 +234,6 @@
 			this.Name = "frmMain";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Load += new System.EventHandler(this.frmMain_Load);
-			this.Resize += new System.EventHandler(this.frmMain_Resize);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -263,7 +253,6 @@
 		private System.Windows.Forms.Button btnSettings;
 		private System.Windows.Forms.Label lblNextUpdate;
 		private System.Windows.Forms.TextBox txtNextUpdate;
-		private System.Windows.Forms.NotifyIcon notifyIcon1;
 		private System.Windows.Forms.Button btnUpdate;
 		private System.Windows.Forms.ColumnHeader colProxied;
 		private System.Windows.Forms.TextBox txtPublicIpv6;

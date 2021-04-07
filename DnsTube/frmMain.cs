@@ -13,7 +13,7 @@ namespace DnsTube
 		private HttpClient httpClient;
 		private CloudflareAPI cfClient;
 		private Settings settings;
-		private string RELEASE_TAG = "v0.8.0";
+		private string RELEASE_TAG = "v0.8.1";
 
 		public frmMain()
 		{
@@ -427,31 +427,6 @@ namespace DnsTube
 			AppendStatusTextThreadSafe(Text);
 			if (File.Exists(settings.GetSettingsFilePath()))
 				AppendStatusTextThreadSafe($"Settings path: {settings.GetSettingsFilePath()}");
-		}
-
-		private void frmMain_Resize(object sender, EventArgs e)
-		{
-			notifyIcon1.BalloonTipIcon = ToolTipIcon.Info;
-
-			if (FormWindowState.Minimized == this.WindowState)
-			{
-				notifyIcon1.Visible = true;
-				notifyIcon1.ShowBalloonTip(500);
-				this.Hide();
-				this.ShowInTaskbar = false;
-			}
-			else if (FormWindowState.Normal == this.WindowState)
-			{
-				notifyIcon1.Visible = false;
-			}
-		}
-
-		private void notifyIcon1_Click(object sender, EventArgs e)
-		{
-			notifyIcon1.Visible = false;
-			this.Show();
-			this.ShowInTaskbar = true;
-			this.WindowState = FormWindowState.Normal;
 		}
 
 		private void btnUpdate_Click(object sender, EventArgs e)
