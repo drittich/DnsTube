@@ -63,7 +63,7 @@
 			this.lblEmail.AutoSize = true;
 			this.lblEmail.Location = new System.Drawing.Point(13, 14);
 			this.lblEmail.Name = "lblEmail";
-			this.lblEmail.Size = new System.Drawing.Size(36, 15);
+			this.lblEmail.Size = new System.Drawing.Size(71, 32);
 			this.lblEmail.TabIndex = 0;
 			this.lblEmail.Text = "Email";
 			// 
@@ -71,7 +71,7 @@
 			// 
 			this.txtEmail.Location = new System.Drawing.Point(106, 11);
 			this.txtEmail.Name = "txtEmail";
-			this.txtEmail.Size = new System.Drawing.Size(349, 23);
+			this.txtEmail.Size = new System.Drawing.Size(349, 39);
 			this.txtEmail.TabIndex = 1;
 			// 
 			// lblApiKey
@@ -79,7 +79,7 @@
 			this.lblApiKey.AutoSize = true;
 			this.lblApiKey.Location = new System.Drawing.Point(12, 73);
 			this.lblApiKey.Name = "lblApiKey";
-			this.lblApiKey.Size = new System.Drawing.Size(47, 15);
+			this.lblApiKey.Size = new System.Drawing.Size(94, 32);
 			this.lblApiKey.TabIndex = 2;
 			this.lblApiKey.Text = "API Key";
 			// 
@@ -88,7 +88,7 @@
 			this.txtApiKey.Location = new System.Drawing.Point(106, 70);
 			this.txtApiKey.Name = "txtApiKey";
 			this.txtApiKey.PasswordChar = '*';
-			this.txtApiKey.Size = new System.Drawing.Size(349, 23);
+			this.txtApiKey.Size = new System.Drawing.Size(349, 39);
 			this.txtApiKey.TabIndex = 4;
 			// 
 			// btnSave
@@ -116,7 +116,7 @@
 			this.lblUpdateInterval.AutoSize = true;
 			this.lblUpdateInterval.Location = new System.Drawing.Point(13, 168);
 			this.lblUpdateInterval.Name = "lblUpdateInterval";
-			this.lblUpdateInterval.Size = new System.Drawing.Size(87, 15);
+			this.lblUpdateInterval.Size = new System.Drawing.Size(177, 32);
 			this.lblUpdateInterval.TabIndex = 6;
 			this.lblUpdateInterval.Text = "Update Interval";
 			// 
@@ -125,7 +125,7 @@
 			this.txtUpdateInterval.Location = new System.Drawing.Point(106, 165);
 			this.txtUpdateInterval.MaxLength = 4;
 			this.txtUpdateInterval.Name = "txtUpdateInterval";
-			this.txtUpdateInterval.Size = new System.Drawing.Size(109, 23);
+			this.txtUpdateInterval.Size = new System.Drawing.Size(109, 39);
 			this.txtUpdateInterval.TabIndex = 10;
 			this.txtUpdateInterval.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUpdateInterval_KeyPress);
 			// 
@@ -134,7 +134,7 @@
 			this.chkStartMinimized.AutoSize = true;
 			this.chkStartMinimized.Location = new System.Drawing.Point(106, 197);
 			this.chkStartMinimized.Name = "chkStartMinimized";
-			this.chkStartMinimized.Size = new System.Drawing.Size(109, 19);
+			this.chkStartMinimized.Size = new System.Drawing.Size(213, 36);
 			this.chkStartMinimized.TabIndex = 11;
 			this.chkStartMinimized.Text = "Start minimized";
 			this.chkStartMinimized.UseVisualStyleBackColor = true;
@@ -144,7 +144,7 @@
 			this.label1.AutoSize = true;
 			this.label1.Location = new System.Drawing.Point(221, 168);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(58, 15);
+			this.label1.Size = new System.Drawing.Size(114, 32);
 			this.label1.TabIndex = 10;
 			this.label1.Text = "(minutes)";
 			// 
@@ -153,7 +153,7 @@
 			this.txtApiToken.Location = new System.Drawing.Point(106, 70);
 			this.txtApiToken.Name = "txtApiToken";
 			this.txtApiToken.PasswordChar = '*';
-			this.txtApiToken.Size = new System.Drawing.Size(349, 23);
+			this.txtApiToken.Size = new System.Drawing.Size(349, 39);
 			this.txtApiToken.TabIndex = 5;
 			// 
 			// lblApiToken
@@ -161,7 +161,7 @@
 			this.lblApiToken.AutoSize = true;
 			this.lblApiToken.Location = new System.Drawing.Point(12, 73);
 			this.lblApiToken.Name = "lblApiToken";
-			this.lblApiToken.Size = new System.Drawing.Size(59, 15);
+			this.lblApiToken.Size = new System.Drawing.Size(119, 32);
 			this.lblApiToken.TabIndex = 11;
 			this.lblApiToken.Text = "API Token";
 			// 
@@ -170,7 +170,7 @@
 			this.rbUseApiKey.AutoSize = true;
 			this.rbUseApiKey.Location = new System.Drawing.Point(107, 9);
 			this.rbUseApiKey.Name = "rbUseApiKey";
-			this.rbUseApiKey.Size = new System.Drawing.Size(65, 19);
+			this.rbUseApiKey.Size = new System.Drawing.Size(128, 36);
 			this.rbUseApiKey.TabIndex = 2;
 			this.rbUseApiKey.TabStop = true;
 			this.rbUseApiKey.Text = "Use key";
@@ -182,7 +182,7 @@
 			this.rbUseApiToken.AutoSize = true;
 			this.rbUseApiToken.Location = new System.Drawing.Point(188, 9);
 			this.rbUseApiToken.Name = "rbUseApiToken";
-			this.rbUseApiToken.Size = new System.Drawing.Size(77, 19);
+			this.rbUseApiToken.Size = new System.Drawing.Size(152, 36);
 			this.rbUseApiToken.TabIndex = 3;
 			this.rbUseApiToken.TabStop = true;
 			this.rbUseApiToken.Text = "Use token";
@@ -194,7 +194,7 @@
 			this.lblAuthorization.AutoSize = true;
 			this.lblAuthorization.Location = new System.Drawing.Point(11, 11);
 			this.lblAuthorization.Name = "lblAuthorization";
-			this.lblAuthorization.Size = new System.Drawing.Size(79, 15);
+			this.lblAuthorization.Size = new System.Drawing.Size(158, 32);
 			this.lblAuthorization.TabIndex = 15;
 			this.lblAuthorization.Text = "Authorization";
 			// 
@@ -203,7 +203,7 @@
 			this.lnkCloudflare.AutoSize = true;
 			this.lnkCloudflare.Location = new System.Drawing.Point(291, 11);
 			this.lnkCloudflare.Name = "lnkCloudflare";
-			this.lnkCloudflare.Size = new System.Drawing.Size(126, 15);
+			this.lnkCloudflare.Size = new System.Drawing.Size(253, 32);
 			this.lnkCloudflare.TabIndex = 16;
 			this.lnkCloudflare.TabStop = true;
 			this.lnkCloudflare.Text = "Cloudflare auth config";
@@ -214,7 +214,7 @@
 			this.lblProtocol.AutoSize = true;
 			this.lblProtocol.Location = new System.Drawing.Point(12, 12);
 			this.lblProtocol.Name = "lblProtocol";
-			this.lblProtocol.Size = new System.Drawing.Size(52, 15);
+			this.lblProtocol.Size = new System.Drawing.Size(102, 32);
 			this.lblProtocol.TabIndex = 17;
 			this.lblProtocol.Text = "Protocol";
 			// 
@@ -223,7 +223,7 @@
 			this.rbProtocolIPv4.AutoSize = true;
 			this.rbProtocolIPv4.Location = new System.Drawing.Point(107, 10);
 			this.rbProtocolIPv4.Name = "rbProtocolIPv4";
-			this.rbProtocolIPv4.Size = new System.Drawing.Size(47, 19);
+			this.rbProtocolIPv4.Size = new System.Drawing.Size(89, 36);
 			this.rbProtocolIPv4.TabIndex = 7;
 			this.rbProtocolIPv4.TabStop = true;
 			this.rbProtocolIPv4.Tag = "0";
@@ -235,7 +235,7 @@
 			this.rbProtocolIPv6.AutoSize = true;
 			this.rbProtocolIPv6.Location = new System.Drawing.Point(188, 10);
 			this.rbProtocolIPv6.Name = "rbProtocolIPv6";
-			this.rbProtocolIPv6.Size = new System.Drawing.Size(47, 19);
+			this.rbProtocolIPv6.Size = new System.Drawing.Size(89, 36);
 			this.rbProtocolIPv6.TabIndex = 8;
 			this.rbProtocolIPv6.TabStop = true;
 			this.rbProtocolIPv6.Tag = "1";
@@ -247,7 +247,7 @@
 			this.rbProtocolIPv4AndIPv6.AutoSize = true;
 			this.rbProtocolIPv4AndIPv6.Location = new System.Drawing.Point(277, 10);
 			this.rbProtocolIPv4AndIPv6.Name = "rbProtocolIPv4AndIPv6";
-			this.rbProtocolIPv4AndIPv6.Size = new System.Drawing.Size(50, 19);
+			this.rbProtocolIPv4AndIPv6.Size = new System.Drawing.Size(95, 36);
 			this.rbProtocolIPv4AndIPv6.TabIndex = 9;
 			this.rbProtocolIPv4AndIPv6.TabStop = true;
 			this.rbProtocolIPv4AndIPv6.Tag = "2";
@@ -281,7 +281,7 @@
 			this.chkNotifyOfUpdates.AutoSize = true;
 			this.chkNotifyOfUpdates.Location = new System.Drawing.Point(106, 222);
 			this.chkNotifyOfUpdates.Name = "chkNotifyOfUpdates";
-			this.chkNotifyOfUpdates.Size = new System.Drawing.Size(138, 19);
+			this.chkNotifyOfUpdates.Size = new System.Drawing.Size(273, 36);
 			this.chkNotifyOfUpdates.TabIndex = 12;
 			this.chkNotifyOfUpdates.Text = "Notify about updates";
 			this.chkNotifyOfUpdates.UseVisualStyleBackColor = true;
@@ -291,7 +291,7 @@
 			this.lblZoneIDs.AutoSize = true;
 			this.lblZoneIDs.Location = new System.Drawing.Point(13, 105);
 			this.lblZoneIDs.Name = "lblZoneIDs";
-			this.lblZoneIDs.Size = new System.Drawing.Size(53, 15);
+			this.lblZoneIDs.Size = new System.Drawing.Size(109, 32);
 			this.lblZoneIDs.TabIndex = 24;
 			this.lblZoneIDs.Text = "Zone IDs";
 			// 
@@ -299,12 +299,12 @@
 			// 
 			this.txtZoneIDs.Location = new System.Drawing.Point(106, 102);
 			this.txtZoneIDs.Name = "txtZoneIDs";
-			this.txtZoneIDs.Size = new System.Drawing.Size(349, 23);
+			this.txtZoneIDs.Size = new System.Drawing.Size(349, 39);
 			this.txtZoneIDs.TabIndex = 6;
 			// 
 			// frmSettings
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(467, 295);
 			this.Controls.Add(this.txtZoneIDs);
@@ -324,7 +324,7 @@
 			this.Controls.Add(this.lblEmail);
 			this.Controls.Add(this.panAuth);
 			this.Controls.Add(this.panProtocol);
-			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
