@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace DnsTube2
 {
@@ -91,5 +88,4 @@ namespace DnsTube2
 	{
 		IPv4, IPv6, IPv4AndIPv6
 	}
-
 }

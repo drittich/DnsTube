@@ -322,14 +322,14 @@ namespace DnsTube2
 			observableDnsEntryCollection = new ObservableCollection<DnsEntryViewItem>();
 			foreach (var dnsRecord in allDnsRecords)
 			{
-				var item = new DnsEntryViewItem();
-				item.Update = settings.SelectedDomains
+				var item = new DnsEntryViewItem(settings);
+				item.UpdateCloudflare = settings.SelectedDomains
 					.Any(entry => entry.ZoneName == dnsRecord.zone_name && entry.DnsName == dnsRecord.name && entry.Type == dnsRecord.type);
-				item.Name = dnsRecord.name;
+				item.DnsName = dnsRecord.name;
 				item.Type = dnsRecord.type;
 				item.Address = dnsRecord.content;
 				item.Proxied = dnsRecord.proxied ? "Yes" : "No";
-				item.Zone = dnsRecord.zone_name;
+				item.ZoneName = dnsRecord.zone_name;
 
 				observableDnsEntryCollection.Add(item);
 			}
@@ -366,35 +366,6 @@ namespace DnsTube2
 		{
 			Environment.Exit(0);
 		}
-
-		//private void listViewRecords_ItemChecked(object sender, ItemCheckedEventArgs e)
-		//{
-		//	if (listViewRecords.FocusedItem == null)
-		//		return;
-
-		//	ListViewItem item = e.Item;
-		//	string itemDnsEntryName = item.SubItems[colName.Index].Text;
-		//	string itemZoneName = item.Tag.ToString();
-		//	string itemType = item.SubItems[colType.Index].Text;
-
-		//	if (!item.Checked)
-		//	{
-		//		// Make sure to clean up any old entries in the settings
-		//		settings.SelectedDomains.RemoveAll(entry => entry.ZoneName == itemZoneName && entry.DnsName == itemDnsEntryName && entry.Type == itemType);
-		//		settings.Save();
-		//	}
-		//	else
-		//	{
-		//		// Item has been selected by the user, store it for later
-		//		if (settings.SelectedDomains.Any(entry => entry.ZoneName == itemZoneName && entry.DnsName == itemDnsEntryName && entry.Type == itemType))
-		//		{
-		//			// Item is already in the settings list, do nothing.
-		//			return;
-		//		}
-		//		settings.SelectedDomains.Add(new SelectedDomain() { ZoneName = itemZoneName, DnsName = itemDnsEntryName, Type = itemType });
-		//		settings.Save();
-		//	}
-		//}
 
 		private void btnSettings_Click(object sender, EventArgs e)
 		{
