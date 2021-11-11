@@ -16,7 +16,7 @@ namespace DnsTube
 			errorMesssage = null;
 
 			var settings = new Settings();
-			var url = protocol == IpSupport.IPv4 ? settings.IPv6_API : settings.IPv6_API;
+			var url = protocol == IpSupport.IPv4 ? settings.IPv4_API : settings.IPv6_API;
 
 			while (publicIpAddress == null && attempts < maxAttempts)
 			{

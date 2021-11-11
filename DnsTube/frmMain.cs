@@ -13,7 +13,7 @@ namespace DnsTube
 		private HttpClient httpClient;
 		private CloudflareAPI cfClient;
 		private Settings settings;
-		private string RELEASE_TAG = "v0.8.1";
+		private string RELEASE_TAG = "v0.8.2";
 
 		public frmMain()
 		{
