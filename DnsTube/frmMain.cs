@@ -269,7 +269,7 @@ namespace DnsTube
 			{
 				if (MessageBox.Show($"A new version of DnsTube is available for download. \n\nClick Yes to view the latest release, or No to ignore.", "DnsTube Update Available", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
 				{
-					System.Diagnostics.Process.Start("https://github.com/drittich/DnsTube/releases/latest");
+					System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("https://github.com/drittich/DnsTube/releases/latest") { UseShellExecute = true });
 				}
 			}
 		}
