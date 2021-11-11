@@ -23,6 +23,8 @@ namespace DnsTube
 				ProtocolSupport = settings.ProtocolSupport;
 				SkipCheckForNewReleases = settings.SkipCheckForNewReleases;
 				ZoneIDs = settings.ZoneIDs ?? "";
+				IPv4_API = settings.IPv4_API ?? "http://api.ipify.org/";
+				IPv6_API = settings.IPv6_API ?? "https://api.ipify.org/";
 			}
 			else
 			{
@@ -31,6 +33,8 @@ namespace DnsTube
 				IsUsingToken = true;
 				ProtocolSupport = IpSupport.IPv4;
 				ZoneIDs = "";
+				IPv4_API = "http://api.ipify.org/";
+				IPv6_API = "https://api.ipify.org/";
 			}
 		}
 
@@ -82,6 +86,10 @@ namespace DnsTube
 		public bool SkipCheckForNewReleases { get; set; }
 		public IpSupport ProtocolSupport { get; set; }
 		public string ZoneIDs { get; set; }
+
+		public string IPv4_API { get; set; }
+
+		public string IPv6_API { get; set; }
 	}
 
 	public enum IpSupport
