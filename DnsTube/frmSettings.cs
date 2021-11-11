@@ -100,7 +100,7 @@ namespace DnsTube
 
 		private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			var url = "https://dash.cloudflare.com/profile/api-tokens";
+			var url = "https://developers.cloudflare.com/api/tokens";
 			Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
 		}
     }
