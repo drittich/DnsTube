@@ -14,7 +14,7 @@ namespace DnsTube
 			var maxAttempts = 3;
 			var attempts = 0;
 			errorMesssage = null;
-			var url = protocol == IpSupport.IPv4 ? "http://ipv4bot.whatismyipaddress.com" : "http://ipv6bot.whatismyipaddress.com";
+			var url = protocol == IpSupport.IPv4 ? "http://api.ipify.org/" : "https://api.ipify.org/";
 
 			while (publicIpAddress == null && attempts < maxAttempts)
 			{
