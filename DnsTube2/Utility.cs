@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace DnsTube2
 {
@@ -17,7 +14,9 @@ namespace DnsTube2
 			var maxAttempts = 3;
 			var attempts = 0;
 			errorMesssage = null;
-			var url = protocol == IpSupport.IPv4 ? "http://ipv4bot.whatismyipaddress.com" : "http://ipv6bot.whatismyipaddress.com";
+
+			var settings = new Settings();
+			var url = protocol == IpSupport.IPv4 ? settings.IPv4_API : settings.IPv6_API;
 
 			while (publicIpAddress == null && attempts < maxAttempts)
 			{

@@ -17,15 +17,15 @@
 			<WrapPanel Grid.Row="0">
 				<WrapPanel>
 					<Label Name="lblPublicIpv4Address" Width="78" >Public IPv4</Label>
-					<TextBox Name="txtPublicIpv4" Width="119" IsReadOnly="True" Margin="0,0,6,0"></TextBox>
+                    <TextBox Name="txtPublicIpv4" Width="119" Height="20" IsReadOnly="True" Margin="0,0,6,0"></TextBox>
 				</WrapPanel>
 				<WrapPanel>
 					<Label Name="lblPublicIpv6Address" Width="78" >Public IPv6</Label>
-					<TextBox Name="txtPublicIpv6" Width="278" IsReadOnly="True" Margin="0,0,6,0"></TextBox>
+                    <TextBox Name="txtPublicIpv6" Width="278" Height="20" IsReadOnly="True" Margin="0,0,6,0"></TextBox>
 				</WrapPanel>
 				<WrapPanel>
 					<Label Name="lblNextUpdate" Width="78" >Next Update</Label>
-					<TextBox Name="txtNextUpdate" Width="119" IsReadOnly="True" ></TextBox>
+                    <TextBox Name="txtNextUpdate" Width="119" Height="20" IsReadOnly="True" ></TextBox>
 				</WrapPanel>
 			</WrapPanel>
 			<!--<ListView Grid.Row="1" Name="listViewRecords" Margin="0,6,0,0">
