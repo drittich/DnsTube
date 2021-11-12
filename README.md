@@ -59,7 +59,7 @@ After you have the settings configured, from then on you just launch it and leav
 ## Notes
 
 1. DnsTube only updates existing Cloudflare records. It will not create or remove records.
-2. DnsTube must currently be run as a logged-in user. A future release will support running it as a service.
+2. DnsTube must currently be run as a logged-in Windows user. A future release will support running it as a service.
 
 ## Building
 
