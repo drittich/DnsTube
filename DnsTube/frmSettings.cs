@@ -30,6 +30,8 @@ namespace DnsTube
 			settings.SkipCheckForNewReleases = !chkNotifyOfUpdates.Checked;
 			settings.ProtocolSupport = GetProtocol();
 			settings.ZoneIDs = txtZoneIDs.Text;
+			settings.IPv4_API = txtIPv4API.Text;
+			settings.IPv6_API = txtIPv6API.Text;
 			settings.Save();
 			Close();
 		}
@@ -57,6 +59,8 @@ namespace DnsTube
 			rbProtocolIPv6.Checked = settings.ProtocolSupport == IpSupport.IPv6;
 			rbProtocolIPv4AndIPv6.Checked = settings.ProtocolSupport == IpSupport.IPv4AndIPv6;
 			txtZoneIDs.Text = settings.ZoneIDs;
+			txtIPv4API.Text = settings.IPv4_API;
+			txtIPv6API.Text = settings.IPv6_API;
 
 			HandleAuthDisplay();
 		}
@@ -96,8 +100,8 @@ namespace DnsTube
 
 		private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			var url = "https://dash.cloudflare.com/profile/api-tokens";
+			var url = "https://developers.cloudflare.com/api/tokens";
 			Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
 		}
-	}
+    }
 }
