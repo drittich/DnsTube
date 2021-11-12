@@ -1,8 +1,9 @@
-# DnsTube
+#### *"Access your home computer from anywhere"*
+
+## DnsTube
+A Windows client for dynamically updating Cloudflare DNS entries with your public IP address.
 
 ## What is this?
-
-DnsTube is Windows client for dynamically updating Cloudflare DNS entries with your public IP address.
 
 Most of us have home computers with dynamically assigned IP addresses provided by our ISPs. If you want to serve up a web site, be able to access files remotely, or use RDP, etc., from the internet, it becomes challenging to locate your machine when the IP address is constantly changing. This is the problem DNS was designed to solve, so by getting a domain name and updating the DNS entries for it as-needed, you can always access your computer by its domain name, and forget about IP addresses.
 
