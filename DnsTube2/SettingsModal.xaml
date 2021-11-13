@@ -27,7 +27,8 @@
             </WrapPanel>
             <WrapPanel Grid.Row="1">
                 <Label Name="lblPublicIpv4Address2" Width="94" >Authorization</Label>
-                <TextBox Name="txtPublicIpv42" Width="119" Height="20" Margin="0,0,6,0"></TextBox>
+                <RadioButton GroupName = "Authorization" Content="Use key" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                <RadioButton GroupName = "Authorization" Content="Use token" Margin="0,0,12,0" VerticalAlignment="Center"/>
             </WrapPanel>
             <WrapPanel Grid.Row="2">
                 <Label Name="lblPublicIpv4Address3" Width="94" >API Token</Label>
@@ -56,9 +57,9 @@
                 <TextBox Name="txtPublicIpv48" Width="119" Height="20" Margin="0,0,6,0"></TextBox>
                 <Label Name="lblPublicIpv4Address8dd" Width="59" >(minutes)</Label>
             </WrapPanel>
-            <WrapPanel Grid.Row="8">
+            <WrapPanel Grid.Row="8" VerticalAlignment="Top">
                 <Label Name="lblPublicIpv4Address9" Width="94" ></Label>
-                <CheckBox Content="Start minimized" Margin="0,0,12,0" />
+                <CheckBox Content="Start minimized"  Margin="0,0,12,0" />
                 <CheckBox Content="Notify about updates" />
             </WrapPanel>
             <WrapPanel Grid.Row="9" HorizontalAlignment="Right">
