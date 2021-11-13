@@ -28,26 +28,6 @@
                     <TextBox Name="txtNextUpdate" Width="119" Height="20" IsReadOnly="True" ></TextBox>
 				</WrapPanel>
 			</WrapPanel>
-			<!--<ListView Grid.Row="1" Name="listViewRecords" Margin="0,6,0,0">
-				<ListView.View>
-					<GridView>
-						<GridViewColumn Header="Update" Width="60"  DisplayMemberBinding="{Binding Year}" />
-						<GridViewColumn Header="Type" Width="60"  DisplayMemberBinding="{Binding Type}" />
-						<GridViewColumn Header="Name" Width="127"  DisplayMemberBinding="{Binding Name}" />
-						<GridViewColumn Header="Address" Width="300"  DisplayMemberBinding="{Binding Address}" />
-						<GridViewColumn Header="Proxied" Width="60"  DisplayMemberBinding="{Binding Proxied}" />
-					</GridView>
-				</ListView.View>
-				<ListView.GroupStyle>
-					<GroupStyle>
-						<GroupStyle.HeaderTemplate>
-							<DataTemplate>
-								<TextBlock FontWeight="Bold" Text="{Binding Name}" />
-							</DataTemplate>
-						</GroupStyle.HeaderTemplate>
-					</GroupStyle>
-				</ListView.GroupStyle>
-			</ListView>-->
 
 			<DataGrid Name="dgDnsRecords" Grid.Row="1" AutoGenerateColumns="False">
 				<DataGrid.Columns>

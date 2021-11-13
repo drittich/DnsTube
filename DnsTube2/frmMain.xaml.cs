@@ -287,7 +287,7 @@ namespace DnsTube2
 			txtPublicIpv6.IsEnabled = settings.ProtocolSupport != IpSupport.IPv4;
 		}
 
-		private void btnUpdateList_Click(object sender, EventArgs e)
+		private void btnUpdateList_Click(object sender, RoutedEventArgs e)
 		{
 			FetchDsnEntries();
 		}
@@ -362,12 +362,12 @@ namespace DnsTube2
 			//}
 		}
 
-		private void btnQuit_Click(object sender, EventArgs e)
+		private void btnQuit_Click(object sender, RoutedEventArgs e)
 		{
 			Environment.Exit(0);
 		}
 
-		private void btnSettings_Click(object sender, EventArgs e)
+		private void btnSettings_Click(object sender, RoutedEventArgs e)
 		{
 			DisplaySettingsForm();
 		}
@@ -375,20 +375,21 @@ namespace DnsTube2
 		private void DisplaySettingsForm()
 		{
 			//var frm = new frmSettings(settings);
-			//frm.ShowDialog();
-			//frm.Close();
-			//// reload settings
-			//settings = new Settings();
+			var frm = new SettingsModal();
+			frm.ShowDialog();
+            frm.Close();
+            // reload settings
+            settings = new Settings();
 
-			//SetProtocolUiEnabled();
+            SetProtocolUiEnabled();
 
-			//// pick up new credentials if they were changed
-			//cfClient = new CloudflareAPI(httpClient, settings);
-			//// pick up new interval if it was changed
-			//ScheduleUpdates();
-		}
+            // pick up new credentials if they were changed
+            cfClient = new CloudflareAPI(httpClient, settings);
+            // pick up new interval if it was changed
+            ScheduleUpdates();
+        }
 
-		private void AppendStatusTextThreadSafe(string s)
+        private void AppendStatusTextThreadSafe(string s)
 		{
 			txtOutput.Text += $"{Utility.GetDateString()}: {s}\r\n";
 		}
@@ -419,7 +420,7 @@ namespace DnsTube2
 				AppendStatusText($"Settings path: {settings.GetSettingsFilePath()}");
 		}
 
-		private void btnUpdate_Click(object sender, EventArgs e)
+		private void btnUpdate_Click(object sender, RoutedEventArgs e)
 		{
 			AppendStatusText($"Manually updating IP address");
 			DoUpdate();
@@ -450,5 +451,5 @@ namespace DnsTube2
 
 			return newContent;
 		}
-	}
+    }
 }

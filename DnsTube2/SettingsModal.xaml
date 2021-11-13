@@ -1,0 +1,71 @@
+﻿<Window x:Class="DnsTube2.SettingsModal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DnsTube2"
+        mc:Ignorable="d"
+        Title="Settings" Height="360" Width="510">
+    <Grid>
+        <Rectangle Fill="#f0f0f0" />
+        <Grid Margin="8,10,8,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="40" />
+            </Grid.RowDefinitions>
+            <WrapPanel Grid.Row="0">
+                <Label Name="lblPublicIpv4Address" Width="94" >Email</Label>
+                <TextBox Name="txtPublicIpv4" Width="380" Height="20" Margin="0,0,6,0"/>
+            </WrapPanel>
+            <WrapPanel Grid.Row="1">
+                <Label Name="lblPublicIpv4Address2" Width="94" >Authorization</Label>
+                <TextBox Name="txtPublicIpv42" Width="119" Height="20" Margin="0,0,6,0"></TextBox>
+            </WrapPanel>
+            <WrapPanel Grid.Row="2">
+                <Label Name="lblPublicIpv4Address3" Width="94" >API Token</Label>
+                <TextBox Name="txtPublicIpv43" Width="380" Height="20" Margin="0,0,6,0"></TextBox>
+            </WrapPanel>
+            <WrapPanel Grid.Row="3">
+                <Label Name="lblPublicIpv4Address4" Width="94" >Zone IDs</Label>
+                <TextBox Name="txtPublicIpv44" Width="380" Height="20" Margin="0,0,6,0"></TextBox>
+            </WrapPanel>
+            <WrapPanel Grid.Row="4">
+                <Label Name="lblPublicIpv4Address5" Width="94" >Protocol</Label>
+                <RadioButton GroupName = "Protocol" Content="IPv4" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                <RadioButton GroupName = "Protocol" Content="IPv6" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                <RadioButton GroupName = "Protocol" Content="Both" VerticalAlignment="Center"/>
+            </WrapPanel>
+            <WrapPanel Grid.Row="5">
+                <Label Name="lblPublicIpv4Address6" Width="94" >IPv4 API</Label>
+                <TextBox Name="txtPublicIpv46" Width="380" Height="20" Margin="0,0,6,0"></TextBox>
+            </WrapPanel>
+            <WrapPanel Grid.Row="6">
+                <Label Name="lblPublicIpv4Address7" Width="94" >IPv6 API</Label>
+                <TextBox Name="txtPublicIpv47" Width="380" Height="20" Margin="0,0,6,0"></TextBox>
+            </WrapPanel>
+            <WrapPanel Grid.Row="7">
+                <Label Name="lblPublicIpv4Address8" Width="94" >Update Interval</Label>
+                <TextBox Name="txtPublicIpv48" Width="119" Height="20" Margin="0,0,6,0"></TextBox>
+                <Label Name="lblPublicIpv4Address8dd" Width="59" >(minutes)</Label>
+            </WrapPanel>
+            <WrapPanel Grid.Row="8">
+                <Label Name="lblPublicIpv4Address9" Width="94" ></Label>
+                <CheckBox Content="Start minimized" Margin="0,0,12,0" />
+                <CheckBox Content="Notify about updates" />
+            </WrapPanel>
+            <WrapPanel Grid.Row="9" HorizontalAlignment="Right">
+                <Button Content="Save" Height="32" Width="100" Click="Button_Click_1" Margin="0,2,12,0" />
+                <Button Content="Cancel" Height="32" Width="100" Click="Button_Click" Margin="0,2,12,0" />
+            </WrapPanel>
+        </Grid>
+
+    </Grid>
+</Window>
