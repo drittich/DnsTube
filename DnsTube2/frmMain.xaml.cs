@@ -188,7 +188,7 @@ namespace DnsTube2
 					{
 						cfClient.UpdateDns(protocol, entry.zone_id, entry.id, entry.type, entry.name, content, entry.proxied);
 
-						AppendStatusText($"{Utility.GetDateString()}: {$"Updated {entry.type} record [{entry.name}] in zone [{entry.zone_name}] to {content}"}\r\n");
+						AppendStatusText($"Updated {entry.type} record [{entry.name}] in zone [{entry.zone_name}] to {content}");
 					}
 					catch (Exception ex)
 					{
