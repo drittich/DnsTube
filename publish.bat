@@ -26,7 +26,7 @@ del /f/s/q %PUBLISH_PATH%\TEMP > nul & rmdir /s/q %PUBLISH_PATH%\TEMP
 
 :: portable self-contained
 echo publishing portable self-contained version...
-dotnet publish --nologo -r win-x64 -c Release --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=true -p:TrimMode=Link -o %PUBLISH_PATH%\TEMP
+dotnet publish --nologo -r win-x64 -c Release --self-contained true -p:PublishSingleFile=false -o %PUBLISH_PATH%\TEMP
 ren %PUBLISH_PATH%\TEMP\DnsTube.exe DnsTube-Portable-SelfContained%EXE_VERSION%.exe
 ren %PUBLISH_PATH%\TEMP\DnsTube.pdb DnsTube-Portable-SelfContained%EXE_VERSION%.pdb
 
@@ -52,7 +52,7 @@ del /f/s/q %PUBLISH_PATH%\TEMP > nul & rmdir /s/q %PUBLISH_PATH%\TEMP
 
 :: regular self-contained
 echo publishing regular self-contained version...
-dotnet publish --nologo -r win-x64 -c Release --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=true -p:TrimMode=Link -o %PUBLISH_PATH%\TEMP
+dotnet publish --nologo -r win-x64 -c Release --self-contained true -p:PublishSingleFile=false -o %PUBLISH_PATH%\TEMP
 ren %PUBLISH_PATH%\TEMP\DnsTube.exe DnsTube-SelfContained%EXE_VERSION%.exe
 ren %PUBLISH_PATH%\TEMP\DnsTube.pdb DnsTube-SelfContained%EXE_VERSION%.pdb
 
