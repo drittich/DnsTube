@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace DnsTube2
+namespace DnsTube
 {
     /// <summary>
     /// Interaction logic for SettingsModal.xaml

@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace DnsTube2
+namespace DnsTube
 {
 	/// <summary>
 	/// Interaction logic for Main2.xaml

@@ -69,4 +69,5 @@ namespace DnsTube.Zone
 		public bool is_subscribed { get; set; }
 		public bool can_subscribe { get; set; }
 	}
+
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DnsTube2
+namespace DnsTube
 {
 	public class DnsEntryViewItem: INotifyPropertyChanged
 	{
