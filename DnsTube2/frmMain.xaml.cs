@@ -13,7 +13,7 @@ namespace DnsTube2
 	/// <summary>
 	/// Interaction logic for Main2.xaml
 	/// </summary>
-	public partial class Main2 : Window
+	public partial class frmMain : Window
 	{
 		private HttpClient httpClient;
 		private CloudflareAPI cfClient;
@@ -21,7 +21,7 @@ namespace DnsTube2
 		ObservableCollection<DnsEntryViewItem> observableDnsEntryCollection;
 		private string RELEASE_TAG = "v0.8.1";
 
-		public Main2()
+		public frmMain()
 		{
 			InitializeComponent();
 			WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -374,8 +374,7 @@ namespace DnsTube2
 
 		private void DisplaySettingsForm()
 		{
-			//var frm = new frmSettings(settings);
-			var frm = new SettingsModal();
+			var frm = new frmSettings(settings);
 			frm.ShowDialog();
             frm.Close();
             // reload settings

@@ -1,10 +1,10 @@
-﻿<Window x:Class="DnsTube2.Main2"
+﻿<Window x:Class="DnsTube2.frmMain"
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		mc:Ignorable="d"
-    Title="Main2" Height="450" Width="800" MinHeight="240" MinWidth="500" Loaded="frmMain2_Loaded">
+    Title="DnsTube" Height="450" Width="800" MinHeight="240" MinWidth="500" Loaded="frmMain2_Loaded">
 	<Grid>
 		<Rectangle Fill="#f0f0f0" />
 		<Grid Margin="12">
