@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="icon-48.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="icon-48.ico" />
   </ItemGroup>
 
 </Project>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DnsTube2"
         mc:Ignorable="d"
-        Title="Settings" Height="360" Width="510" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Title="Settings" Height="360" Width="510" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Icon="/icon-48.ico">
     <Grid>
         <Rectangle Fill="#f0f0f0" />
         <Grid Margin="8,10,8,10">
