@@ -101,8 +101,10 @@ namespace DnsTube
 		{
 			bool isNumPadNumeric = (e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9);
 			bool isNumeric = (e.Key >= Key.D0 && e.Key <= Key.D9);
+            bool isBackspaceOrDelete = (e.Key >= Key.Back && e.Key <= Key.Delete);
+            bool isHomeOrEnd = (e.Key >= Key.Home && e.Key <= Key.End);
 
-			if (!isNumPadNumeric && !isNumeric)
+            if (!isNumPadNumeric && !isNumeric && !isBackspaceOrDelete && !isHomeOrEnd)
 			{
 				e.Handled = true;
 			}
