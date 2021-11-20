@@ -22,6 +22,7 @@ namespace DnsTube
 		private Settings settings;
 		ObservableCollection<DnsEntryViewItem> observableDnsEntryCollection;
 		TaskbarIcon notifyIcon1;
+		private bool isInitialMinimize = false;
 		private string RELEASE_TAG = "v0.8.2";
 
 		public frmMain()
@@ -40,23 +41,23 @@ namespace DnsTube
 		private void NotifyIcon1_TrayMouseDown(object sender, RoutedEventArgs e)
 		{
 			ShowInTaskbar = true;
-			notifyIcon1.Visibility = Visibility.Collapsed;
 			WindowState = WindowState.Normal;
 			Activate();
-			WindowStyle = WindowStyle.SingleBorderWindow;
 		}
 
 		private void frmMain_StateChanged(object sender, EventArgs e)
 		{
-			if (WindowState == WindowState.Minimized)
+			if (WindowState == WindowState.Minimized && settings.MinimizeToTray)
 			{
 				notifyIcon1.Visibility = Visibility.Visible;
 				WindowStyle = WindowStyle.ToolWindow;
 				ShowInTaskbar = false;
-				if (!settings.StartMinimized)
+				if (isInitialMinimize)
+					isInitialMinimize = false;
+				else
 					notifyIcon1.ShowBalloonTip("DnsTube", "Application will continue to work in the background", BalloonIcon.Info);
 			}
-			else //if (WindowState.Normal == this.WindowState)
+			else if (WindowState == WindowState.Normal)
 			{
 				notifyIcon1.Visibility = Visibility.Collapsed;
 				WindowStyle = WindowStyle.SingleBorderWindow;
@@ -291,7 +292,10 @@ namespace DnsTube
 		private void Init()
 		{
 			if (settings.StartMinimized)
+			{
+				isInitialMinimize = true;
 				WindowState = WindowState.Minimized;
+			}
 
 			httpClient = new HttpClient();
 

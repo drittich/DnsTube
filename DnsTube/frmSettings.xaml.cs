@@ -42,6 +42,7 @@ namespace DnsTube
             settings.ApiToken = txtApiToken.Text;
             settings.UpdateIntervalMinutes = int.Parse(txtUpdateInterval.Text);
             settings.StartMinimized = chkStartMinimized.IsChecked.GetValueOrDefault();
+            settings.MinimizeToTray = chkMinimizeToTray.IsChecked.GetValueOrDefault();
             settings.SkipCheckForNewReleases = !chkNotifyOfUpdates.IsChecked.GetValueOrDefault();
             settings.ProtocolSupport = GetProtocol();
             settings.ZoneIDs = txtZoneIDs.Text;
@@ -60,6 +61,7 @@ namespace DnsTube
             txtApiToken.Text = settings.ApiToken;
             txtUpdateInterval.Text = settings.UpdateIntervalMinutes.ToString();
             chkStartMinimized.IsChecked = settings.StartMinimized;
+            chkMinimizeToTray.IsChecked = settings.MinimizeToTray;
             chkNotifyOfUpdates.IsChecked = !settings.SkipCheckForNewReleases;
             rbProtocolIPv4.IsChecked = settings.ProtocolSupport == IpSupport.IPv4;
             rbProtocolIPv6.IsChecked = settings.ProtocolSupport == IpSupport.IPv6;

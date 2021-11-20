@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DnsTube"
         mc:Ignorable="d"
-        Title="Settings" Height="360" Width="510" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Icon="/icon-48.ico">
+        Title="Settings" Height="360" Width="510" MinHeight="360" MinWidth="510" MaxHeight="360" MaxWidth="510" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Icon="/icon-48.ico">
     <Grid>
         <Rectangle Fill="#f0f0f0" />
         <Grid Margin="8,10,8,10">
@@ -62,7 +62,8 @@
             <WrapPanel Grid.Row="8" VerticalAlignment="Top">
                 <Label Name="lblPublicIpv4Address9" Width="94" ></Label>
                 <CheckBox Name="chkStartMinimized" Content="Start minimized"  Margin="0,0,12,0" />
-                <CheckBox Name="chkNotifyOfUpdates" Content="Notify about updates" />
+                <CheckBox Name="chkMinimizeToTray" Content="Minimize to tray"  Margin="0,0,12,0" />
+                <CheckBox Name="chkNotifyOfUpdates" Content="Notify of updates" />
             </WrapPanel>
             <WrapPanel Grid.Row="9" HorizontalAlignment="Right">
                 <Button Content="Save" Height="32" Width="100" Click="Button_Save_Click" Margin="0,2,12,0" />
