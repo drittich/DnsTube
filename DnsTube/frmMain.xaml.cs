@@ -319,7 +319,7 @@ namespace DnsTube
 			var release = Utility.GetLatestRelease();
 			if (release != null && release.tag_name != RELEASE_TAG && !settings.SkipCheckForNewReleases)
 			{
-				if (MessageBox.Show($"A new version of DnsTube is available for download. \n\nClick Yes to view the latest release, or No to ignore.", "DnsTube Update Available", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+				if (MessageBox.Show($"You are not running the latest release version.\n\nClick Yes to view the latest release, or No to ignore.\n\nTo prevent this alert, uncheck \"Notify of updates\" in Settings.", "DnsTube Update Available", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
 				{
 					Process.Start(new ProcessStartInfo("https://github.com/drittich/DnsTube/releases/latest") { UseShellExecute = true });
 				}
