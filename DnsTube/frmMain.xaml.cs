@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -17,6 +18,7 @@ namespace DnsTube
 	/// </summary>
 	public partial class frmMain : Window
 	{
+		private static Mutex _mutex = null;
 		private HttpClient httpClient;
 		private CloudflareAPI cfClient;
 		private Settings settings;
@@ -27,6 +29,15 @@ namespace DnsTube
 
 		public frmMain()
 		{
+			const string appName = "DnsTube";
+			bool createdNew;
+			_mutex = new Mutex(true, appName, out createdNew);
+			if (!createdNew)
+			{
+				MessageBox.Show("DnsTube is already running", "DnsTube", MessageBoxButton.OK, MessageBoxImage.Error);
+				Application.Current.Shutdown();
+			}
+
 			InitializeComponent();
 			WindowStartupLocation = WindowStartupLocation.CenterScreen;
 			notifyIcon1 = new TaskbarIcon();
