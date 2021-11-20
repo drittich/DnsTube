@@ -4,48 +4,48 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		mc:Ignorable="d"
-    Title="DnsTube" Height="450" Width="800" MinHeight="240" MinWidth="500" Loaded="frmMain2_Loaded" Icon="/icon-48.ico">
-	<Grid>
-		<Rectangle Fill="#f0f0f0" />
-		<Grid Margin="12">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="*" />
-				<RowDefinition Height="*" />
-				<RowDefinition Height="Auto" />
-			</Grid.RowDefinitions>
-			<WrapPanel Grid.Row="0">
-				<WrapPanel>
-					<Label Name="lblPublicIpv4Address" Width="78" >Public IPv4</Label>
+    Title="DnsTube" Height="450" Width="800" MinHeight="340" MinWidth="500" Loaded="frmMain2_Loaded" Icon="/icon-48.ico">
+    <Grid>
+        <Rectangle Fill="#f0f0f0" />
+        <Grid Margin="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <WrapPanel Grid.Row="0">
+                <WrapPanel>
+                    <Label Name="lblPublicIpv4Address" Width="78" >Public IPv4</Label>
                     <TextBox Name="txtPublicIpv4" Width="119" Height="20" IsReadOnly="True" Margin="0,0,6,0"></TextBox>
-				</WrapPanel>
-				<WrapPanel>
-					<Label Name="lblPublicIpv6Address" Width="78" >Public IPv6</Label>
+                </WrapPanel>
+                <WrapPanel>
+                    <Label Name="lblPublicIpv6Address" Width="78" >Public IPv6</Label>
                     <TextBox Name="txtPublicIpv6" Width="278" Height="20" IsReadOnly="True" Margin="0,0,6,0"></TextBox>
-				</WrapPanel>
-				<WrapPanel>
-					<Label Name="lblNextUpdate" Width="78" >Next Update</Label>
+                </WrapPanel>
+                <WrapPanel>
+                    <Label Name="lblNextUpdate" Width="78" >Next Update</Label>
                     <TextBox Name="txtNextUpdate" Width="119" Height="20" IsReadOnly="True" ></TextBox>
-				</WrapPanel>
-			</WrapPanel>
+                </WrapPanel>
+            </WrapPanel>
 
-			<DataGrid Name="dgDnsRecords" Grid.Row="1" AutoGenerateColumns="False">
-				<DataGrid.Columns>
-					<DataGridCheckBoxColumn Header="Update" IsReadOnly="False" Binding="{Binding Path=UpdateCloudflare, UpdateSourceTrigger=PropertyChanged}"></DataGridCheckBoxColumn>
-					<DataGridTextColumn Header="Type" Binding="{Binding Path=Type}" IsReadOnly="True"></DataGridTextColumn>
-					<DataGridTextColumn Header="Name" Binding="{Binding Path=DnsName}" IsReadOnly="True"></DataGridTextColumn>
-					<DataGridTextColumn Header="Address" Binding="{Binding Path=Address}" IsReadOnly="True"></DataGridTextColumn>
-					<DataGridTextColumn Header="Proxied" Binding="{Binding Path=Proxied}" IsReadOnly="True"></DataGridTextColumn>
-				</DataGrid.Columns>
-			</DataGrid>
+            <DataGrid Name="dgDnsRecords" Grid.Row="1" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Header="Update" IsReadOnly="False" Binding="{Binding Path=UpdateCloudflare, UpdateSourceTrigger=PropertyChanged}"></DataGridCheckBoxColumn>
+                    <DataGridTextColumn Header="Type" Binding="{Binding Path=Type}" IsReadOnly="True"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Path=DnsName}" IsReadOnly="True"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Address" Binding="{Binding Path=Address}" IsReadOnly="True"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Proxied" Binding="{Binding Path=Proxied}" IsReadOnly="True"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
 
-			<TextBox Grid.Row="2" Name="txtOutput" Height="250" Width="Auto" TextWrapping="Wrap" Margin="0,6,0,0"></TextBox>
-			<WrapPanel Grid.Row="3" Margin="0,6,0,0">
-				<Button Name="btnUpdate" Height="32" Width="100" Click="btnUpdate_Click" Margin="2,0,12,0" >Manual Update</Button>
-				<Button Name="btnUpdateList" Height="32" Width="100" Click="btnUpdateList_Click" Margin="0,0,12,0" >Fetch List</Button>
-				<Button Name="btnSettings" Height="32" Width="100" Click="btnSettings_Click" Margin="0,0,12,0" >Settings</Button>
-				<Button Name="btnQuit" Height="32" Width="100" Click="btnQuit_Click" Margin="0,0,12,0" >Quit</Button>
-			</WrapPanel>
-		</Grid>
-	</Grid>
+            <TextBox Grid.Row="2" Name="txtOutput" Width="Auto" TextWrapping="Wrap" Margin="0,6,0,0" VerticalScrollBarVisibility="Auto"/>
+            <WrapPanel Grid.Row="3" Margin="0,6,0,0">
+                <Button Name="btnUpdate" Height="32" Width="100" Click="btnUpdate_Click" Margin="2,0,12,0" >Manual Update</Button>
+                <Button Name="btnUpdateList" Height="32" Width="100" Click="btnUpdateList_Click" Margin="0,0,12,0" >Fetch List</Button>
+                <Button Name="btnSettings" Height="32" Width="100" Click="btnSettings_Click" Margin="0,0,12,0" >Settings</Button>
+                <Button Name="btnQuit" Height="32" Width="100" Click="btnQuit_Click" Margin="0,0,12,0" >Quit</Button>
+            </WrapPanel>
+        </Grid>
+    </Grid>
 </Window>
