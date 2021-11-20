@@ -69,6 +69,10 @@
                 <Button Content="Cancel" Height="32" Width="100" Click="Button_Cancel_Click" Margin="0,2,12,0" />
             </WrapPanel>
         </Grid>
-
+        <TextBlock Margin="0,45,29,266" HorizontalAlignment="Right">           
+            <Hyperlink NavigateUri="https://developers.cloudflare.com/api/tokens" RequestNavigate="Hyperlink_RequestNavigate">
+                Cloudflare auth docs
+            </Hyperlink>
+        </TextBlock>
     </Grid>
 </Window>
