@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 
+using Hardcodet.Wpf.TaskbarNotification;
+
 namespace DnsTube
 {
 	/// <summary>
@@ -19,16 +21,49 @@ namespace DnsTube
 		private CloudflareAPI cfClient;
 		private Settings settings;
 		ObservableCollection<DnsEntryViewItem> observableDnsEntryCollection;
+		TaskbarIcon notifyIcon1;
 		private string RELEASE_TAG = "v0.8.2";
 
 		public frmMain()
 		{
 			InitializeComponent();
 			WindowStartupLocation = WindowStartupLocation.CenterScreen;
+			notifyIcon1 = new TaskbarIcon();
+			notifyIcon1.Icon = new System.Drawing.Icon("icon-48.ico");
+			notifyIcon1.ToolTipText = "DnsTube";
+			notifyIcon1.Visibility = Visibility.Collapsed;
+			notifyIcon1.TrayLeftMouseDown += NotifyIcon1_TrayMouseDown;
+			notifyIcon1.TrayRightMouseDown += NotifyIcon1_TrayMouseDown;
 			settings = new Settings();
 		}
 
-		private void frmMain2_Loaded(object sender, RoutedEventArgs e)
+		private void NotifyIcon1_TrayMouseDown(object sender, RoutedEventArgs e)
+		{
+			ShowInTaskbar = true;
+			notifyIcon1.Visibility = Visibility.Collapsed;
+			WindowState = WindowState.Normal;
+			Activate();
+			WindowStyle = WindowStyle.SingleBorderWindow;
+		}
+
+		private void frmMain_StateChanged(object sender, EventArgs e)
+		{
+			if (WindowState == WindowState.Minimized)
+			{
+				notifyIcon1.Visibility = Visibility.Visible;
+				WindowStyle = WindowStyle.ToolWindow;
+				ShowInTaskbar = false;
+				if (!settings.StartMinimized)
+					notifyIcon1.ShowBalloonTip("DnsTube", "Application will continue to work in the background", BalloonIcon.Info);
+			}
+			else //if (WindowState.Normal == this.WindowState)
+			{
+				notifyIcon1.Visibility = Visibility.Collapsed;
+				WindowStyle = WindowStyle.SingleBorderWindow;
+			}
+		}
+
+		private void frmMain_Loaded(object sender, RoutedEventArgs e)
 		{
 			Init();
 
@@ -256,10 +291,7 @@ namespace DnsTube
 		private void Init()
 		{
 			if (settings.StartMinimized)
-			{
-				//Hide();
-				WindowState = System.Windows.WindowState.Maximized;
-			}
+				WindowState = WindowState.Minimized;
 
 			httpClient = new HttpClient();
 
@@ -376,19 +408,19 @@ namespace DnsTube
 		{
 			var frm = new frmSettings(settings);
 			frm.ShowDialog();
-            frm.Close();
-            // reload settings
-            settings = new Settings();
+			frm.Close();
+			// reload settings
+			settings = new Settings();
 
-            SetProtocolUiEnabled();
+			SetProtocolUiEnabled();
 
-            // pick up new credentials if they were changed
-            cfClient = new CloudflareAPI(httpClient, settings);
-            // pick up new interval if it was changed
-            ScheduleUpdates();
-        }
+			// pick up new credentials if they were changed
+			cfClient = new CloudflareAPI(httpClient, settings);
+			// pick up new interval if it was changed
+			ScheduleUpdates();
+		}
 
-        private void AppendStatusTextThreadSafe(string s)
+		private void AppendStatusTextThreadSafe(string s)
 		{
 			txtOutput.Text += $"{Utility.GetDateString()}: {s}\r\n";
 		}
@@ -450,5 +482,5 @@ namespace DnsTube
 
 			return newContent;
 		}
-    }
+	}
 }
