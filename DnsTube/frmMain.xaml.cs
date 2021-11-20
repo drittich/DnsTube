@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -25,7 +26,7 @@ namespace DnsTube
 		ObservableCollection<DnsEntryViewItem> observableDnsEntryCollection;
 		TaskbarIcon notifyIcon1;
 		private bool isInitialMinimize = false;
-		private string RELEASE_TAG = "v0.8.2";
+		private string RELEASE_TAG = "v0.9.0";
 
 		public frmMain()
 		{
@@ -320,7 +321,7 @@ namespace DnsTube
 			{
 				if (MessageBox.Show($"A new version of DnsTube is available for download. \n\nClick Yes to view the latest release, or No to ignore.", "DnsTube Update Available", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
 				{
-					System.Diagnostics.Process.Start("https://github.com/drittich/DnsTube/releases/latest");
+					Process.Start(new ProcessStartInfo("https://github.com/drittich/DnsTube/releases/latest") { UseShellExecute = true });
 				}
 			}
 		}
