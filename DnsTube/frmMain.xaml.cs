@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 using Hardcodet.Wpf.TaskbarNotification;
 
@@ -31,6 +32,7 @@ namespace DnsTube
 		public frmMain()
 		{
 			const string appName = "DnsTube";
+			this.Icon = BitmapFrame.Create(new Uri("pack://application:,,,/DnsTube;component/icon-48.ico"));
 			bool createdNew;
 			_mutex = new Mutex(true, appName, out createdNew);
 			if (!createdNew)
