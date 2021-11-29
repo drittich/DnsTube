@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -16,7 +15,7 @@ using Hardcodet.Wpf.TaskbarNotification;
 namespace DnsTube
 {
 	/// <summary>
-	/// Interaction logic for Main2.xaml
+	/// Interaction logic for frmMain.xaml
 	/// </summary>
 	public partial class frmMain : Window
 	{
@@ -32,7 +31,7 @@ namespace DnsTube
 		public frmMain()
 		{
 			const string appName = "DnsTube";
-			this.Icon = BitmapFrame.Create(new Uri("pack://application:,,,/DnsTube;component/icon-48.ico"));
+			Icon = BitmapFrame.Create(new Uri("pack://application:,,,/DnsTube;component/icon-48.ico"));
 			bool createdNew;
 			_mutex = new Mutex(true, appName, out createdNew);
 			if (!createdNew)
@@ -82,7 +81,7 @@ namespace DnsTube
 		{
 			Init();
 
-			DisplayVersion();
+			DisplayVersionAndSettingsPath();
 
 			PromptForSettings();
 
@@ -317,15 +316,6 @@ namespace DnsTube
 			System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
 
 			SetProtocolUiEnabled();
-
-			var release = Utility.GetLatestRelease();
-			if (release != null && release.tag_name != RELEASE_TAG && !settings.SkipCheckForNewReleases)
-			{
-				if (MessageBox.Show($"You are not running the latest release version.\n\nClick Yes to view the latest release, or No to ignore.\n\nTo prevent this alert, uncheck \"Notify of updates\" in Settings.", "DnsTube Update Available", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
-				{
-					Process.Start(new ProcessStartInfo("https://github.com/drittich/DnsTube/releases/latest") { UseShellExecute = true });
-				}
-			}
 		}
 
 		private void SetProtocolUiEnabled()
@@ -459,12 +449,18 @@ namespace DnsTube
 			txtNextUpdate.Text = d.ToString("h:mm:ss tt");
 		}
 
-		private void DisplayVersion()
+		private void DisplayVersionAndSettingsPath()
 		{
-			var execAssembly = System.Reflection.Assembly.GetExecutingAssembly();
-			var version = execAssembly.GetName().Version.ToString();
-			Title = $"DnsTube v{version}";
+			Title = $"DnsTube {RELEASE_TAG}";
 			AppendStatusText(Title);
+
+			if (!settings.SkipCheckForNewReleases)
+			{
+				var release = Utility.GetLatestRelease();
+				if (release != null && release.tag_name != RELEASE_TAG)
+					AppendStatusText("You are not running the latest release. See https://github.com/drittich/DnsTube/releases/latest for more information.");
+			}
+
 			if (File.Exists(settings.GetSettingsFilePath()))
 				AppendStatusText($"Settings path: {settings.GetSettingsFilePath()}");
 		}

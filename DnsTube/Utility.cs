@@ -46,6 +46,9 @@ namespace DnsTube
 
 			GithubRelease release = null;
 			using (var client = new HttpClient())
+			{
+				client.Timeout = TimeSpan.FromSeconds(15);
+
 				try
 				{
 					client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
@@ -54,6 +57,7 @@ namespace DnsTube
 					release = JsonSerializer.Deserialize<GithubRelease>(response);
 				}
 				catch { }
+			}
 			return release;
 		}
 
