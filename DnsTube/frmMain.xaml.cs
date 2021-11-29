@@ -26,7 +26,7 @@ namespace DnsTube
 		ObservableCollection<DnsEntryViewItem> observableDnsEntryCollection;
 		TaskbarIcon notifyIcon1;
 		private bool isInitialMinimize = false;
-		private string RELEASE_TAG = "v0.9.0";
+		private string RELEASE_TAG = "v0.9.1";
 
 		public frmMain()
 		{
