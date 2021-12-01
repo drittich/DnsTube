@@ -26,7 +26,7 @@ namespace DnsTube
 		ObservableCollection<DnsEntryViewItem> observableDnsEntryCollection;
 		TaskbarIcon notifyIcon1;
 		private bool isInitialMinimize = false;
-		private string RELEASE_TAG = "v0.9.1";
+		private string RELEASE_TAG = "v0.9.2";
 
 		public frmMain()
 		{
@@ -235,7 +235,7 @@ namespace DnsTube
 
 					try
 					{
-						cfClient.UpdateDns(protocol, entry.zone_id, entry.id, entry.type, entry.name, content, entry.proxied);
+						cfClient.UpdateDns(protocol, entry.zone_id, entry.id, entry.type, entry.name, content, entry.ttl, entry.proxied);
 
 						AppendStatusText($"Updated {entry.type} record [{entry.name}] in zone [{entry.zone_name}] to {content}");
 					}
