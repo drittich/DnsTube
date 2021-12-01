@@ -368,6 +368,7 @@ namespace DnsTube
 				item.DnsName = dnsRecord.name;
 				item.Type = dnsRecord.type;
 				item.Address = dnsRecord.content;
+				item.TTL = dnsRecord.ttl == 1 ? "Auto" : dnsRecord.ttl.ToString();
 				item.Proxied = dnsRecord.proxied ? "Yes" : "No";
 				item.ZoneName = dnsRecord.zone_name;
 

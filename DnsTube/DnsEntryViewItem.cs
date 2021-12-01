@@ -38,6 +38,7 @@ namespace DnsTube
 		public string DnsName { get; set; }
 		public string Type { get; set; }
 		public string Address { get; set; }
+		public string TTL { get; set; }
 		public string Proxied { get; set; }
 		public string ZoneName { get; set; }
 
