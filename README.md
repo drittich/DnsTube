@@ -9,7 +9,7 @@ Most of us have home computers with dynamically assigned IP addresses provided b
 
 This is where DnsTube comes in. Cloudflare provides free DNS hosting for your domain, and also provides an API for updating DNS entries, i.e., the IP address in this case. By running DnsTube on your computer, it will periodically check the public-facing IP address and update the Cloudflare DNS entry as needed.
 
-![image](https://user-images.githubusercontent.com/1222810/113607965-e5474700-9617-11eb-917a-1f80aad9c039.png)
+![image](https://user-images.githubusercontent.com/1222810/144518919-81b2d2e2-8ee6-4819-9f8c-bb79276afc4c.png)
 
 ## Features
 
