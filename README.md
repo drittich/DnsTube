@@ -23,7 +23,7 @@ This is where DnsTube comes in. Cloudflare provides free DNS hosting for your do
 
 Head over to the [Releases](https://github.com/drittich/DnsTube/releases/latest) page to download the latest binary.
 
-You have four executables to choose from, and you can extract and copy the application files to a folder of your choice. (DnsTube requires .NET 5, so you may be prompted to install it if you choose a non-self-contained version.)
+You have four executables to choose from, and you can extract and copy the application files to a folder of your choice. (DnsTube requires .NET 6, so you may be prompted to install it if you choose a non-self-contained version.)
 
 - *DnsTube-vX.X.X.7z*: normal application, requires .NET 6 runtime to be installed
 - *DnsTube-SelfContained-vX.X.X.7z*: normal self-contained application, does not require .NET 6 runtime to be installed
