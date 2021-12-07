@@ -25,10 +25,10 @@ Head over to the [Releases](https://github.com/drittich/DnsTube/releases/latest)
 
 You have four executables to choose from, and you can extract and copy the application files to a folder of your choice. (DnsTube requires .NET 5, so you may be prompted to install it if you choose a non-self-contained version.)
 
-- *DnsTube-vX.X.X.7z*: normal application, requires .NET 5 runtime to be installed
-- *DnsTube-SelfContained-vX.X.X.7z*: normal self-contained application, does not require .NET 5 runtime to be installed
-- *DnsTube-Portable-vX.X.X.7z*: portable application, requires .NET 5 runtime to be installed
-- *DnsTube-Portable-SelfContained-vX.X.X.7z*: portable self-contained application, does not require .NET 5 runtime to be installed
+- *DnsTube-vX.X.X.7z*: normal application, requires .NET 6 runtime to be installed
+- *DnsTube-SelfContained-vX.X.X.7z*: normal self-contained application, does not require .NET 6 runtime to be installed
+- *DnsTube-Portable-vX.X.X.7z*: portable application, requires .NET 6 runtime to be installed
+- *DnsTube-Portable-SelfContained-vX.X.X.7z*: portable self-contained application, does not require .NET 6 runtime to be installed
 
 You can choose to manually launch the application, or make it [run automatically at startup in Windows 10](https://support.microsoft.com/en-us/windows/add-an-app-to-run-automatically-at-startup-in-windows-10-150da165-dcd9-7230-517b-cf3c295d89dd).
 
@@ -64,7 +64,7 @@ After you have the settings configured, from then on you just launch it and leav
 
 ## Building
 
-This solution was built using Visual Studio 2019. It's probably best to use 2019 or later. 
+This solution can be built using Visual Studio 2022.
 
 ## The Name
 
