@@ -5,75 +5,75 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DnsTube"
         mc:Ignorable="d"
-        Title="Settings" Height="360" Width="510" MinHeight="360" MinWidth="510" MaxHeight="360" MaxWidth="510" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Icon="/icon-48.ico">
+        Title="Settings" Height="360" Width="520" MinHeight="360" MinWidth="520" MaxHeight="360" MaxWidth="520" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Icon="/icon-48.ico">
     <Grid>
         <Rectangle Fill="#f0f0f0" />
-        <Grid Margin="8,10,8,10">
+        <Grid Margin="8,10,8,10" Height="Auto">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="40" />
             </Grid.RowDefinitions>
-            <WrapPanel Grid.Row="0">
+            <WrapPanel Grid.Row="0" Margin="0,2,0,2">
                 <Label Name="lblPublicIpv4Address" Width="94" >Email</Label>
                 <TextBox Name="txtEmail" Width="380" Height="20" Margin="0,0,6,0"/>
             </WrapPanel>
-            <WrapPanel Grid.Row="1">
+            <WrapPanel Grid.Row="1" Margin="0,2,0,2">
                 <Label Name="lblPublicIpv4Address2" Width="94" >Authorization</Label>
                 <RadioButton GroupName="Authorization" Name="rbUseApiKey" Content="Use key" Margin="0,0,12,0" VerticalAlignment="Center" Checked="rbUseApiKey_Checked"/>
                 <RadioButton GroupName="Authorization" Name="rbUseApiToken" Content="Use token" Margin="0,0,12,0" VerticalAlignment="Center" Checked="rbUseApiKey_Checked"/>
+                <TextBlock Margin="40,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center">           
+                    <Hyperlink NavigateUri="https://developers.cloudflare.com/api/tokens" RequestNavigate="Hyperlink_RequestNavigate">
+                        Cloudflare auth docs
+                    </Hyperlink>
+                </TextBlock>
             </WrapPanel>
-            <WrapPanel Grid.Row="2">
+            <WrapPanel Grid.Row="2" Margin="0,2,0,2">
                 <Label Name="lblApiToken" Width="94" >API Token</Label>
                 <Label Name="lblApiKey" Width="94" >API Key</Label>
                 <TextBox Name="txtApiToken" Width="380" Height="20" Margin="0,0,6,0"></TextBox>
                 <TextBox Name="txtApiKey" Width="380" Height="20" Margin="0,0,6,0"></TextBox>
             </WrapPanel>
-            <WrapPanel Grid.Row="3">
+            <WrapPanel Grid.Row="3" Margin="0,2,0,2">
                 <Label Name="lblPublicIpv4Address4" Width="94" >Zone IDs</Label>
                 <TextBox Name="txtZoneIDs" Width="380" Height="20" Margin="0,0,6,0"></TextBox>
             </WrapPanel>
-            <WrapPanel Grid.Row="4">
+            <WrapPanel Grid.Row="4" Margin="0,2,0,2">
                 <Label Name="lblPublicIpv4Address5" Width="94" >Protocol</Label>
                 <RadioButton GroupName = "Protocol" Name="rbProtocolIPv4" Content="IPv4" Margin="0,0,12,0" VerticalAlignment="Center"/>
                 <RadioButton GroupName = "Protocol" Name="rbProtocolIPv6" Content="IPv6" Margin="0,0,12,0" VerticalAlignment="Center"/>
                 <RadioButton GroupName = "Protocol" Name="rbProtocolIPv4AndIPv6" Content="Both" VerticalAlignment="Center"/>
             </WrapPanel>
-            <WrapPanel Grid.Row="5">
+            <WrapPanel Grid.Row="5" Margin="0,2,0,2">
                 <Label Name="lblPublicIpv4Address6" Width="94" >IPv4 API</Label>
                 <TextBox Name="txtIPv4API" Width="380" Height="20" Margin="0,0,6,0"></TextBox>
             </WrapPanel>
-            <WrapPanel Grid.Row="6">
+            <WrapPanel Grid.Row="6" Margin="0,2,0,2">
                 <Label Name="lblPublicIpv4Address7" Width="94" >IPv6 API</Label>
                 <TextBox Name="txtIPv6API" Width="380" Height="20" Margin="0,0,6,0"></TextBox>
             </WrapPanel>
-            <WrapPanel Grid.Row="7">
+            <WrapPanel Grid.Row="7" Margin="0,2,0,2">
                 <Label Name="lblPublicIpv4Address8" Width="94" >Update Interval</Label>
                 <TextBox Name="txtUpdateInterval" Width="119" Height="20" Margin="0,0,6,0" PreviewKeyDown="txtUpdateInterval_PreviewKeyDown"></TextBox>
                 <Label Name="lblPublicIpv4Address8dd" Width="59" >(minutes)</Label>
             </WrapPanel>
-            <WrapPanel Grid.Row="8" VerticalAlignment="Top">
+            <WrapPanel Grid.Row="8" VerticalAlignment="Top" Margin="0,2,0,2">
                 <Label Name="lblPublicIpv4Address9" Width="94" ></Label>
                 <CheckBox Name="chkStartMinimized" Content="Start minimized"  Margin="0,0,12,0" />
                 <CheckBox Name="chkMinimizeToTray" Content="Minimize to tray"  Margin="0,0,12,0" />
                 <CheckBox Name="chkNotifyOfUpdates" Content="Notify of updates" />
             </WrapPanel>
-            <WrapPanel Grid.Row="9" HorizontalAlignment="Right">
-                <Button Content="Save" Height="32" Width="100" Click="Button_Save_Click" Margin="0,2,12,0" />
-                <Button Content="Cancel" Height="32" Width="100" Click="Button_Cancel_Click" Margin="0,2,12,0" />
+            <WrapPanel Grid.Row="9" HorizontalAlignment="Right" Height="Auto" Margin="0,2,0,2">
+                <Button Content="Save" Height="32" Width="100" Click="Button_Save_Click" Margin="0,8,12,0" />
+                <Button Content="Cancel" Height="32" Width="100" Click="Button_Cancel_Click" Margin="0,8,12,0" />
             </WrapPanel>
         </Grid>
-        <TextBlock Margin="0,45,29,266" HorizontalAlignment="Right">           
-            <Hyperlink NavigateUri="https://developers.cloudflare.com/api/tokens" RequestNavigate="Hyperlink_RequestNavigate">
-                Cloudflare auth docs
-            </Hyperlink>
-        </TextBlock>
     </Grid>
 </Window>
