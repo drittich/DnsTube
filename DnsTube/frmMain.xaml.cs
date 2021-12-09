@@ -6,9 +6,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+
+using DnsTube.Core;
 
 using Hardcodet.Wpf.TaskbarNotification;
 
@@ -26,12 +29,13 @@ namespace DnsTube
 		ObservableCollection<DnsEntryViewItem> observableDnsEntryCollection;
 		TaskbarIcon notifyIcon1;
 		private bool isInitialMinimize = false;
+		private CancellationTokenSource cancellationTokenSource;
 		private string RELEASE_TAG = "v0.9.4";
 
 		public frmMain()
 		{
 			const string appName = "DnsTube";
-			Icon = BitmapFrame.Create(new Uri("pack://application:,,,/DnsTube;component/icon-48.ico"));
+			Icon = BitmapFrame.Create(new Uri("pack://application:,,,/DnsTube.Gui;component/icon-48.ico"));
 			bool createdNew;
 			_mutex = new Mutex(true, appName, out createdNew);
 			if (!createdNew)
@@ -94,7 +98,8 @@ namespace DnsTube
 			if (validateSettings())
 				ValidateSelectedDomains();
 
-			ScheduleUpdates();
+			cancellationTokenSource = new CancellationTokenSource();
+			ScheduleUpdates(cancellationTokenSource.Token);
 		}
 
 		private void ValidateSelectedDomains()
@@ -129,24 +134,24 @@ namespace DnsTube
 			}
 		}
 
-		private void ScheduleUpdates()
+		private async Task ScheduleUpdates(CancellationToken stoppingToken)
 		{
 			var interval = TimeSpan.FromMinutes(settings.UpdateIntervalMinutes);
 			txtNextUpdate.Text = DateTime.Now.Add(interval).ToString("h:mm:ss tt");
 
-			TaskScheduler.StopAll();
-			TaskScheduler.Instance.ScheduleTask(interval,
-				() =>
+			
+			while (!stoppingToken.IsCancellationRequested)
+			{
+				try
 				{
-					try
-					{
-						DoUpdate();
-					}
-					finally
-					{
-						SetNextUpdateTextThreadSafe(DateTime.Now.Add(interval));
-					}
-				});
+					DoUpdate();
+				}
+				finally
+				{
+					SetNextUpdateTextThreadSafe(DateTime.Now.Add(interval));
+				}
+				await Task.Delay((int)interval.TotalMilliseconds, stoppingToken);
+			}
 		}
 
 		private void DoUpdate()
@@ -287,7 +292,7 @@ namespace DnsTube
 		private string GetPublicIpAddress(IpSupport protocol)
 		{
 			string errorMesssage;
-			var publicIpAddress = Utility.GetPublicIpAddress(protocol, httpClient, out errorMesssage);
+			var publicIpAddress = Core.Utility.GetPublicIpAddress(protocol, httpClient, out errorMesssage);
 
 			// Abort if we get an error, keeping the current address in settings
 			if (publicIpAddress == null)
@@ -426,12 +431,14 @@ namespace DnsTube
 			// pick up new credentials if they were changed
 			cfClient = new CloudflareAPI(httpClient, settings);
 			// pick up new interval if it was changed
-			ScheduleUpdates();
+			cancellationTokenSource = new CancellationTokenSource();
+
+			ScheduleUpdates(cancellationTokenSource.Token);
 		}
 
 		private void AppendStatusTextThreadSafe(string s)
 		{
-			txtOutput.Text += $"{Utility.GetDateString()}: {s}\r\n";
+			txtOutput.Text += $"{Core.Utility.GetDateString()}: {s}\r\n";
 		}
 
 		private void AppendStatusText(string s)
@@ -462,8 +469,8 @@ namespace DnsTube
 					AppendStatusText("You are not running the latest release. See https://github.com/drittich/DnsTube/releases/latest for more information.");
 			}
 
-			if (File.Exists(settings.GetSettingsFilePath()))
-				AppendStatusText($"Settings path: {settings.GetSettingsFilePath()}");
+			if (File.Exists(Utility.GetSettingsFilePath()))
+				AppendStatusText($"Settings path: {Utility.GetSettingsFilePath()}");
 		}
 
 		private void btnUpdate_Click(object sender, RoutedEventArgs e)
@@ -474,7 +481,7 @@ namespace DnsTube
 
 		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
 		{
-			TaskScheduler.StopAll();
+			cancellationTokenSource.Cancel();
 
 			base.OnClosing(e);
 		}

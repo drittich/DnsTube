@@ -10,7 +10,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DnsTube", "DnsTube\DnsTube.csproj", "{860BC53C-BE90-4F70-8B5A-0061A1C124DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DnsTube.Gui", "DnsTube\DnsTube.Gui.csproj", "{860BC53C-BE90-4F70-8B5A-0061A1C124DB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B1BFDFCB-338D-4AF8-B214-E9205B3D713B} = {B1BFDFCB-338D-4AF8-B214-E9205B3D713B}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DnsTube.Service", "DnsTubeService\DnsTube.Service.csproj", "{54F91335-A5A6-43ED-98CD-7DAB3743366B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B1BFDFCB-338D-4AF8-B214-E9205B3D713B} = {B1BFDFCB-338D-4AF8-B214-E9205B3D713B}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DnsTube.Core", "DnsTube.Core\DnsTube.Core.csproj", "{B1BFDFCB-338D-4AF8-B214-E9205B3D713B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +32,14 @@ Global
 		{860BC53C-BE90-4F70-8B5A-0061A1C124DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{860BC53C-BE90-4F70-8B5A-0061A1C124DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{860BC53C-BE90-4F70-8B5A-0061A1C124DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54F91335-A5A6-43ED-98CD-7DAB3743366B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54F91335-A5A6-43ED-98CD-7DAB3743366B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54F91335-A5A6-43ED-98CD-7DAB3743366B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54F91335-A5A6-43ED-98CD-7DAB3743366B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1BFDFCB-338D-4AF8-B214-E9205B3D713B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1BFDFCB-338D-4AF8-B214-E9205B3D713B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1BFDFCB-338D-4AF8-B214-E9205B3D713B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1BFDFCB-338D-4AF8-B214-E9205B3D713B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
 
+using DnsTube.Core;
+
 namespace DnsTube
 {
     /// <summary>
