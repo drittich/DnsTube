@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,7 +26,6 @@ namespace DnsTube
 		TaskbarIcon notifyIcon1;
 		private bool isInitialMinimize = false;
 		private CancellationTokenSource cancellationTokenSource;
-		private string RELEASE_TAG = "v0.9.4";
 
 		public frmMain()
 		{
@@ -87,7 +83,9 @@ namespace DnsTube
 		{
 			Init();
 
-			DisplayVersionAndSettingsPath();
+			Title = $"DnsTube {engine.RELEASE_TAG}";
+			AppendStatusText(Title);
+			engine.DisplayVersionAndSettingsPath(AppendStatusText);
 
 			PromptForSettings();
 
@@ -231,7 +229,6 @@ namespace DnsTube
 
 		private void UpdateDataGridThreadSafe(List<Dns.Result> allDnsRecords)
 		{
-
 			// TODO: group items by zone (see below)
 			observableDnsEntryCollection = new ObservableCollection<DnsEntryViewItem>();
 			foreach (var dnsRecord in allDnsRecords)
@@ -325,22 +322,6 @@ namespace DnsTube
 		private void SetNextUpdateTextThreadSafe(DateTime d)
 		{
 			txtNextUpdate.Text = d.ToString("h:mm:ss tt");
-		}
-
-		private void DisplayVersionAndSettingsPath()
-		{
-			Title = $"DnsTube {RELEASE_TAG}";
-			AppendStatusText(Title);
-
-			if (!settings.SkipCheckForNewReleases)
-			{
-				var release = Utility.GetLatestRelease();
-				if (release != null && release.tag_name != RELEASE_TAG)
-					AppendStatusText("You are not running the latest release. See https://github.com/drittich/DnsTube/releases/latest for more information.");
-			}
-
-			if (File.Exists(Utility.GetSettingsFilePath()))
-				AppendStatusText($"Settings path: {Utility.GetSettingsFilePath()}");
 		}
 
 		private void btnUpdate_Click(object sender, RoutedEventArgs e)

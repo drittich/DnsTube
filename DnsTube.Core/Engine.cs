@@ -12,6 +12,8 @@ namespace DnsTube.Core
 		public HttpClient HttpClient { get; set; }
 		public CloudflareAPI CloudflareAPI { get; set; }
 		public Settings Settings { get; set; }
+		public string RELEASE_TAG = "v0.9.4";
+
 
 		public Engine(Settings settings)
 		{
@@ -27,6 +29,20 @@ namespace DnsTube.Core
 		public void InitCloudflareClient(Settings settings)
 		{
 			CloudflareAPI = new CloudflareAPI(HttpClient, settings);
+		}
+
+		public void DisplayVersionAndSettingsPath(Action<string> appendStatusText)
+		{
+	
+			if (!Settings.SkipCheckForNewReleases)
+			{
+				var release = Utility.GetLatestRelease();
+				if (release != null && release.tag_name != RELEASE_TAG)
+					appendStatusText("You are not running the latest release. See https://github.com/drittich/DnsTube/releases/latest for more information.");
+			}
+
+			if (File.Exists(Utility.GetSettingsFilePath()))
+				appendStatusText($"Settings path: {Utility.GetSettingsFilePath()}");
 		}
 
 		/// <summary>
