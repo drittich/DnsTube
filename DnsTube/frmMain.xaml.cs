@@ -23,8 +23,7 @@ namespace DnsTube
 	public partial class frmMain : Window
 	{
 		private static Mutex _mutex = null;
-		private HttpClient httpClient;
-		private CloudflareAPI cfClient;
+		private Engine engine;
 		private Settings settings;
 		ObservableCollection<DnsEntryViewItem> observableDnsEntryCollection;
 		TaskbarIcon notifyIcon1;
@@ -92,11 +91,9 @@ namespace DnsTube
 
 			PromptForSettings();
 
-			cfClient = new CloudflareAPI(httpClient, settings);
-
 			FetchDsnEntries();
 
-			DisplayAndLogPublicIpAddress();
+			engine.DisplayAndLogPublicIpAddress(settings, txtPublicIpv4.Text, txtPublicIpv6.Text, AppendStatusText, DisplayPublicIpAddressThreadSafe);
 
 			if (settings.Validate())
 				ValidateSelectedDomains();
@@ -117,31 +114,13 @@ namespace DnsTube
 			}
 		}
 
-		private void DisplayAndLogPublicIpAddress()
-		{
-			if (settings.ProtocolSupport != IpSupport.IPv6)
-			{
-				var publicIpv4Address = GetPublicIpAddress(IpSupport.IPv4);
-				if (publicIpv4Address == null)
-					AppendStatusText($"Error detecting public IPv4 address");
-				else
-					AppendStatusText($"Detected public IPv4 {publicIpv4Address}");
-			}
-			if (settings.ProtocolSupport != IpSupport.IPv4)
-			{
-				var publicIpv6Address = GetPublicIpAddress(IpSupport.IPv6);
-				if (publicIpv6Address == null)
-					AppendStatusText($"Error detecting public IPv6 address");
-				else
-					AppendStatusText($"Detected public IPv6 {publicIpv6Address}");
-			}
-		}
+
 
 		private async Task ScheduleUpdates(CancellationToken stoppingToken)
 		{
 			var interval = TimeSpan.FromMinutes(settings.UpdateIntervalMinutes);
 			txtNextUpdate.Text = DateTime.Now.Add(interval).ToString("h:mm:ss tt");
-		
+
 			while (!stoppingToken.IsCancellationRequested)
 			{
 				try
@@ -164,12 +143,12 @@ namespace DnsTube
 			var updatedAddress = false;
 			// if IPv6-only support was not specified, do the IPv4 update
 			if (settings.ProtocolSupport != IpSupport.IPv6)
-				if (UpdateDnsRecords(IpSupport.IPv4))
+				if (engine.UpdateDnsRecords(IpSupport.IPv4, txtPublicIpv4.Text, txtPublicIpv6.Text, AppendStatusText, DisplayPublicIpAddressThreadSafe))
 					updatedAddress = true;
 
 			// if IPv4-only support was not specified, do the IPv6 update
 			if (settings.ProtocolSupport != IpSupport.IPv4)
-				if (UpdateDnsRecords(IpSupport.IPv6))
+				if (engine.UpdateDnsRecords(IpSupport.IPv6, txtPublicIpv4.Text, txtPublicIpv6.Text, AppendStatusText, DisplayPublicIpAddressThreadSafe))
 					updatedAddress = true;
 
 			// fetch and update listview with current status of records if necessary
@@ -177,91 +156,6 @@ namespace DnsTube
 				FetchDsnEntries();
 		}
 
-		/// <summary>
-		/// Returns true if an update was performed
-		/// </summary>
-		/// <param name="protocol"></param>
-		/// <returns></returns>
-		private bool UpdateDnsRecords(IpSupport protocol)
-		{
-			var publicIpAddress = GetPublicIpAddress(protocol);
-			if (publicIpAddress == null)
-			{
-				AppendStatusText($"Error detecting public {protocol} address");
-				return false;
-			}
-
-			var oldPublicIpAddress = protocol == IpSupport.IPv4 ? settings.PublicIpv4Address : settings.PublicIpv6Address;
-
-			if (publicIpAddress == oldPublicIpAddress)
-				return false;
-
-			if (protocol == IpSupport.IPv4)
-				settings.PublicIpv4Address = publicIpAddress;
-			else
-				settings.PublicIpv6Address = publicIpAddress;
-			settings.Save();
-
-			if (oldPublicIpAddress != null)
-				AppendStatusText($"Public {protocol} changed from {oldPublicIpAddress} to {publicIpAddress}");
-
-			DisplayPublicIpAddressThreadSafe(protocol, publicIpAddress);
-
-			var typesToUpdateForThisProtocol = new List<string> {
-					"SPF",
-					"TXT",
-					protocol == IpSupport.IPv4 ? "A" : "AAAA"
-				};
-
-			// Get requested entries to update
-			List<Dns.Result> potentialEntriesToUpdate = null;
-			try
-			{
-				var allRecordsByZone = cfClient.GetAllDnsRecordsByZone();
-
-				potentialEntriesToUpdate = allRecordsByZone.Where(d => settings.SelectedDomains.Any(s =>
-					s.ZoneName == d.zone_name
-					&& s.DnsName == d.name
-					&& s.Type == d.type)
-					&& typesToUpdateForThisProtocol.Contains(d.type)).ToList();
-			}
-			catch (Exception ex)
-			{
-				AppendStatusText($"Error getting DNS records");
-				AppendStatusText(ex.Message);
-			}
-
-			// TODO:determine which ones need updating
-			if (potentialEntriesToUpdate == null || !potentialEntriesToUpdate.Any())
-				return false;
-
-			foreach (var entry in potentialEntriesToUpdate)
-			{
-				string content;
-				if (entry.type == "SPF" || entry.type == "TXT")
-					content = UpdateDnsRecordContent(protocol, entry.content, publicIpAddress);
-				else
-					content = publicIpAddress;
-
-				if (entry.content == content)
-					continue;
-
-				try
-				{
-					cfClient.UpdateDns(protocol, entry.zone_id, entry.id, entry.type, entry.name, content, entry.ttl, entry.proxied);
-
-					AppendStatusText($"Updated {entry.type} record [{entry.name}] in zone [{entry.zone_name}] to {content}");
-				}
-				catch (Exception ex)
-				{
-					AppendStatusText($"Error updating [{entry.type}] record [{entry.name}] in zone [{entry.zone_name}] to {content}");
-					AppendStatusText(ex.Message);
-				}
-			}
-			return true;
-
-			return false;
-		}
 
 		private void PromptForSettings()
 		{
@@ -282,40 +176,18 @@ namespace DnsTube
 			return true;
 		}
 
-		private string GetPublicIpAddress(IpSupport protocol)
-		{
-			string? errorMesssage;
-			var publicIpAddress = Utility.GetPublicIpAddress(protocol, httpClient, out errorMesssage);
-
-			// Abort if we get an error, keeping the current address in settings
-			if (publicIpAddress == null)
-			{
-				AppendStatusText($"Error getting public {protocol}: {errorMesssage}");
-				return null;
-			}
-
-			if ((protocol == IpSupport.IPv4 && txtPublicIpv4.Text != publicIpAddress) || (protocol == IpSupport.IPv6 && txtPublicIpv6.Text != publicIpAddress))
-				DisplayPublicIpAddressThreadSafe(protocol, publicIpAddress);
-
-			return publicIpAddress;
-		}
-
 		private void Init()
 		{
 			InitNotifyIcon();
 
 			settings = new Settings();
+			engine = new Engine(settings);
 
 			if (settings.StartMinimized)
 			{
 				isInitialMinimize = true;
 				WindowState = WindowState.Minimized;
 			}
-
-			httpClient = new HttpClient();
-
-			// use TLS 1.2
-			System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
 
 			SetProtocolUiEnabled();
 		}
@@ -341,7 +213,7 @@ namespace DnsTube
 
 			try
 			{
-				var allDnsRecordsByZone = cfClient.GetAllDnsRecordsByZone();
+				var allDnsRecordsByZone = engine.CloudflareAPI.GetAllDnsRecordsByZone();
 				UpdateDnsEntryListUI(allDnsRecordsByZone);
 			}
 			catch (Exception e)
@@ -422,11 +294,12 @@ namespace DnsTube
 			frm.Close();
 			// reload settings
 			settings = new Settings();
+			engine.Settings = settings;
 
 			SetProtocolUiEnabled();
 
 			// pick up new credentials if they were changed
-			cfClient = new CloudflareAPI(httpClient, settings);
+			engine.InitCloudflareClient(settings);
 			// pick up new interval if it was changed
 			cancellationTokenSource = new CancellationTokenSource();
 
@@ -483,23 +356,7 @@ namespace DnsTube
 			base.OnClosing(e);
 		}
 
-		private const string ipv4Regex = @"\b(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\b";
-		private const string ipv6Regex = @"\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*";
 
-		private string UpdateDnsRecordContent(IpSupport protocol, string content, string publicIpAddress)
-		{
-			// we need the explicit protocol for this method
-			if (protocol == IpSupport.IPv4AndIPv6)
-				throw new ArgumentOutOfRangeException();
 
-			var newContent = content;
-
-			if (protocol == IpSupport.IPv4)
-				newContent = Regex.Replace(newContent, ipv4Regex, publicIpAddress);
-			else if (protocol == IpSupport.IPv6)
-				newContent = Regex.Replace(newContent, ipv6Regex, publicIpAddress);
-
-			return newContent;
-		}
 	}
 }
