@@ -35,7 +35,7 @@ namespace DnsTube
 
 			do
 			{
-				HttpRequestMessage req = GetRequestMessage(HttpMethod.Get, $"zones?status=active&page={pageNumber}&per_page={pageSize}&order=name&direction=asc&match=all");
+				var req = GetRequestMessage(HttpMethod.Get, $"zones?status=active&page={pageNumber}&per_page={pageSize}&order=name&direction=asc&match=all");
 
 				Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -101,7 +101,7 @@ namespace DnsTube
 				else
 				{
 					var cfError = JsonSerializer.Deserialize<CloudflareApiError>(result);
-					throw new Exception(cfError.errors?.FirstOrDefault().message);
+					throw new Exception(cfError?.errors?.First().message);
 				}
 			}
 		}

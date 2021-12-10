@@ -22,9 +22,9 @@ namespace DnsTube.Core
 			return Path.Combine(appDirectory, "config.json");
 		}
 
-		public static string GetPublicIpAddress(IpSupport protocol, HttpClient Client, out string errorMesssage)
+		public static string GetPublicIpAddress(IpSupport protocol, HttpClient Client, out string? errorMesssage)
 		{
-			string publicIpAddress = null;
+			string? publicIpAddress = null;
 			var maxAttempts = 3;
 			var attempts = 0;
 			errorMesssage = null;

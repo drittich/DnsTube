@@ -36,9 +36,9 @@ namespace DnsTube
 		{
 			const string appName = "DnsTube";
 			Icon = BitmapFrame.Create(new Uri("pack://application:,,,/DnsTube.Gui;component/icon-48.ico"));
-			bool createdNew;
-			_mutex = new Mutex(true, appName, out createdNew);
-			if (!createdNew)
+			bool isFirstInstance;
+			_mutex = new Mutex(true, appName, out isFirstInstance);
+			if (!isFirstInstance)
 			{
 				MessageBox.Show("DnsTube is already running", "DnsTube", MessageBoxButton.OK, MessageBoxImage.Error);
 				Application.Current.Shutdown();
@@ -46,13 +46,16 @@ namespace DnsTube
 
 			InitializeComponent();
 			WindowStartupLocation = WindowStartupLocation.CenterScreen;
+		}
+
+		private void InitNotifyIcon()
+		{
 			notifyIcon1 = new TaskbarIcon();
 			notifyIcon1.Icon = new System.Drawing.Icon("icon-48.ico");
 			notifyIcon1.ToolTipText = "DnsTube";
 			notifyIcon1.Visibility = Visibility.Collapsed;
 			notifyIcon1.TrayLeftMouseDown += NotifyIcon1_TrayMouseDown;
 			notifyIcon1.TrayRightMouseDown += NotifyIcon1_TrayMouseDown;
-			settings = new Settings();
 		}
 
 		private void NotifyIcon1_TrayMouseDown(object sender, RoutedEventArgs e)
@@ -95,7 +98,7 @@ namespace DnsTube
 
 			DisplayAndLogPublicIpAddress();
 
-			if (validateSettings())
+			if (settings.Validate())
 				ValidateSelectedDomains();
 
 			cancellationTokenSource = new CancellationTokenSource();
@@ -138,8 +141,7 @@ namespace DnsTube
 		{
 			var interval = TimeSpan.FromMinutes(settings.UpdateIntervalMinutes);
 			txtNextUpdate.Text = DateTime.Now.Add(interval).ToString("h:mm:ss tt");
-
-			
+		
 			while (!stoppingToken.IsCancellationRequested)
 			{
 				try
@@ -175,6 +177,11 @@ namespace DnsTube
 				FetchDsnEntries();
 		}
 
+		/// <summary>
+		/// Returns true if an update was performed
+		/// </summary>
+		/// <param name="protocol"></param>
+		/// <returns></returns>
 		private bool UpdateDnsRecords(IpSupport protocol)
 		{
 			var publicIpAddress = GetPublicIpAddress(protocol);
@@ -185,80 +192,80 @@ namespace DnsTube
 			}
 
 			var oldPublicIpAddress = protocol == IpSupport.IPv4 ? settings.PublicIpv4Address : settings.PublicIpv6Address;
-			if (publicIpAddress != oldPublicIpAddress)
-			{
-				if (protocol == IpSupport.IPv4)
-					settings.PublicIpv4Address = publicIpAddress;
-				else
-					settings.PublicIpv6Address = publicIpAddress;
-				settings.Save();
 
-				if (oldPublicIpAddress != null)
-					AppendStatusText($"Public {protocol} changed from {oldPublicIpAddress} to {publicIpAddress}");
+			if (publicIpAddress == oldPublicIpAddress)
+				return false;
 
-				DisplayPublicIpAddressThreadSafe(protocol, publicIpAddress);
+			if (protocol == IpSupport.IPv4)
+				settings.PublicIpv4Address = publicIpAddress;
+			else
+				settings.PublicIpv6Address = publicIpAddress;
+			settings.Save();
 
-				var typesToUpdateForThisProtocol = new List<string> {
+			if (oldPublicIpAddress != null)
+				AppendStatusText($"Public {protocol} changed from {oldPublicIpAddress} to {publicIpAddress}");
+
+			DisplayPublicIpAddressThreadSafe(protocol, publicIpAddress);
+
+			var typesToUpdateForThisProtocol = new List<string> {
 					"SPF",
 					"TXT",
 					protocol == IpSupport.IPv4 ? "A" : "AAAA"
 				};
 
-				// Get requested entries to update
-				List<Dns.Result> potentialEntriesToUpdate = null;
+			// Get requested entries to update
+			List<Dns.Result> potentialEntriesToUpdate = null;
+			try
+			{
+				var allRecordsByZone = cfClient.GetAllDnsRecordsByZone();
+
+				potentialEntriesToUpdate = allRecordsByZone.Where(d => settings.SelectedDomains.Any(s =>
+					s.ZoneName == d.zone_name
+					&& s.DnsName == d.name
+					&& s.Type == d.type)
+					&& typesToUpdateForThisProtocol.Contains(d.type)).ToList();
+			}
+			catch (Exception ex)
+			{
+				AppendStatusText($"Error getting DNS records");
+				AppendStatusText(ex.Message);
+			}
+
+			// TODO:determine which ones need updating
+			if (potentialEntriesToUpdate == null || !potentialEntriesToUpdate.Any())
+				return false;
+
+			foreach (var entry in potentialEntriesToUpdate)
+			{
+				string content;
+				if (entry.type == "SPF" || entry.type == "TXT")
+					content = UpdateDnsRecordContent(protocol, entry.content, publicIpAddress);
+				else
+					content = publicIpAddress;
+
+				if (entry.content == content)
+					continue;
+
 				try
 				{
-					var allRecordsByZone = cfClient.GetAllDnsRecordsByZone();
+					cfClient.UpdateDns(protocol, entry.zone_id, entry.id, entry.type, entry.name, content, entry.ttl, entry.proxied);
 
-					potentialEntriesToUpdate = allRecordsByZone.Where(d => settings.SelectedDomains.Any(s =>
-						s.ZoneName == d.zone_name
-						&& s.DnsName == d.name
-						&& s.Type == d.type)
-						&& typesToUpdateForThisProtocol.Contains(d.type)).ToList();
+					AppendStatusText($"Updated {entry.type} record [{entry.name}] in zone [{entry.zone_name}] to {content}");
 				}
 				catch (Exception ex)
 				{
-					AppendStatusText($"Error getting DNS records");
+					AppendStatusText($"Error updating [{entry.type}] record [{entry.name}] in zone [{entry.zone_name}] to {content}");
 					AppendStatusText(ex.Message);
 				}
-
-				// TODO:determine which ones need updating
-
-				if (potentialEntriesToUpdate == null || !potentialEntriesToUpdate.Any())
-					return false;
-
-				foreach (var entry in potentialEntriesToUpdate)
-				{
-					string content;
-					if (entry.type == "SPF" || entry.type == "TXT")
-						content = UpdateDnsRecordContent(protocol, entry.content, publicIpAddress);
-					else
-						content = publicIpAddress;
-
-					if (entry.content == content)
-						continue;
-
-					try
-					{
-						cfClient.UpdateDns(protocol, entry.zone_id, entry.id, entry.type, entry.name, content, entry.ttl, entry.proxied);
-
-						AppendStatusText($"Updated {entry.type} record [{entry.name}] in zone [{entry.zone_name}] to {content}");
-					}
-					catch (Exception ex)
-					{
-						AppendStatusText($"Error updating [{entry.type}] record [{entry.name}] in zone [{entry.zone_name}] to {content}");
-						AppendStatusText(ex.Message);
-					}
-				}
-				return true;
 			}
+			return true;
 
 			return false;
 		}
 
 		private void PromptForSettings()
 		{
-			if (!validateSettings())
+			if (!settings.Validate())
 			{
 				MessageBox.Show($"Please configure your settings.");
 				DisplaySettingsForm();
@@ -267,7 +274,7 @@ namespace DnsTube
 
 		private bool PreflightSettingsCheck()
 		{
-			if (!validateSettings())
+			if (!settings.Validate())
 			{
 				AppendStatusText($"Settings not configured");
 				return false;
@@ -275,29 +282,15 @@ namespace DnsTube
 			return true;
 		}
 
-		private bool validateSettings()
-		{
-			// check if settings are populate
-			if (string.IsNullOrWhiteSpace(settings.EmailAddress)
-				|| !settings.EmailAddress.Contains("@")
-				|| (!settings.IsUsingToken && string.IsNullOrWhiteSpace(settings.ApiKey))
-				|| (settings.IsUsingToken && string.IsNullOrWhiteSpace(settings.ApiToken))
-				|| settings.UpdateIntervalMinutes == 0
-				)
-				return false;
-
-			return true;
-		}
-
 		private string GetPublicIpAddress(IpSupport protocol)
 		{
-			string errorMesssage;
-			var publicIpAddress = Core.Utility.GetPublicIpAddress(protocol, httpClient, out errorMesssage);
+			string? errorMesssage;
+			var publicIpAddress = Utility.GetPublicIpAddress(protocol, httpClient, out errorMesssage);
 
 			// Abort if we get an error, keeping the current address in settings
 			if (publicIpAddress == null)
 			{
-				AppendStatusText($"Error getting public {protocol.ToString()}: {errorMesssage}");
+				AppendStatusText($"Error getting public {protocol}: {errorMesssage}");
 				return null;
 			}
 
@@ -309,6 +302,10 @@ namespace DnsTube
 
 		private void Init()
 		{
+			InitNotifyIcon();
+
+			settings = new Settings();
+
 			if (settings.StartMinimized)
 			{
 				isInitialMinimize = true;
@@ -491,7 +488,7 @@ namespace DnsTube
 
 		private string UpdateDnsRecordContent(IpSupport protocol, string content, string publicIpAddress)
 		{
-			// we need explicit protocol in this method
+			// we need the explicit protocol for this method
 			if (protocol == IpSupport.IPv4AndIPv6)
 				throw new ArgumentOutOfRangeException();
 

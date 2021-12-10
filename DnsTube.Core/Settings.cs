@@ -11,9 +11,9 @@ namespace DnsTube
 	{
 		public Settings()
 		{
-			if (File.Exists(Core.Utility.GetSettingsFilePath()))
+			if (File.Exists(Utility.GetSettingsFilePath()))
 			{
-				string json = File.ReadAllText(Core.Utility.GetSettingsFilePath());
+				string json = File.ReadAllText(Utility.GetSettingsFilePath());
 				var settings = JsonSerializer.Deserialize<SettingsDTO>(json);
 				EmailAddress = settings.EmailAddress;
 				IsUsingToken = settings.IsUsingToken;
@@ -39,6 +39,23 @@ namespace DnsTube
 				IPv4_API = "https://api.ipify.org/";
 				IPv6_API = "https://api64.ipify.org/";
 			}
+		}
+
+		/// <summary>
+		/// Make sure settings are populated
+		/// </summary>
+		/// <returns></returns>
+		public bool Validate()
+		{
+			if (string.IsNullOrWhiteSpace(EmailAddress)
+				|| !EmailAddress.Contains("@")
+				|| (!IsUsingToken && string.IsNullOrWhiteSpace(ApiKey))
+				|| (IsUsingToken && string.IsNullOrWhiteSpace(ApiToken))
+				|| UpdateIntervalMinutes == 0
+			)
+				return false;
+
+			return true;
 		}
 
 		public void Save()
