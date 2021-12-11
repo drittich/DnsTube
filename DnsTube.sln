@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DnsTube.Service", "DnsTubeS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DnsTube.Core", "DnsTube.Core\DnsTube.Core.csproj", "{B1BFDFCB-338D-4AF8-B214-E9205B3D713B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DnsTube.Console", "ConsoleApp1\DnsTube.Console.csproj", "{7FD52A22-6B81-4163-9EED-161816550CD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DnsTube.Console", "DnsTube.Console\DnsTube.Console.csproj", "{7FD52A22-6B81-4163-9EED-161816550CD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
