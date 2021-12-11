@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DnsTube
+namespace DnsTube.Core
 {
 	public class GithubRelease
 	{

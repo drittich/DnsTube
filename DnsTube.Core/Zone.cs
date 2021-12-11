@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DnsTube.Zone
+namespace DnsTube.Core.Zone
 {
 	public class ListZonesResponse
 	{

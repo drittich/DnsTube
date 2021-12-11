@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DnsTube.Dns
+namespace DnsTube.Core.Dns
 {
 	public class DnsRecordsResponse
 	{

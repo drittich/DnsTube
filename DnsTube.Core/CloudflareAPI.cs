@@ -3,9 +3,9 @@ using System.Text;
 using System.Text.Json;
 
 using DnsTube.Core;
-using DnsTube.Dns;
+using DnsTube.Core.Dns;
 
-namespace DnsTube
+namespace DnsTube.Core
 {
 	public class CloudflareAPI
 	{

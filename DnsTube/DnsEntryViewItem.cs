@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 
-namespace DnsTube
+using DnsTube.Core;
+
+namespace DnsTube.Gui
 {
 	public class DnsEntryViewItem: INotifyPropertyChanged
 	{

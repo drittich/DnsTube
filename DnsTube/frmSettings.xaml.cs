@@ -5,7 +5,7 @@ using System.Windows.Navigation;
 
 using DnsTube.Core;
 
-namespace DnsTube
+namespace DnsTube.Gui
 {
     /// <summary>
     /// Interaction logic for frmSettings.xaml

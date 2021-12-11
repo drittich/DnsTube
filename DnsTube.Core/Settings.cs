@@ -5,7 +5,7 @@ using System.Text.Json;
 
 using DnsTube.Core;
 
-namespace DnsTube
+namespace DnsTube.Core
 {
 	public class Settings : SettingsDTO
 	{

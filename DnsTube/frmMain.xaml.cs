@@ -12,7 +12,7 @@ using DnsTube.Core;
 
 using Hardcodet.Wpf.TaskbarNotification;
 
-namespace DnsTube
+namespace DnsTube.Gui
 {
 	/// <summary>
 	/// Interaction logic for frmMain.xaml
@@ -222,12 +222,12 @@ namespace DnsTube
 			}
 		}
 
-		private void UpdateDnsEntryListUI(List<Dns.Result> allDnsRecords)
+		private void UpdateDnsEntryListUI(List<DnsTube.Core.Dns.Result> allDnsRecords)
 		{
 			Dispatcher.BeginInvoke(new Action(() => UpdateDataGridThreadSafe(allDnsRecords)), System.Windows.Threading.DispatcherPriority.Background, null);
 		}
 
-		private void UpdateDataGridThreadSafe(List<Dns.Result> allDnsRecords)
+		private void UpdateDataGridThreadSafe(List<DnsTube.Core.Dns.Result> allDnsRecords)
 		{
 			// TODO: group items by zone (see below)
 			observableDnsEntryCollection = new ObservableCollection<DnsEntryViewItem>();
@@ -336,8 +336,5 @@ namespace DnsTube
 
 			base.OnClosing(e);
 		}
-
-
-
 	}
 }
