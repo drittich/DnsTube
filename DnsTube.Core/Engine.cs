@@ -50,30 +50,10 @@ namespace DnsTube.Core
 		/// </summary>
 		/// <param name="protocol"></param>
 		/// <returns></returns>
-		public bool UpdateDnsRecords(IpSupport protocol, string currentIpv4Address, string currentIpv6Address, Action<string> appendStatusText, Action<IpSupport, string> displayPublicIpAddress)
+		public bool UpdateDnsRecords(IpSupport protocol, string publicIpAddress, out List<string> messages)
 		{
-			var publicIpAddress = GetPublicIpAddress(protocol, currentIpv4Address, currentIpv6Address, appendStatusText, displayPublicIpAddress);
-			if (publicIpAddress == null)
-			{
-				appendStatusText($"Error detecting public {protocol} address");
-				return false;
-			}
-
-			var oldPublicIpAddress = protocol == IpSupport.IPv4 ? Settings.PublicIpv4Address : Settings.PublicIpv6Address;
-
-			if (publicIpAddress == oldPublicIpAddress)
-				return false;
-
-			if (protocol == IpSupport.IPv4)
-				Settings.PublicIpv4Address = publicIpAddress;
-			else
-				Settings.PublicIpv6Address = publicIpAddress;
-			Settings.Save();
-
-			if (oldPublicIpAddress != null)
-				appendStatusText($"Public {protocol} changed from {oldPublicIpAddress} to {publicIpAddress}");
-
-			displayPublicIpAddress(protocol, publicIpAddress);
+			bool updateWasDone = false;
+			messages = new List<string>();
 
 			var typesToUpdateForThisProtocol = new List<string> {
 					"SPF",
@@ -82,7 +62,7 @@ namespace DnsTube.Core
 				};
 
 			// Get requested entries to update
-			List<Dns.Result> potentialEntriesToUpdate = null;
+			List<Dns.Result>? potentialEntriesToUpdate = null;
 			try
 			{
 				var allRecordsByZone = CloudflareAPI.GetAllDnsRecordsByZone();
@@ -95,8 +75,8 @@ namespace DnsTube.Core
 			}
 			catch (Exception ex)
 			{
-				appendStatusText($"Error getting DNS records");
-				appendStatusText(ex.Message);
+				messages.Add($"Error getting DNS records");
+				messages.Add(ex.Message);
 			}
 
 			// TODO:determine which ones need updating
@@ -117,56 +97,69 @@ namespace DnsTube.Core
 				try
 				{
 					CloudflareAPI.UpdateDns(protocol, entry.zone_id, entry.id, entry.type, entry.name, content, entry.ttl, entry.proxied);
-
-					appendStatusText($"Updated {entry.type} record [{entry.name}] in zone [{entry.zone_name}] to {content}");
+					updateWasDone = true;
+					messages.Add($"Updated {entry.type} record [{entry.name}] in zone [{entry.zone_name}] to {content}");
 				}
 				catch (Exception ex)
 				{
-					appendStatusText($"Error updating [{entry.type}] record [{entry.name}] in zone [{entry.zone_name}] to {content}");
-					appendStatusText(ex.Message);
+					messages.Add($"Error updating [{entry.type}] record [{entry.name}] in zone [{entry.zone_name}] to {content}");
+					messages.Add(ex.Message);
 				}
 			}
-			//TODO: which of these is right? look at history
-			return true;
 
-			return false;
+			return updateWasDone;
 		}
 
-		public string GetPublicIpAddress(IpSupport protocol, string currentIpv4Address, string currentIpv6Address, Action<string> appendStatusText, Action<IpSupport, string> displayPublicIpAddress)
+		public string? GetPublicIpAddress(IpSupport protocol, out string? errorMesssage)
 		{
-			string? errorMesssage;
-			var publicIpAddress = Utility.GetPublicIpAddress(protocol, HttpClient, out errorMesssage);
+			string? publicIpAddress = null;
+			var maxAttempts = 3;
+			var attempts = 0;
+			errorMesssage = null;
 
-			// Abort if we get an error, keeping the current address in settings
-			if (publicIpAddress == null)
+			var url = protocol == IpSupport.IPv4 ? Settings.IPv4_API : Settings.IPv6_API;
+
+			while (publicIpAddress == null && attempts < maxAttempts)
 			{
-				appendStatusText($"Error getting public {protocol}: {errorMesssage}");
-				return null;
+				try
+				{
+					attempts++;
+					var response = HttpClient.GetStringAsync(url).Result;
+					var candidatePublicIpAddress = response.Replace("\n", "");
+
+					if (!IsValidIpAddress(protocol, candidatePublicIpAddress))
+						throw new Exception($"Malformed response, expected IP address: {response}");
+
+					publicIpAddress = candidatePublicIpAddress;
+				}
+				catch (Exception e)
+				{
+					if (attempts >= maxAttempts)
+						errorMesssage = e.Message;
+				}
 			}
-
-			if ((protocol == IpSupport.IPv4 && currentIpv4Address != publicIpAddress) || (protocol == IpSupport.IPv6 && currentIpv6Address != publicIpAddress))
-				displayPublicIpAddress(protocol, publicIpAddress);
-
 			return publicIpAddress;
 		}
 
-		public void DisplayAndLogPublicIpAddress(Settings settings, string currentIpv4Address, string currentIpv6Address, Action<string> appendStatusText, Action<IpSupport, string> displayPublicIpAddress)
+		public static bool IsValidIpAddress(IpSupport protocol, string ipString)
 		{
-			if (settings.ProtocolSupport != IpSupport.IPv6)
+			if (string.IsNullOrWhiteSpace(ipString))
+				return false;
+
+			if (protocol == IpSupport.IPv4)
 			{
-				var publicIpv4Address = GetPublicIpAddress(IpSupport.IPv4, currentIpv4Address, currentIpv6Address, appendStatusText, displayPublicIpAddress);
-				if (publicIpv4Address == null)
-					appendStatusText($"Error detecting public IPv4 address");
-				else
-					appendStatusText($"Detected public IPv4 {publicIpv4Address}");
+				string[] splitValues = ipString.Split('.');
+				if (splitValues.Length != 4)
+					return false;
+
+				byte tempForParsing;
+				return splitValues.All(r => byte.TryParse(r, out tempForParsing));
 			}
-			if (settings.ProtocolSupport != IpSupport.IPv4)
+			else
 			{
-				var publicIpv6Address = GetPublicIpAddress(IpSupport.IPv6, currentIpv4Address, currentIpv6Address, appendStatusText, displayPublicIpAddress);
-				if (publicIpv6Address == null)
-					appendStatusText($"Error detecting public IPv6 address");
-				else
-					appendStatusText($"Detected public IPv6 {publicIpv6Address}");
+				var regex = new Regex(@"(?:^|(?<=\s))(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(?=\s|$)");
+				var match = regex.Match(ipString);
+				return match.Success;
 			}
 		}
 

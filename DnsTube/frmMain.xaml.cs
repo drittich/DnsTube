@@ -91,7 +91,7 @@ namespace DnsTube.Gui
 
 			FetchDsnEntries();
 
-			engine.DisplayAndLogPublicIpAddress(settings, txtPublicIpv4.Text, txtPublicIpv6.Text, AppendStatusText, DisplayPublicIpAddressThreadSafe);
+			DisplayAndLogPublicIpAddress();
 
 			if (settings.Validate())
 				ValidateSelectedDomains();
@@ -112,7 +112,42 @@ namespace DnsTube.Gui
 			}
 		}
 
+		public void DisplayAndLogPublicIpAddress()
+		{
+			string? errorMesssage;
+			if (settings.ProtocolSupport != IpSupport.IPv6)
+			{
 
+				var publicIpv4Address = engine.GetPublicIpAddress(IpSupport.IPv4, out errorMesssage);
+				if (publicIpv4Address == null)
+				{
+					AppendStatusText($"Error getting public IPv4 address: {errorMesssage}");
+				}
+				else
+				{
+					AppendStatusText($"Detected public IPv4 address {publicIpv4Address}");
+					// update UI
+					if (txtPublicIpv4.Text != publicIpv4Address)
+						txtPublicIpv4.Text = publicIpv4Address;
+				}
+
+			}
+			if (settings.ProtocolSupport != IpSupport.IPv4)
+			{
+				var publicIpv6Address = engine.GetPublicIpAddress(IpSupport.IPv6, out errorMesssage);
+				if (publicIpv6Address == null)
+				{
+					AppendStatusText($"Error detecting public IPv6 address: {errorMesssage}");
+				}
+				else
+				{
+					AppendStatusText($"Detected public IPv6 address {publicIpv6Address}");
+					// update UI
+					if (txtPublicIpv6.Text != publicIpv6Address)
+						txtPublicIpv6.Text = publicIpv6Address;
+				}
+			}
+		}
 
 		private async Task ScheduleUpdates(CancellationToken stoppingToken)
 		{
@@ -141,12 +176,12 @@ namespace DnsTube.Gui
 			var updatedAddress = false;
 			// if IPv6-only support was not specified, do the IPv4 update
 			if (settings.ProtocolSupport != IpSupport.IPv6)
-				if (engine.UpdateDnsRecords(IpSupport.IPv4, txtPublicIpv4.Text, txtPublicIpv6.Text, AppendStatusText, DisplayPublicIpAddressThreadSafe))
+				if (UpdateDnsRecords(IpSupport.IPv4))
 					updatedAddress = true;
 
 			// if IPv4-only support was not specified, do the IPv6 update
 			if (settings.ProtocolSupport != IpSupport.IPv4)
-				if (engine.UpdateDnsRecords(IpSupport.IPv6, txtPublicIpv4.Text, txtPublicIpv6.Text, AppendStatusText, DisplayPublicIpAddressThreadSafe))
+				if (UpdateDnsRecords(IpSupport.IPv6))
 					updatedAddress = true;
 
 			// fetch and update listview with current status of records if necessary
@@ -154,6 +189,51 @@ namespace DnsTube.Gui
 				FetchDsnEntries();
 		}
 
+		/// <summary>
+		/// Returns true if an update was performed
+		/// </summary>
+		/// <param name="protocol"></param>
+		/// <returns></returns>
+		public bool UpdateDnsRecords(IpSupport protocol)
+		{
+			string? errorMesssage; 
+			var publicIpAddress = engine.GetPublicIpAddress(protocol, out errorMesssage);
+			if (publicIpAddress == null)
+			{
+				AppendStatusText($"Error getting public {protocol} address: {errorMesssage}");
+			}
+			else
+			{
+				AppendStatusText($"Detected public {protocol} address {publicIpAddress}");
+				// update UI
+				var input = protocol == IpSupport.IPv4 ? txtPublicIpv4 : txtPublicIpv6;
+				if (input.Text != publicIpAddress)
+					input.Text = publicIpAddress;
+			}
+
+			var oldPublicIpAddress = protocol == IpSupport.IPv4 ? settings.PublicIpv4Address : settings.PublicIpv6Address;
+
+			if (publicIpAddress == oldPublicIpAddress)
+				return false;
+
+			if (protocol == IpSupport.IPv4)
+				settings.PublicIpv4Address = publicIpAddress;
+			else
+				settings.PublicIpv6Address = publicIpAddress;
+			settings.Save();
+
+			if (oldPublicIpAddress != null)
+				AppendStatusText($"Public {protocol} changed from {oldPublicIpAddress} to {publicIpAddress}");
+
+			DisplayPublicIpAddressThreadSafe(protocol, publicIpAddress);
+
+			List<string> messages;
+			var ret = engine.UpdateDnsRecords(protocol, publicIpAddress, out messages);
+			foreach(var message in messages)
+				AppendStatusText(message);
+
+			return ret;
+		}
 
 		private void PromptForSettings()
 		{

@@ -22,10 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DnsTube.Service", "DnsTubeS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DnsTube.Core", "DnsTube.Core\DnsTube.Core.csproj", "{B1BFDFCB-338D-4AF8-B214-E9205B3D713B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DnsTube.Console", "DnsTube.Console\DnsTube.Console.csproj", "{FE7CBD2F-672F-4F69-BD0A-59F668DE1EDB}"
-	ProjectSection(ProjectDependencies) = postProject
-		{B1BFDFCB-338D-4AF8-B214-E9205B3D713B} = {B1BFDFCB-338D-4AF8-B214-E9205B3D713B}
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DnsTube.Console", "ConsoleApp1\DnsTube.Console.csproj", "{7FD52A22-6B81-4163-9EED-161816550CD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,10 +42,10 @@ Global
 		{B1BFDFCB-338D-4AF8-B214-E9205B3D713B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1BFDFCB-338D-4AF8-B214-E9205B3D713B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1BFDFCB-338D-4AF8-B214-E9205B3D713B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FE7CBD2F-672F-4F69-BD0A-59F668DE1EDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FE7CBD2F-672F-4F69-BD0A-59F668DE1EDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FE7CBD2F-672F-4F69-BD0A-59F668DE1EDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FE7CBD2F-672F-4F69-BD0A-59F668DE1EDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FD52A22-6B81-4163-9EED-161816550CD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FD52A22-6B81-4163-9EED-161816550CD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FD52A22-6B81-4163-9EED-161816550CD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FD52A22-6B81-4163-9EED-161816550CD6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
