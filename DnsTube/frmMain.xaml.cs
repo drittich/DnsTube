@@ -91,7 +91,7 @@ namespace DnsTube.Gui
 
 			FetchDsnEntries();
 
-			DisplayAndLogPublicIpAddress();
+			//DisplayAndLogPublicIpAddress();
 
 			if (settings.Validate())
 				ValidateSelectedDomains();
@@ -112,42 +112,42 @@ namespace DnsTube.Gui
 			}
 		}
 
-		public void DisplayAndLogPublicIpAddress()
-		{
-			string? errorMesssage;
-			if (settings.ProtocolSupport != IpSupport.IPv6)
-			{
+		//public void DisplayAndLogPublicIpAddress()
+		//{
+		//	string? errorMesssage;
+		//	if (settings.ProtocolSupport != IpSupport.IPv6)
+		//	{
 
-				var publicIpv4Address = engine.GetPublicIpAddress(IpSupport.IPv4, out errorMesssage);
-				if (publicIpv4Address == null)
-				{
-					AppendStatusText($"Error getting public IPv4 address: {errorMesssage}");
-				}
-				else
-				{
-					AppendStatusText($"Detected public IPv4 address {publicIpv4Address}");
-					// update UI
-					if (txtPublicIpv4.Text != publicIpv4Address)
-						txtPublicIpv4.Text = publicIpv4Address;
-				}
+		//		var publicIpv4Address = engine.GetPublicIpAddress(IpSupport.IPv4, out errorMesssage);
+		//		if (publicIpv4Address == null)
+		//		{
+		//			AppendStatusText($"Error getting public IPv4 address: {errorMesssage}");
+		//		}
+		//		else
+		//		{
+		//			AppendStatusText($"Detected public IPv4 address {publicIpv4Address}");
+		//			// update UI
+		//			if (txtPublicIpv4.Text != publicIpv4Address)
+		//				txtPublicIpv4.Text = publicIpv4Address;
+		//		}
 
-			}
-			if (settings.ProtocolSupport != IpSupport.IPv4)
-			{
-				var publicIpv6Address = engine.GetPublicIpAddress(IpSupport.IPv6, out errorMesssage);
-				if (publicIpv6Address == null)
-				{
-					AppendStatusText($"Error detecting public IPv6 address: {errorMesssage}");
-				}
-				else
-				{
-					AppendStatusText($"Detected public IPv6 address {publicIpv6Address}");
-					// update UI
-					if (txtPublicIpv6.Text != publicIpv6Address)
-						txtPublicIpv6.Text = publicIpv6Address;
-				}
-			}
-		}
+		//	}
+		//	if (settings.ProtocolSupport != IpSupport.IPv4)
+		//	{
+		//		var publicIpv6Address = engine.GetPublicIpAddress(IpSupport.IPv6, out errorMesssage);
+		//		if (publicIpv6Address == null)
+		//		{
+		//			AppendStatusText($"Error detecting public IPv6 address: {errorMesssage}");
+		//		}
+		//		else
+		//		{
+		//			AppendStatusText($"Detected public IPv6 address {publicIpv6Address}");
+		//			// update UI
+		//			if (txtPublicIpv6.Text != publicIpv6Address)
+		//				txtPublicIpv6.Text = publicIpv6Address;
+		//		}
+		//	}
+		//}
 
 		private async Task ScheduleUpdates(CancellationToken stoppingToken)
 		{

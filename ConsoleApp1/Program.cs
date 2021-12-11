@@ -99,7 +99,6 @@ namespace DnsTube.Console
 			string? errorMesssage;
 			if (settings.ProtocolSupport != IpSupport.IPv6)
 			{
-
 				var publicIpv4Address = engine.GetPublicIpAddress(IpSupport.IPv4, out errorMesssage);
 				if (publicIpv4Address == null)
 				{
