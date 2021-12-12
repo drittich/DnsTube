@@ -4,9 +4,9 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>icon-48.ico</ApplicationIcon>
     <Nullable>enable</Nullable>
-    <DebugType>none</DebugType>
+    <DebugType>full</DebugType>
+    <PackageIcon>icon-48.ico</PackageIcon>
   </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -22,23 +22,39 @@
     <None Remove="NewFolder\**" />
     <Page Remove="NewFolder\**" />
   </ItemGroup>
-
+	
   <ItemGroup>
-    <None Remove="icon-48.ico" />
+    <EmbeddedResource Include="icon-48.ico" />
   </ItemGroup>
-
+	
   <ItemGroup>
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf.NetCore" Version="1.0.18" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="icon-48.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <ProjectReference Include="..\DnsTube.Core\DnsTube.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DnsTube.Core\DnsTube.Core.csproj" />
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="icon-48.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

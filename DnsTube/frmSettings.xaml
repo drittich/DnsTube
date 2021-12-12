@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DnsTube"
         mc:Ignorable="d"
-        Title="Settings" Height="360" Width="520" MinHeight="360" MinWidth="520" MaxHeight="360" MaxWidth="520" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Icon="/icon-48.ico">
+        Title="Settings" Height="360" Width="520" MinHeight="360" MinWidth="520" MaxHeight="360" MaxWidth="520" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" >
     <Grid>
         <Rectangle Fill="#f0f0f0" />
         <Grid Margin="8,10,8,10" Height="Auto">

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 using DnsTube.Core;
 
@@ -30,7 +32,7 @@ namespace DnsTube.Gui
 		public frmMain()
 		{
 			const string appName = "DnsTube";
-			Icon = BitmapFrame.Create(new Uri("pack://application:,,,/DnsTube.Gui;component/icon-48.ico"));
+			//Icon = BitmapFrame.Create(new Uri("pack://application:,,,/DnsTube.Gui;component/icon-48.ico"));
 			bool isFirstInstance;
 			_mutex = new Mutex(true, appName, out isFirstInstance);
 			if (!isFirstInstance)
@@ -41,12 +43,50 @@ namespace DnsTube.Gui
 
 			InitializeComponent();
 			WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+			Icon = GetFormIconImageSource();
+		}
+
+		/// <summary>
+		/// Ref: https://stackoverflow.com/a/65843713/39430
+		/// Ref: https://stackoverflow.com/a/6580799/39430
+		/// </summary>
+		private ImageSource GetFormIconImageSource()
+		{
+			var assembly = Assembly.GetExecutingAssembly();//reflects the current executable
+			var resourceName = $"{GetType().Namespace}.icon-48.ico";
+
+			using (var stream = assembly.GetManifestResourceStream(resourceName))
+			{
+				if (stream == null)
+					throw new Exception("Icon resource not found");
+				else
+					return new Icon(stream).ToImageSource();
+			}
+		}
+
+		/// <summary>
+		/// Ref: https://stackoverflow.com/a/65843713/39430
+		/// Ref: https://stackoverflow.com/a/6580799/39430
+		/// </summary>
+		private Icon GetFormIcon()
+		{
+			var assembly = Assembly.GetExecutingAssembly();//reflects the current executable
+			var resourceName = $"{GetType().Namespace}.icon-48.ico";
+
+			using (var stream = assembly.GetManifestResourceStream(resourceName))
+			{
+				if (stream == null)
+					throw new Exception("Icon resource not found");
+				else
+					return new Icon(stream);
+			}
 		}
 
 		private void InitNotifyIcon()
 		{
 			notifyIcon1 = new TaskbarIcon();
-			notifyIcon1.Icon = new System.Drawing.Icon("icon-48.ico");
+			notifyIcon1.Icon = GetFormIcon();
 			notifyIcon1.ToolTipText = "DnsTube";
 			notifyIcon1.Visibility = Visibility.Collapsed;
 			notifyIcon1.TrayLeftMouseDown += NotifyIcon1_TrayMouseDown;
@@ -366,7 +406,7 @@ namespace DnsTube.Gui
 
 		private void DisplaySettingsForm()
 		{
-			var frm = new frmSettings(settings);
+			var frm = new frmSettings(settings, Icon);
 			frm.ShowDialog();
 			frm.Close();
 			// reload settings
