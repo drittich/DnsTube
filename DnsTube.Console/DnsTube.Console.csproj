@@ -4,8 +4,17 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
 	  <Nullable>enable</Nullable>
+	  <DebugType>none</DebugType>
   </PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DefineConstants>TRACE;$(PORTABLE);$(SERVICE)</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DefineConstants>$(PORTABLE);$(SERVICE)</DefineConstants>
+		<Optimize>True</Optimize>
+	</PropertyGroup>
+	
   <ItemGroup>
     <ProjectReference Include="..\DnsTube.Core\DnsTube.Core.csproj" />
   </ItemGroup>
