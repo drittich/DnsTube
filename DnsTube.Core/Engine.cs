@@ -31,7 +31,7 @@ namespace DnsTube.Core
 			CloudflareAPI = new CloudflareAPI(HttpClient, settings);
 		}
 
-		public void DisplayVersionAndSettingsPath(Action<string> appendStatusText)
+		public void DisplayNewReleasePrompt(Action<string> appendStatusText)
 		{
 	
 			if (!Settings.SkipCheckForNewReleases)
@@ -41,8 +41,6 @@ namespace DnsTube.Core
 					appendStatusText("You are not running the latest release. See https://github.com/drittich/DnsTube/releases/latest for more information.");
 			}
 
-			if (File.Exists(Utility.GetSettingsFilePath()))
-				appendStatusText($"Settings path: {Utility.GetSettingsFilePath()}");
 		}
 
 		/// <summary>

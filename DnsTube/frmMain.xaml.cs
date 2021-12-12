@@ -127,7 +127,7 @@ namespace DnsTube.Gui
 
 			Title = $"DnsTube {engine.RELEASE_TAG}";
 			AppendStatusText(Title);
-			engine.DisplayVersionAndSettingsPath(AppendStatusText);
+			engine.DisplayNewReleasePrompt(AppendStatusText);
 
 			PromptForSettings();
 
@@ -300,7 +300,7 @@ namespace DnsTube.Gui
 		{
 			InitNotifyIcon();
 
-			settings = new Settings();
+			settings = new Settings(Utility.GetSettingsFilePath());
 			engine = new Engine(settings);
 
 			if (settings.StartMinimized)
@@ -412,7 +412,7 @@ namespace DnsTube.Gui
 			frm.ShowDialog();
 			frm.Close();
 			// reload settings
-			settings = new Settings();
+			settings.LoadFromConfigFile();
 			engine.Settings = settings;
 
 			SetProtocolUiEnabled();

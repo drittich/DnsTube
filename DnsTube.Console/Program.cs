@@ -14,14 +14,14 @@ namespace DnsTube.Console
 
 		static void Main(string? configPath = null)
 		{
-			configPath = configPath ?? "using local path";
+			configPath = configPath ?? Utility.GetSettingsFilePath();
 			AppendStatusText($"Looking for config in {configPath}");
 
-			settings = new Settings();
+			settings = new Settings(configPath);
 			engine = new Engine(settings);
 			var Title = $"DnsTube {engine.RELEASE_TAG}";
 			AppendStatusText(Title);
-			engine.DisplayVersionAndSettingsPath(AppendStatusText);
+			engine.DisplayNewReleasePrompt(AppendStatusText);
 			PromptForSettings();
 			FetchDsnEntries();
 			DisplayAndLogPublicIpAddress();

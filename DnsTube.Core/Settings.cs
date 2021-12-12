@@ -3,31 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-using DnsTube.Core;
-
 namespace DnsTube.Core
 {
 	public class Settings : SettingsDTO
 	{
-		public Settings()
+		private string ConfigPath { get; set; }
+		public Settings(string configPath)
 		{
-			if (File.Exists(Utility.GetSettingsFilePath()))
+			ConfigPath = configPath;
+
+			if (File.Exists(ConfigPath))
 			{
-				string json = File.ReadAllText(Utility.GetSettingsFilePath());
-				var settings = JsonSerializer.Deserialize<SettingsDTO>(json);
-				EmailAddress = settings.EmailAddress;
-				IsUsingToken = settings.IsUsingToken;
-				ApiKey = settings.ApiKey;
-				ApiToken = settings.ApiToken;
-				UpdateIntervalMinutes = settings.UpdateIntervalMinutes;
-				SelectedDomains = settings.SelectedDomains;
-				StartMinimized = settings.StartMinimized;
-				MinimizeToTray = settings.MinimizeToTray;
-				ProtocolSupport = settings.ProtocolSupport;
-				SkipCheckForNewReleases = settings.SkipCheckForNewReleases;
-				ZoneIDs = settings.ZoneIDs ?? "";
-				IPv4_API = settings.IPv4_API ?? "https://api.ipify.org/";
-				IPv6_API = settings.IPv6_API ?? "https://api64.ipify.org/";
+				LoadFromConfigFile();
 			}
 			else
 			{
@@ -38,7 +25,32 @@ namespace DnsTube.Core
 				ZoneIDs = "";
 				IPv4_API = "https://api.ipify.org/";
 				IPv6_API = "https://api64.ipify.org/";
+
+				Save();
 			}
+		}
+
+		public void LoadFromConfigFile()
+		{
+			string json = File.ReadAllText(ConfigPath);
+			var settings = JsonSerializer.Deserialize<SettingsDTO>(json);
+
+			if (settings == null)
+				throw new Exception($"Unable to parse {ConfigPath}");
+
+			EmailAddress = settings.EmailAddress;
+			IsUsingToken = settings.IsUsingToken;
+			ApiKey = settings.ApiKey;
+			ApiToken = settings.ApiToken;
+			UpdateIntervalMinutes = settings.UpdateIntervalMinutes;
+			SelectedDomains = settings.SelectedDomains;
+			StartMinimized = settings.StartMinimized;
+			MinimizeToTray = settings.MinimizeToTray;
+			ProtocolSupport = settings.ProtocolSupport;
+			SkipCheckForNewReleases = settings.SkipCheckForNewReleases;
+			ZoneIDs = settings.ZoneIDs ?? "";
+			IPv4_API = settings.IPv4_API ?? "https://api.ipify.org/";
+			IPv6_API = settings.IPv6_API ?? "https://api64.ipify.org/";
 		}
 
 		/// <summary>
@@ -61,7 +73,7 @@ namespace DnsTube.Core
 		public void Save()
 		{
 			string json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
-			File.WriteAllText(Core.Utility.GetSettingsFilePath(), json);
+			File.WriteAllText(ConfigPath, json);
 		}
 	}
 
@@ -74,22 +86,22 @@ namespace DnsTube.Core
 
 	public class SettingsDTO
 	{
-		public string EmailAddress { get; set; }
+		public string EmailAddress { get; set; } = "";
 		public bool IsUsingToken { get; set; }
-		public string ApiKey { get; set; }
-		public string ApiToken { get; set; }
+		public string ApiKey { get; set; } = "";
+		public string ApiToken { get; set; } = "";
 		public int UpdateIntervalMinutes { get; set; }
-		public string PublicIpv4Address { get; set; }
-		public string PublicIpv6Address { get; set; }
-		public List<SelectedDomain> SelectedDomains { get; set; }
+		public string PublicIpv4Address { get; set; } = "";
+		public string PublicIpv6Address { get; set; } = "";
+		public List<SelectedDomain> SelectedDomains { get; set; } = new List<SelectedDomain>();
 		public bool StartMinimized { get; set; }
 		public bool MinimizeToTray { get; set; }
 		public bool SkipCheckForNewReleases { get; set; }
 		public IpSupport ProtocolSupport { get; set; }
-		public string ZoneIDs { get; set; }
+		public string ZoneIDs { get; set; } = "";
 
-		public string IPv4_API { get; set; }
+		public string IPv4_API { get; set; } = "";
 
-		public string IPv6_API { get; set; }
+		public string IPv6_API { get; set; } = "";
 	}
 }
