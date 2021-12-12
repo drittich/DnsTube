@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <DebugType>full</DebugType>
     <PackageIcon>icon-48.ico</PackageIcon>
+    <ApplicationIcon>icon-48.ico</ApplicationIcon>
   </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -21,6 +22,10 @@
     <EmbeddedResource Remove="NewFolder\**" />
     <None Remove="NewFolder\**" />
     <Page Remove="NewFolder\**" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Content Include="icon-48.ico" />
   </ItemGroup>
 	
   <ItemGroup>

@@ -116,6 +116,8 @@ namespace DnsTube.Gui
 			{
 				notifyIcon1.Visibility = Visibility.Collapsed;
 				WindowStyle = WindowStyle.SingleBorderWindow;
+				// Line below to fix a bug where title bar icon was gone after restore from tray 
+				Icon = GetFormIconImageSource();
 			}
 		}
 
