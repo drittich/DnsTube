@@ -12,8 +12,11 @@ namespace DnsTube.Console
 		static Settings settings;
 		static Engine engine;
 
-		static void Main(string[] args)
+		static void Main(string? configPath = null)
 		{
+			configPath = configPath ?? "using local path";
+			AppendStatusText($"Looking for config in {configPath}");
+
 			settings = new Settings();
 			engine = new Engine(settings);
 			var Title = $"DnsTube {engine.RELEASE_TAG}";

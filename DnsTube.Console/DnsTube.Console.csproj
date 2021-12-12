@@ -14,6 +14,9 @@
 		<DefineConstants>$(PORTABLE);$(SERVICE)</DefineConstants>
 		<Optimize>True</Optimize>
 	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="System.CommandLine.DragonFruit" Version="0.3.0-alpha.21216.1" />
+	</ItemGroup>
 	
   <ItemGroup>
     <ProjectReference Include="..\DnsTube.Core\DnsTube.Core.csproj" />

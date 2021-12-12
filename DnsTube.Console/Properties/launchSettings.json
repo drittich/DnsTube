@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DnsTube.Console": {
+      "commandName": "Project",
+      "commandLineArgs": "--config-path \"c:\\temp\\config.json\""
+    }
+  }
+}
