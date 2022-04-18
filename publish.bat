@@ -5,6 +5,8 @@ set PROJECT_PATH=%SOLUTION_PATH%\DnsTube
 set PUBLISH_PATH=%PROJECT_PATH%\bin\Publish
 set ZIP_EXE_PATH="C:\Program Files\7-Zip\7z.exe"
 
+echo Will create, e.g., DnsTube%EXE_VERSION%.exe
+
 if exist %PUBLISH_PATH%\NUL del /f/s/q %PUBLISH_PATH% > nul & rmdir /s/q %PUBLISH_PATH%
 
 cd %PROJECT_PATH%
