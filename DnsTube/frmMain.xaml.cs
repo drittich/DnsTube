@@ -10,6 +10,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
+using DnsTube.Services;
+
 using Hardcodet.Wpf.TaskbarNotification;
 
 namespace DnsTube
@@ -26,7 +28,7 @@ namespace DnsTube
 		ObservableCollection<DnsEntryViewItem> observableDnsEntryCollection;
 		TaskbarIcon notifyIcon1;
 		private bool isInitialMinimize = false;
-		private string RELEASE_TAG = "v0.9.6";
+		private string RELEASE_TAG = "v0.9.7";
 
 		public frmMain()
 		{
@@ -226,7 +228,7 @@ namespace DnsTube
 				{
 					string content;
 					if (entry.type == "SPF" || entry.type == "TXT")
-						content = UpdateDnsRecordContent(protocol, entry.content, publicIpAddress);
+						content = DnsService.UpdateDnsRecordContent(protocol, entry.content, publicIpAddress);
 					else
 						content = publicIpAddress;
 
@@ -477,25 +479,6 @@ namespace DnsTube
 			TaskScheduler.StopAll();
 
 			base.OnClosing(e);
-		}
-
-		private const string ipv4Regex = @"\b(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\b";
-		private const string ipv6Regex = @"(.*)(ip6:)([0-9a-f:]+)(.*)";
-
-		private string UpdateDnsRecordContent(IpSupport protocol, string content, string publicIpAddress)
-		{
-			// we need explicit protocol in this method
-			if (protocol == IpSupport.IPv4AndIPv6)
-				throw new ArgumentOutOfRangeException();
-
-			var newContent = content;
-
-			if (protocol == IpSupport.IPv4)
-				newContent = Regex.Replace(newContent, ipv4Regex, publicIpAddress);
-			else if (protocol == IpSupport.IPv6)
-				newContent = Regex.Replace(newContent, ipv6Regex, $"$1$2{publicIpAddress}$4");
-
-			return newContent;
 		}
 	}
 }

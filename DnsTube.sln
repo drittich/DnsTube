@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DnsTube", "DnsTube\DnsTube.csproj", "{860BC53C-BE90-4F70-8B5A-0061A1C124DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DnsTube.Tests", "DnsTube.Tests\DnsTube.Tests.csproj", "{BC53E56F-E192-42FF-B84A-7F944D86F0D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,10 @@ Global
 		{860BC53C-BE90-4F70-8B5A-0061A1C124DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{860BC53C-BE90-4F70-8B5A-0061A1C124DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{860BC53C-BE90-4F70-8B5A-0061A1C124DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC53E56F-E192-42FF-B84A-7F944D86F0D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC53E56F-E192-42FF-B84A-7F944D86F0D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC53E56F-E192-42FF-B84A-7F944D86F0D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC53E56F-E192-42FF-B84A-7F944D86F0D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
