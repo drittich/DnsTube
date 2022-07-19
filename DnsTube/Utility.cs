@@ -63,7 +63,7 @@ namespace DnsTube
 
 		public static string GetDateString()
 		{
-			return DateTime.Now.ToString("yyyy-MM-dd h:mm:ss tt");
+			return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 		}
 
 		public static bool IsValidIpAddress(IpSupport protocol, string ipString)
