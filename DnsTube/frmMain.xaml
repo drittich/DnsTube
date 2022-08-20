@@ -43,7 +43,7 @@
             <TextBox Grid.Row="2" Name="txtOutput" Width="Auto" TextWrapping="Wrap" Margin="0,6,0,0" VerticalScrollBarVisibility="Auto" IsReadOnly="True" />
             <WrapPanel Grid.Row="3" Margin="0,6,0,0">
                 <Button Name="btnUpdate" Height="32" Width="140" Click="btnUpdate_Click" Margin="1,4,12,0" ToolTip="Force an IP address update" >Update Address Now</Button>
-                <Button Name="btnUpdateList" Height="32" Width="140" Click="btnUpdateList_Click" Margin="0,4,12,0" ToolTip="Refresh the list of Cloudflare DNS entries ">Refetch DNS Entires</Button>
+                <Button Name="btnUpdateList" Height="32" Width="140" Click="btnUpdateList_Click" Margin="0,4,12,0" ToolTip="Refresh the list of Cloudflare DNS entries ">Refetch DNS Entries</Button>
                 <Button Name="btnSettings" Height="32" Width="140" Click="btnSettings_Click" Margin="0,4,12,0" ToolTip="Configure the application">Settings</Button>
                 <Button Name="btnQuit" Height="32" Width="140" Click="btnQuit_Click" Margin="0,4,12,0" ToolTip="Exit the application">Quit</Button>
             </WrapPanel>
