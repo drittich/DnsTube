@@ -134,7 +134,7 @@ namespace DnsTube
 		private void ScheduleUpdates()
 		{
 			var interval = TimeSpan.FromMinutes(settings.UpdateIntervalMinutes);
-			txtNextUpdate.Text = DateTime.Now.Add(interval).ToString("h:mm:ss tt");
+			txtNextUpdate.Text = DateTime.Now.Add(interval).ToString("HH:mm:ss");
 
 			TaskScheduler.StopAll();
 			TaskScheduler.Instance.ScheduleTask(interval,
@@ -449,7 +449,7 @@ namespace DnsTube
 
 		private void SetNextUpdateTextThreadSafe(DateTime d)
 		{
-			txtNextUpdate.Text = d.ToString("h:mm:ss tt");
+			txtNextUpdate.Text = d.ToString("HH:mm:ss");
 		}
 
 		private void DisplayVersionAndSettingsPath()
