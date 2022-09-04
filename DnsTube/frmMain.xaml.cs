@@ -99,6 +99,8 @@ namespace DnsTube
 				ValidateSelectedDomains();
 
 			ScheduleUpdates();
+
+			await DoUpdateAsync();
 		}
 
 		private void ValidateSelectedDomains()
