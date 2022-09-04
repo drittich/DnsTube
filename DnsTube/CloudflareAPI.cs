@@ -5,14 +5,16 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
+
 using DnsTube.Dns;
 
 namespace DnsTube
 {
 	public class CloudflareAPI
 	{
-		private Settings settings;
-		public static string EndPoint = "https://api.cloudflare.com/client/v4/";
+		private readonly Settings settings;
+		public const string EndPoint = "https://api.cloudflare.com/client/v4/";
 		public HttpClient Client { get; set; }
 
 		public CloudflareAPI(HttpClient client, Settings settings)
@@ -28,9 +30,9 @@ namespace DnsTube
 		/// Ref: https://api.cloudflare.com/#zone-list-zones
 		/// </summary>
 		/// <returns></returns>
-		public List<string> ListZoneIDs()
+		public async Task<List<string>> ListZoneIDsAsync()
 		{
-			List<string> ret = new List<string>();
+			List<string> ret = new();
 			int pageSize = 50;
 			int pageNumber = 1;
 			int totalPages;
@@ -41,8 +43,8 @@ namespace DnsTube
 
 				Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-				var response = Client.SendAsync(req).Result;
-				var result = response.Content.ReadAsStringAsync().Result;
+				var response = await Client.SendAsync(req);
+				var result = await response.Content.ReadAsStringAsync();
 
 				ValidateCloudflareResult(response, result, "list zones");
 
@@ -60,7 +62,7 @@ namespace DnsTube
 		}
 
 		// Ref: https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records
-		private List<Result> GetRecordsByType(string zoneIdentifier, string recordType)
+		private async Task<List<Result>> GetRecordsByTypeAsync(string zoneIdentifier, string recordType)
 		{
 			int pageSize = 100;
 			int pageNumber = 1;
@@ -74,8 +76,8 @@ namespace DnsTube
 
 				var req = GetRequestMessage(HttpMethod.Get, $"zones/{zoneIdentifier}/dns_records?type={recordType}&page={pageNumber}&per_page={pageSize}&order=name&direction=asc&match=all");
 
-				var response = Client.SendAsync(req).Result;
-				var result = response.Content.ReadAsStringAsync().Result;
+				var response = await Client.SendAsync(req);
+				var result = await response.Content.ReadAsStringAsync();
 
 				ValidateCloudflareResult(response, result, "list DNS records");
 
@@ -109,7 +111,7 @@ namespace DnsTube
 		}
 
 		// Ref: https://api.cloudflare.com/#dns-records-for-a-zone-update-dns-record
-		public DnsUpdateResponse UpdateDns(IpSupport protocol, string zoneIdentifier, string dnsRecordIdentifier, string dnsRecordType, string dnsRecordName, string content, int ttl, bool proxied)
+		public async Task<DnsUpdateResponse> UpdateDnsAsync(IpSupport protocol, string zoneIdentifier, string dnsRecordIdentifier, string dnsRecordType, string dnsRecordName, string content, int ttl, bool proxied)
 		{
 			var dnsUpdateRequest = new DnsUpdateRequest() { type = dnsRecordType, name = dnsRecordName, content = content, ttl = ttl, proxied = proxied };
 
@@ -118,8 +120,8 @@ namespace DnsTube
 			HttpRequestMessage req = GetRequestMessage(HttpMethod.Put, $"zones/{zoneIdentifier}/dns_records/{dnsRecordIdentifier}");
 			req.Content = new StringContent(JsonSerializer.Serialize(dnsUpdateRequest), Encoding.UTF8, "application/json");
 
-			response = Client.SendAsync(req).Result;
-			var result = response.Content.ReadAsStringAsync().Result;
+			response = await Client.SendAsync(req);
+			var result = await response.Content.ReadAsStringAsync();
 
 			ValidateCloudflareResult(response, result, $"update {protocol} DNS");
 
@@ -127,11 +129,11 @@ namespace DnsTube
 			return ret;
 		}
 
-		public List<Dns.Result> GetAllDnsRecordsByZone()
+		public async Task<List<Dns.Result>> GetAllDnsRecordsByZoneAsync()
 		{
 			var zoneIDs = settings.ZoneIDs.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 			if (!zoneIDs.Any())
-				zoneIDs = ListZoneIDs();
+				zoneIDs = await ListZoneIDsAsync();
 
 			var allDnsEntries = new List<Dns.Result>();
 
@@ -139,20 +141,20 @@ namespace DnsTube
 			{
 				if (settings.ProtocolSupport != IpSupport.IPv6)
 				{
-					var aRecords = GetRecordsByType(zoneID, "A");
+					var aRecords = await GetRecordsByTypeAsync(zoneID, "A");
 					allDnsEntries.AddRange(aRecords);
 				}
 
 				if (settings.ProtocolSupport != IpSupport.IPv4)
 				{
-					var aaaaRecords = GetRecordsByType(zoneID, "AAAA");
+					var aaaaRecords = await GetRecordsByTypeAsync(zoneID, "AAAA");
 					allDnsEntries.AddRange(aaaaRecords);
 				}
 
-				var txtRecords = GetRecordsByType(zoneID, "TXT");
+				var txtRecords = await GetRecordsByTypeAsync(zoneID, "TXT");
 				allDnsEntries.AddRange(txtRecords);
 
-				var spfRecords = GetRecordsByType(zoneID, "SPF");
+				var spfRecords = await GetRecordsByTypeAsync(zoneID, "SPF");
 				allDnsEntries.AddRange(spfRecords);
 			}
 

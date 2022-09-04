@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -25,17 +26,16 @@ namespace DnsTube
 		private HttpClient httpClient;
 		private CloudflareAPI cfClient;
 		private Settings settings;
-		ObservableCollection<DnsEntryViewItem> observableDnsEntryCollection;
-		TaskbarIcon notifyIcon1;
+		private ObservableCollection<DnsEntryViewItem> observableDnsEntryCollection;
+		private readonly TaskbarIcon notifyIcon1;
 		private bool isInitialMinimize = false;
-		private string RELEASE_TAG = "v0.9.8";
+		private readonly string RELEASE_TAG = "v0.9.8";
 
 		public frmMain()
 		{
 			const string appName = "DnsTube";
 			Icon = BitmapFrame.Create(new Uri("pack://application:,,,/DnsTube;component/icon-48.ico"));
-			bool createdNew;
-			_mutex = new Mutex(true, appName, out createdNew);
+			_mutex = new Mutex(true, appName, out bool createdNew);
 			if (!createdNew)
 			{
 				MessageBox.Show("DnsTube is already running", "DnsTube", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -44,10 +44,12 @@ namespace DnsTube
 
 			InitializeComponent();
 			WindowStartupLocation = WindowStartupLocation.CenterScreen;
-			notifyIcon1 = new TaskbarIcon();
-			notifyIcon1.Icon = new System.Drawing.Icon("icon-48.ico");
-			notifyIcon1.ToolTipText = "DnsTube";
-			notifyIcon1.Visibility = Visibility.Collapsed;
+			notifyIcon1 = new TaskbarIcon
+			{
+				Icon = new System.Drawing.Icon("icon-48.ico"),
+				ToolTipText = "DnsTube",
+				Visibility = Visibility.Collapsed
+			};
 			notifyIcon1.TrayLeftMouseDown += NotifyIcon1_TrayMouseDown;
 			notifyIcon1.TrayRightMouseDown += NotifyIcon1_TrayMouseDown;
 			settings = new Settings();
@@ -79,21 +81,21 @@ namespace DnsTube
 			}
 		}
 
-		private void frmMain_Loaded(object sender, RoutedEventArgs e)
+		private async void frmMain_Loaded(object sender, RoutedEventArgs e)
 		{
 			Init();
 
-			DisplayVersionAndSettingsPath();
+			await DisplayVersionAndSettingsPathAsync();
 
 			PromptForSettings();
 
 			cfClient = new CloudflareAPI(httpClient, settings);
 
-			FetchDsnEntries();
+			await FetchDsnEntriesAsync();
 
-			DisplayAndLogPublicIpAddress();
+			await DisplayAndLogPublicIpAddressAsync();
 
-			if (validateSettings())
+			if (ValidateSettings())
 				ValidateSelectedDomains();
 
 			ScheduleUpdates();
@@ -111,11 +113,11 @@ namespace DnsTube
 			}
 		}
 
-		private void DisplayAndLogPublicIpAddress()
+		private async Task DisplayAndLogPublicIpAddressAsync()
 		{
 			if (settings.ProtocolSupport != IpSupport.IPv6)
 			{
-				var publicIpv4Address = GetPublicIpAddress(IpSupport.IPv4);
+				var publicIpv4Address = await GetPublicIpAddressAsync(IpSupport.IPv4);
 				if (publicIpv4Address == null)
 					AppendStatusText($"Error detecting public IPv4 address");
 				else
@@ -123,7 +125,7 @@ namespace DnsTube
 			}
 			if (settings.ProtocolSupport != IpSupport.IPv4)
 			{
-				var publicIpv6Address = GetPublicIpAddress(IpSupport.IPv6);
+				var publicIpv6Address = await GetPublicIpAddressAsync(IpSupport.IPv6);
 				if (publicIpv6Address == null)
 					AppendStatusText($"Error detecting public IPv6 address");
 				else
@@ -138,11 +140,11 @@ namespace DnsTube
 
 			TaskScheduler.StopAll();
 			TaskScheduler.Instance.ScheduleTask(interval,
-				() =>
+				async () =>
 				{
 					try
 					{
-						DoUpdate();
+						await DoUpdateAsync();
 					}
 					finally
 					{
@@ -151,7 +153,7 @@ namespace DnsTube
 				});
 		}
 
-		private void DoUpdate()
+		private async Task DoUpdateAsync()
 		{
 			if (!PreflightSettingsCheck())
 				return;
@@ -159,22 +161,22 @@ namespace DnsTube
 			var updatedAddress = false;
 			// if IPv6-only support was not specified, do the IPv4 update
 			if (settings.ProtocolSupport != IpSupport.IPv6)
-				if (UpdateDnsRecords(IpSupport.IPv4))
+				if (await UpdateDnsRecordsAsync(IpSupport.IPv4))
 					updatedAddress = true;
 
 			// if IPv4-only support was not specified, do the IPv6 update
 			if (settings.ProtocolSupport != IpSupport.IPv4)
-				if (UpdateDnsRecords(IpSupport.IPv6))
+				if (await UpdateDnsRecordsAsync(IpSupport.IPv6))
 					updatedAddress = true;
 
 			// fetch and update listview with current status of records if necessary
 			if (updatedAddress)
-				FetchDsnEntries();
+				await FetchDsnEntriesAsync();
 		}
 
-		private bool UpdateDnsRecords(IpSupport protocol)
+		private async Task<bool> UpdateDnsRecordsAsync(IpSupport protocol)
 		{
-			var publicIpAddress = GetPublicIpAddress(protocol);
+			var publicIpAddress = await GetPublicIpAddressAsync(protocol);
 			if (publicIpAddress == null)
 			{
 				AppendStatusText($"Error detecting public {protocol} address");
@@ -205,7 +207,7 @@ namespace DnsTube
 				List<Dns.Result> potentialEntriesToUpdate = null;
 				try
 				{
-					var allRecordsByZone = cfClient.GetAllDnsRecordsByZone();
+					var allRecordsByZone = await cfClient.GetAllDnsRecordsByZoneAsync();
 
 					potentialEntriesToUpdate = allRecordsByZone.Where(d => settings.SelectedDomains.Any(s =>
 						s.ZoneName == d.zone_name
@@ -237,7 +239,7 @@ namespace DnsTube
 
 					try
 					{
-						cfClient.UpdateDns(protocol, entry.zone_id, entry.id, entry.type, entry.name, content, entry.ttl, entry.proxied);
+						await cfClient.UpdateDnsAsync(protocol, entry.zone_id, entry.id, entry.type, entry.name, content, entry.ttl, entry.proxied);
 
 						AppendStatusText($"Updated {entry.type} record [{entry.name}] in zone [{entry.zone_name}] to {content}");
 					}
@@ -255,7 +257,7 @@ namespace DnsTube
 
 		private void PromptForSettings()
 		{
-			if (!validateSettings())
+			if (!ValidateSettings())
 			{
 				MessageBox.Show($"Please configure your settings.");
 				DisplaySettingsForm();
@@ -264,7 +266,7 @@ namespace DnsTube
 
 		private bool PreflightSettingsCheck()
 		{
-			if (!validateSettings())
+			if (!ValidateSettings())
 			{
 				AppendStatusText($"Settings not configured");
 				return false;
@@ -272,11 +274,11 @@ namespace DnsTube
 			return true;
 		}
 
-		private bool validateSettings()
+		private bool ValidateSettings()
 		{
 			// check if settings are populate
 			if (string.IsNullOrWhiteSpace(settings.EmailAddress)
-				|| !settings.EmailAddress.Contains("@")
+				|| !settings.EmailAddress.Contains('@')
 				|| (!settings.IsUsingToken && string.IsNullOrWhiteSpace(settings.ApiKey))
 				|| (settings.IsUsingToken && string.IsNullOrWhiteSpace(settings.ApiToken))
 				|| settings.UpdateIntervalMinutes == 0
@@ -286,15 +288,16 @@ namespace DnsTube
 			return true;
 		}
 
-		private string GetPublicIpAddress(IpSupport protocol)
+		private async Task<string> GetPublicIpAddressAsync(IpSupport protocol)
 		{
-			string errorMesssage;
-			var publicIpAddress = Utility.GetPublicIpAddress(protocol, httpClient, out errorMesssage);
+			var tuple = await Utility.GetPublicIpAddressAsync(protocol, httpClient);
+			string publicIpAddress = tuple.Item1;
+			string errorMesssage = tuple.Item2;
 
 			// Abort if we get an error, keeping the current address in settings
 			if (publicIpAddress == null)
 			{
-				AppendStatusText($"Error getting public {protocol.ToString()}: {errorMesssage}");
+				AppendStatusText($"Error getting public {protocol}: {errorMesssage}");
 				return null;
 			}
 
@@ -329,19 +332,19 @@ namespace DnsTube
 			txtPublicIpv6.IsEnabled = settings.ProtocolSupport != IpSupport.IPv4;
 		}
 
-		private void btnUpdateList_Click(object sender, RoutedEventArgs e)
+		private async void btnUpdateList_Click(object sender, RoutedEventArgs e)
 		{
-			FetchDsnEntries();
+			await FetchDsnEntriesAsync();
 		}
 
-		private void FetchDsnEntries()
+		private async Task FetchDsnEntriesAsync()
 		{
 			if (!PreflightSettingsCheck())
 				return;
 
 			try
 			{
-				var allDnsRecordsByZone = cfClient.GetAllDnsRecordsByZone();
+				var allDnsRecordsByZone = await cfClient.GetAllDnsRecordsByZoneAsync();
 				UpdateDnsEntryListUI(allDnsRecordsByZone);
 			}
 			catch (Exception e)
@@ -364,15 +367,17 @@ namespace DnsTube
 			observableDnsEntryCollection = new ObservableCollection<DnsEntryViewItem>();
 			foreach (var dnsRecord in allDnsRecords)
 			{
-				var item = new DnsEntryViewItem(settings);
-				item.UpdateCloudflare = settings.SelectedDomains
-					.Any(entry => entry.ZoneName == dnsRecord.zone_name && entry.DnsName == dnsRecord.name && entry.Type == dnsRecord.type);
-				item.DnsName = dnsRecord.name;
-				item.Type = dnsRecord.type;
-				item.Address = dnsRecord.content;
-				item.TTL = dnsRecord.ttl == 1 ? "Auto" : dnsRecord.ttl.ToString();
-				item.Proxied = dnsRecord.proxied ? "Yes" : "No";
-				item.ZoneName = dnsRecord.zone_name;
+				var item = new DnsEntryViewItem(settings)
+				{
+					UpdateCloudflare = settings.SelectedDomains
+						.Any(entry => entry.ZoneName == dnsRecord.zone_name && entry.DnsName == dnsRecord.name && entry.Type == dnsRecord.type),
+					DnsName = dnsRecord.name,
+					Type = dnsRecord.type,
+					Address = dnsRecord.content,
+					TTL = dnsRecord.ttl == 1 ? "Auto" : dnsRecord.ttl.ToString(),
+					Proxied = dnsRecord.proxied ? "Yes" : "No",
+					ZoneName = dnsRecord.zone_name
+				};
 
 				observableDnsEntryCollection.Add(item);
 			}
@@ -452,14 +457,14 @@ namespace DnsTube
 			txtNextUpdate.Text = d.ToString("HH:mm:ss");
 		}
 
-		private void DisplayVersionAndSettingsPath()
+		private async Task DisplayVersionAndSettingsPathAsync()
 		{
 			Title = $"DnsTube {RELEASE_TAG}";
 			AppendStatusText(Title);
 
 			if (!settings.SkipCheckForNewReleases)
 			{
-				var release = Utility.GetLatestRelease();
+				var release = await Utility.GetLatestReleaseAsync();
 				if (release != null && release.tag_name != RELEASE_TAG)
 					AppendStatusText("You are not running the latest release. See https://github.com/drittich/DnsTube/releases/latest for more information.");
 			}
@@ -468,10 +473,10 @@ namespace DnsTube
 				AppendStatusText($"Settings path: {settings.GetSettingsFilePath()}");
 		}
 
-		private void btnUpdate_Click(object sender, RoutedEventArgs e)
+		private async void btnUpdate_Click(object sender, RoutedEventArgs e)
 		{
 			AppendStatusText($"Manually updating IP address");
-			DoUpdate();
+			await DoUpdateAsync();
 		}
 
 		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)

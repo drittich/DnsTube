@@ -3,17 +3,18 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace DnsTube
 {
 	public class Utility
 	{
-		public static string GetPublicIpAddress(IpSupport protocol, HttpClient Client, out string errorMesssage)
+		public async static Task<Tuple<string, string>> GetPublicIpAddressAsync(IpSupport protocol, HttpClient Client)
 		{
 			string publicIpAddress = null;
 			var maxAttempts = 3;
 			var attempts = 0;
-			errorMesssage = null;
+			string errorMesssage = null;
 
 			var settings = new Settings();
 			var url = protocol == IpSupport.IPv4 ? settings.IPv4_API : settings.IPv6_API;
@@ -23,7 +24,7 @@ namespace DnsTube
 				try
 				{
 					attempts++;
-					var response = Client.GetStringAsync(url).Result;
+					var response = await Client.GetStringAsync(url);
 					var candidatePublicIpAddress = response.Replace("\n", "");
 
 					if (!IsValidIpAddress(protocol, candidatePublicIpAddress))
@@ -37,10 +38,11 @@ namespace DnsTube
 						errorMesssage = e.Message;
 				}
 			}
-			return publicIpAddress;
+			
+			return new Tuple<string, string>(publicIpAddress, errorMesssage);
 		}
 
-		public static GithubRelease GetLatestRelease()
+		public async static Task<GithubRelease> GetLatestReleaseAsync()
 		{
 			var url = "https://api.github.com/repos/drittich/DnsTube/releases/latest";
 
@@ -53,7 +55,7 @@ namespace DnsTube
 				{
 					client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 					client.DefaultRequestHeaders.UserAgent.TryParseAdd("request");
-					var response = client.GetStringAsync(url).Result;
+					var response = await client.GetStringAsync(url);
 					release = JsonSerializer.Deserialize<GithubRelease>(response);
 				}
 				catch { }
