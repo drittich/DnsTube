@@ -32,7 +32,7 @@ namespace DnsTube
 						candidatePublicIpAddress = regex.Match(response).Value;
 					}
 
-                    if (!IsValidIpAddress(protocol, candidatePublicIpAddress))
+					if (!IsValidIpAddress(protocol, candidatePublicIpAddress))
 						throw new Exception($"Malformed response, expected IP address: {response}");
 
 					publicIpAddress = candidatePublicIpAddress;
