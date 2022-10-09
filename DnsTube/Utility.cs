@@ -9,6 +9,8 @@ namespace DnsTube
 {
 	public class Utility
 	{
+		public const string Ipv4Regex = @"\b(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\b";
+
 		public async static Task<Tuple<string, string>> GetPublicIpAddressAsync(IpSupport protocol, HttpClient Client)
 		{
 			string publicIpAddress = null;
@@ -26,7 +28,7 @@ namespace DnsTube
 					attempts++;
 					var response = await Client.GetStringAsync(url);
 					var candidatePublicIpAddress = response.Replace("\n", "");
-					var regex = new Regex("(\\b25[0-5]|\\b2[0-4][0-9]|\\b[01]?[0-9][0-9]?)(\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}");
+					var regex = new Regex(Ipv4Regex);
 					if (regex.IsMatch(candidatePublicIpAddress))
 					{
 						candidatePublicIpAddress = regex.Match(response).Value;
