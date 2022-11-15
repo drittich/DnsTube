@@ -36,13 +36,10 @@ builder.Services.AddHostedService<WorkerService>();
 var app = builder.Build();
 
 app.UseRouting();
-app.UseEndpoints(endpoints => {
-	endpoints.MapControllers();
-	endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
-	endpoints.MapServerSentEvents("/sse");
-	app.MapGet("/", () => Results.Redirect("/index.html"));
-});
-
+app.MapControllers();
+app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapServerSentEvents("/sse");
+app.MapGet("/", () => Results.Redirect("/index.html"));
 app.UseStaticFiles();
 var defaultFilesOptions = new DefaultFilesOptions { DefaultFileNames = new List<string> { "index.html" } };
 app.UseDefaultFiles(defaultFilesOptions);

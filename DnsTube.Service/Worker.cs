@@ -15,7 +15,6 @@ namespace DnsTube.Service
 		private ILogService _logService;
 		private IIpAddressService _ipAddressService;
 		private IConfiguration _configuration;
-		
 
 		public WorkerService(ILogger<WorkerService> logger, ISettingsService settingsService, IGitHubService githubService, ICloudflareService cloudflareService, ILogService logService, IIpAddressService ipAddressService, IConfiguration configuration)
 		{
