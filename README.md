@@ -1,87 +1,68 @@
-#### *"Access your home computer from anywhere"*
+# DnsTube v2
 
-## DnsTube
-A Windows client for dynamically updating Cloudflare DNS entries with your public IP address.
+A Windows Service for dynamically updating Cloudflare DNS.
 
-## What is this?
+## Installing
 
-Most of us have home computers with dynamically assigned IP addresses provided by our ISPs. If you want to serve up a web site, be able to access files remotely, or use RDP, etc., from the internet, it becomes challenging to locate your machine when the IP address is constantly changing. This is the problem DNS was designed to solve, so by getting a domain name and updating the DNS entries for it as-needed, you can always access your computer by its domain name, and forget about IP addresses.
-
-This is where DnsTube comes in. Cloudflare provides free DNS hosting for your domain, and also provides an API for updating DNS entries, i.e., the IP address in this case. By running DnsTube on your computer, it will periodically check the public-facing IP address and update the Cloudflare DNS entry as needed.
-
-![image](https://user-images.githubusercontent.com/1222810/144518919-81b2d2e2-8ee6-4819-9f8c-bb79276afc4c.png)
-
-## Features
-
-* Can update A (IPv4), AAAA (IPv6), SPF, and TXT records.
-* Support both Cloudflare API keys and tokens
-* Supports API tokens scoped to specific zones
-* Does updates on an adjustable timer, e.g., every 30 minutes
-* Supports minimize on load, check for updates
-
-## Downloading & Installation
-
-Head over to the [Releases](https://github.com/drittich/DnsTube/releases/latest) page to download the latest binary.
-
-You have four executables to choose from, and you can extract and copy the application files to a folder of your choice. (DnsTube requires .NET 6, so you may be prompted to install it if you choose a non-self-contained version.)
-
-- *DnsTube-vX.X.X.7z*: normal application, requires .NET 6 runtime to be installed
-- *DnsTube-SelfContained-vX.X.X.7z*: normal self-contained application, does not require .NET 6 runtime to be installed
-- *DnsTube-Portable-vX.X.X.7z*: portable application, requires .NET 6 runtime to be installed
-- *DnsTube-Portable-SelfContained-vX.X.X.7z*: portable self-contained application, does not require .NET 6 runtime to be installed
-
-You can choose to manually launch the application, or make it [run automatically at startup in Windows 10](https://support.microsoft.com/en-us/windows/add-an-app-to-run-automatically-at-startup-in-windows-10-150da165-dcd9-7230-517b-cf3c295d89dd).
-
-## Configuration & Usage
-
-You will need to create an account with Cloudflare and make it the DNS authority for your domain. You then need to configure your DNS entries as appropriate. See [Managing DNS records in Cloudflare](https://support.cloudflare.com/hc/en-us/articles/360019093151-Managing-DNS-records-in-Cloudflare) for more info.
-
-You can use [nslookup](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup) to make sure DNS resolution is working correctly, e.g., 
+- Extract the package to a folder of your choice
+- Open a command prompt as Administrator and install the service using  `install-service.bat`.
+You should see the following output:
 ```
-nslookup mydomain.com
+PS C:\Program Files\DnsTubeService> .\install-service.bat
+sc create "DnsTube Service" binPath="C:\Program Files\DnsTubeService\DnsTube.Service.exe" start=auto
+[SC] CreateService SUCCESS
+[SC] ChangeServiceConfig2 SUCCESS
+
+SERVICE_NAME: DnsTube Service
+		TYPE               : 10  WIN32_OWN_PROCESS
+		STATE              : 2  START_PENDING
+								(NOT_STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)
+		WIN32_EXIT_CODE    : 0  (0x0)
+		SERVICE_EXIT_CODE  : 0  (0x0)
+		CHECKPOINT         : 0x0
+		WAIT_HINT          : 0x7d0
+		PID                : 21408
+		FLAGS              :
+PS C:\Program Files\DnsTubeService>
 ```
 
-After that, you'll need to generate an API Token (preferred) or Key in order to access the API via DnsTube. The details for doing that can be found at [Creating API tokens](https://developers.cloudflare.com/api/tokens/create).
+## Configuration
 
-Once you have done this, enter your Cloudflare email address, token or key, and zone ID. You'll also went to select whether you are updating IPv4 addresses, ipv6 addresses or both.
+By default the service hosts the web application on your local machine at port 5666. If you wish to change this, edit `appsettings.json` accordingly. Once the service is running you can launch the interface at http://localhost:5666/ (or whatever port you have chosen).
 
-After you have the settings configured, from then on you just launch it and leave it running.
+Go the settings page and enter your email address, API key/token, etc. Go back to the main tab (refresh if necessary) and you should see a table listing your Cloudflare DNS entries. Check off the ones you want to dynamically update and the service should take it from there.
 
-## UI
+## Uninstalling
+Open a command prompt as Administrator and uninstall the service using  `uninstall-service.bat`. You should see the following output:
+```
+PS C:\Program Files\DnsTubeService> .\uninstall-service.bat
 
-**Top Pane**: The UI shows a list of domains for zone you have provded at the top, and you can check off the ones you want DnsTube to update. 
+SERVICE_NAME: DnsTube Service
+		TYPE               : 10  WIN32_OWN_PROCESS
+		STATE              : 3  STOP_PENDING
+								(STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
+		WIN32_EXIT_CODE    : 0  (0x0)
+		SERVICE_EXIT_CODE  : 0  (0x0)
+		CHECKPOINT         : 0x0
+		WAIT_HINT          : 0x0
+[SC] DeleteService SUCCESS
+PS C:\Program Files\DnsTubeService>
+```
 
-**Lower Pane**: The lower pane shows a running log of activity. 
 
-**Fetch List** button: If you have modified your DNS entries manually in Cloudflare, you can click **Fetch List** to update the list of domains shown in DnsTube. 
+## Project Structure
 
-**Manual Update** button: You can click **Manual Update** whenever you want to force an IP address update before the timer interval occurs - I often do this when I have just finished using a VPN.
+- **DnsTube.Core project**: Holds core application code 
+- **DnsTube.Service project**: Contains the Windows service, the REST API for the web application, and the web applicaiton itself.
 
-## Notes
+## Development
 
-1. DnsTube only updates existing Cloudflare records. It will not create or remove records.
-2. DnsTube must currently be run as a logged-in Windows user. A future release will support running it as a service.
+The front-end application must be built before starting the .NET application. To do this, open a command prompt and go to `[YOUR_INSTALL_FOLDER]\DnsTube.Service\ClientApp`. Then run
+```
+npm install
+npm run build
+```
 
-## Building
+This will build your files and copy them to the `[YOUR_INSTALL_FOLDER]\DnsTube.Service\wwwroot` folder.
 
-This solution can be built using Visual Studio 2022.
-
-## The Name
-
-We all know the internet is a [series of tubes](https://en.wikipedia.org/wiki/Series_of_tubes). This application uses those very same tubes to update your DNS.
-
-## Contributing
-
-Contributions are welcome!
-
-## Authors
-
-* **D'Arcy Rittich**
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](/LICENSE) file for details.
-
-## Acknowledgments
-
-Some of the UI was inspired by [CloudFlare-DDNS-Updater](https://github.com/birkett/CloudFlare-DDNS-Updater). 
+At this point you can run the application with `Ctrl - F5` and you should be able to launch the application UI at the URL http://localhost:5666.

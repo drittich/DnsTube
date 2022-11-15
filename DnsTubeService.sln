@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DnsTube.Service", "DnsTube.Service\DnsTube.Service.csproj", "{73A43270-9624-46B8-BB2A-741672ED0A81}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DnsTube.Core", "DnsTube.Core\DnsTube.Core.csproj", "{709DD075-4FC1-450A-976D-207096D5AC11}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{73A43270-9624-46B8-BB2A-741672ED0A81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73A43270-9624-46B8-BB2A-741672ED0A81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73A43270-9624-46B8-BB2A-741672ED0A81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73A43270-9624-46B8-BB2A-741672ED0A81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{709DD075-4FC1-450A-976D-207096D5AC11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{709DD075-4FC1-450A-976D-207096D5AC11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{709DD075-4FC1-450A-976D-207096D5AC11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{709DD075-4FC1-450A-976D-207096D5AC11}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {77B8FC47-998C-4580-89D7-4DCF865623D8}
+	EndGlobalSection
+EndGlobal

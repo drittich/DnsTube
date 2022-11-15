@@ -1,0 +1,42 @@
+{
+  "profiles": {
+    "DnsTube.Service": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "Index.html",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5666",
+      "dotnetRunMessages": true
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "Index.html",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "dotnet": {
+      "commandName": "Project",
+      "hotReloadProfile": "aspnetcore"
+    }
+  },
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "Kestrel": {
+    "Endpoints": {
+      "Http": {
+        "Url": "http://localhost:5666"
+      }
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:54371/",
+      "sslPort": 44302
+    }
+  }
+}

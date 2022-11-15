@@ -1,0 +1,25 @@
+{
+  "name": "dnstube",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && vite build",
+    "watch": "tsc && vite build --watch"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.3",
+    "path": "^0.12.7",
+    "sass": "^1.55.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.1.0"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.6",
+    "bootstrap": "^5.2.2",
+    "date-fns": "^2.29.3",
+    "linkify-html": "^4.0.2",
+    "linkifyjs": "^4.0.2",
+    "three-dots": "^0.2.3"
+  }
+}
