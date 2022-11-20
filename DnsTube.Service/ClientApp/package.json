@@ -17,6 +17,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.2.2",
+    "bootstrap-icons": "^1.10.2",
     "date-fns": "^2.29.3",
     "linkify-html": "^4.0.2",
     "linkifyjs": "^4.0.2",

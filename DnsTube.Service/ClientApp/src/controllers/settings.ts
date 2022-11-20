@@ -1,5 +1,6 @@
 import '../style.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import { getDbFolderAsync, getSettingsAsync, saveSettingsAsync } from "../services/Settings";
 
 init();
@@ -25,12 +26,24 @@ function init() {
 			});
 	}, false);
 
+
+	document.getElementById('togglePassword')!.addEventListener('click', handleViewTokenClick);
+
 	let authTypeRadioButtons = document.getElementsByName("IsUsingToken");
 	for (let i = 0; i < authTypeRadioButtons.length; i++) {
 		authTypeRadioButtons[i].addEventListener("click", function () {
 			setAuthLabel((this as HTMLInputElement).value == 'true');
 		}, false);
 	}
+}
+
+function handleViewTokenClick(this: HTMLElement) {
+	const tokenInput = document.querySelector('#apiKeyOrToken') as HTMLInputElement;
+	const type = tokenInput.getAttribute('type') === 'password' ? 'text' : 'password';
+	tokenInput.setAttribute('type', type);
+
+	(this as HTMLElement).classList.toggle('bi-eye-slash', type == "text");
+	(this as HTMLElement).classList.toggle('bi-eye', type == "password");
 }
 
 async function getSettings(): Promise<void> {

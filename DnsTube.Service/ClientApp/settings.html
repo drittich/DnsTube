@@ -16,155 +16,161 @@
 				<a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto
 					text-dark text-decoration-none">
 					<!-- <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap" /></svg> -->
-						<span class="fs-4">DnsTube v2.0</span>
-					</a>
+					<span class="fs-4">DnsTube v2.0</span>
+				</a>
 
-					<ul class="nav nav-pills">
-						<li class="nav-item"><a href="/index.html" class="nav-link"
-								aria-current="page">Home</a></li>
-						<li class="nav-item"><a href="/settings.html" class="nav-link active">Settings</a></li>
-						<!-- <li class="nav-item"><a href="/Log" class="nav-link">Log</a></li> -->
-					</ul>
-				</header>
-			</div>
+				<ul class="nav nav-pills">
+					<li class="nav-item"><a href="/index.html" class="nav-link"
+							aria-current="page">Home</a></li>
+					<li class="nav-item"><a href="/settings.html" class="nav-link active">Settings</a></li>
+				</ul>
+			</header>
+		</div>
 
-			<div class="container body-content">
+		<div class="container body-content">
 
-
-				<style>
+			<style>
 					.form-group.row {
 						padding-bottom: 6px;
 					}
 				</style>
-				<h4>Settings</h4>
+			<h4>Settings</h4>
 
-				<div>
+			<div class="alert alert-secondary" role="alert">
+				To get a Cloudflare API token see <a
+					href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/"
+					target="_blank">Create an API token</a>
+			</div>
 
-					<form id="settings">
-						<div class="form-group row">
-							<label for="email" class="col-sm-2 col-form-label">Email</label>
-							<div class="col-6">
-								<input type="email" class="form-control" name="EmailAddress"
-									id="emailAddress">
-							</div>
-						</div>
+			<div>
 
-						<div class="form-group row">
-							<label for="apiToken" class="col-sm-2 col-form-label">Authorization Type</label>
-							<div class="col-sm-10" style="padding-top:8px;">
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" name="IsUsingToken"
-										id="authorizationKey" value="false">
-									<label class="form-check-label" for="authorizationKey">
-										Use key
-									</label>
-								</div>
-								<div class="form-check form-check-inline align-bottom">
-									<input class="form-check-input" type="radio" name="IsUsingToken"
-										id="authorizationToken" value="true">
-									<label class="form-check-label" for="authorizationToken">
-										Use token
-									</label>
-								</div>
-							</div>
+				<form id="settings">
+					<div class="form-group row">
+						<label for="email" class="col-sm-2 col-form-label">Email</label>
+						<div class="col-6">
+							<input type="email" class="form-control" name="EmailAddress"
+								id="emailAddress">
 						</div>
-
-						<div class="form-group row">
-							<label for="apiKeyOrToken" id="apiKeyTokenLabel" class="col-sm-2
-								col-form-label">Authorization Key/Token</label>
-							<div class="col-6">
-								<input type="text" class="form-control" name="ApiKeyOrToken"
-									id="apiKeyOrToken">
-							</div>
-						</div>
-
-						<div class="form-group row">
-							<label for="zoneIDs" class="col-sm-2 col-form-label">Zone IDs</label>
-							<div class="col-6">
-								<input type="text" class="form-control" name="ZoneIDs" id="zoneIDs">
-							</div>
-						</div>
-
-						<div class="form-group row">
-							<label for="apiToken" class="col-sm-2 col-form-label">Protocol</label>
-							<div class="col-sm-10" style="padding-top:8px;">
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" name="ProtocolSupport"
-										id="protocolIpv4" value="0">
-									<label class="form-check-label" for="protocolIpv4">
-										IPv4
-									</label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" name="ProtocolSupport"
-										id="protocolIpv6" value="1">
-									<label class="form-check-label" for="protocolIpv6">
-										IPv6
-									</label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" name="ProtocolSupport"
-										id="protocolBoth" value="2">
-									<label class="form-check-label" for="protocolBoth">
-										Both
-									</label>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group row">
-							<label for="ipv4Api" class="col-sm-2 col-form-label">IPv4 API</label>
-							<div class="col-6">
-								<input type="url" class="form-control" name="Ipv4_API" id="ipv4Api">
-							</div>
-						</div>
-						<div class="form-group row">
-							<label for="ipv6Api" class="col-sm-2 col-form-label">IPv6 API</label>
-							<div class="col-6">
-								<input type="url" class="form-control" name="Ipv6_API" id="ipv6Api">
-							</div>
-						</div>
-						<div class="form-group row">
-							<label for="updateIntervalMinutes" class="col-sm-2 col-form-label">Update
-								Interval</label>
-							<div class="col-2">
-								<input type="number" class="form-control" name="UpdateIntervalMinutes"
-									id="updateIntervalMinutes" value="30">
-							</div>
-							<label class="col-sm-2 col-form-label">(minutes)</label>
-						</div>
-						<div class="form-group row">
-							<label for="ipv6Api" class="col-sm-2 col-form-label"></label>
-							<div class="form-check form-check-inline" style="margin-left:12px;">
-								<input class="form-check-input" type="checkbox" name="NotifyOfUpdates"
-									id="notifyOfUpdates" value="true">
-								<label class="form-check-label" for="notifyOfUpdates">Check for DnsTube
-									updates</label>
-							</div>
-						</div>
-
-						<div class="form-group row" style="margin-top: 12px;">
-								<div class="d-grid gap-2 d-md-block">
-									<button type="button" class="btn btn-primary" id="saveSettings">Save</button>
-								</div>
-							</div>
-						</form>
 					</div>
 
-					<small class="fst-italic text-muted text-small">
-						Settings saved in SQLite Db at: <span id="dbPath"></span>
-					</small>
+					<div class="form-group row">
+						<label for="apiToken" class="col-sm-2 col-form-label">Authorization Type</label>
+						<div class="col-sm-10" style="padding-top:8px;">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="IsUsingToken"
+									id="authorizationKey" value="false">
+								<label class="form-check-label" for="authorizationKey">
+									Use key
+								</label>
+							</div>
+							<div class="form-check form-check-inline align-bottom">
+								<input class="form-check-input" type="radio" name="IsUsingToken"
+									id="authorizationToken" value="true">
+								<label class="form-check-label" for="authorizationToken">
+									Use token
+								</label>
+							</div>
+						</div>
+					</div>
 
-				</div>
+					<div class="form-group row">
+						<label for="apiKeyOrToken" id="apiKeyTokenLabel" class="col-sm-2
+							col-form-label">Authorization Key/Token</label>
+						<div class="col-6">
+							<input type="password" class="form-control" name="ApiKeyOrToken"
+								id="apiKeyOrToken" style="display:inline-block">
+							<i class="bi-eye" id="togglePassword" style="margin-left: -30px;
+								cursor: pointer;"></i>
+						</div>
+					</div>
 
-				<div class="container body-content">
-					<hr />
-					<footer>
-						<p>&copy; 2022 - DnsTube</p>
-					</footer>
-				</div>
+					<div class="form-group row">
+						<label for="zoneIDs" class="col-sm-2 col-form-label">Zone IDs</label>
+						<div class="col-6">
+							<input type="text" class="form-control" name="ZoneIDs" id="zoneIDs">
+						</div>
+					</div>
 
-				<script type="module" src="/src/controllers/settings.ts"></script>
+					<div class="form-group row">
+						<label for="apiToken" class="col-sm-2 col-form-label">Protocol</label>
+						<div class="col-sm-10" style="padding-top:8px;">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="ProtocolSupport"
+									id="protocolIpv4" value="0">
+								<label class="form-check-label" for="protocolIpv4">
+									IPv4
+								</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="ProtocolSupport"
+									id="protocolIpv6" value="1">
+								<label class="form-check-label" for="protocolIpv6">
+									IPv6
+								</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="ProtocolSupport"
+									id="protocolBoth" value="2">
+								<label class="form-check-label" for="protocolBoth">
+									Both
+								</label>
+							</div>
+						</div>
+					</div>
 
-			</body>
-		</html>
+					<div class="form-group row">
+						<label for="ipv4Api" class="col-sm-2 col-form-label">IPv4 API</label>
+						<div class="col-6">
+							<input type="url" class="form-control" name="Ipv4_API" id="ipv4Api">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="ipv6Api" class="col-sm-2 col-form-label">IPv6 API</label>
+						<div class="col-6">
+							<input type="url" class="form-control" name="Ipv6_API" id="ipv6Api">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="updateIntervalMinutes" class="col-sm-2 col-form-label">Update
+							Interval</label>
+						<div class="col-2">
+							<input type="number" class="form-control" name="UpdateIntervalMinutes"
+								id="updateIntervalMinutes" value="30">
+						</div>
+						<label class="col-sm-2 col-form-label">(minutes)</label>
+					</div>
+					<div class="form-group row">
+						<label for="ipv6Api" class="col-sm-2 col-form-label"></label>
+						<div class="form-check form-check-inline" style="margin-left:14px;">
+							<input class="form-check-input" type="checkbox" name="NotifyOfUpdates"
+								id="notifyOfUpdates" value="true">
+							<label class="form-check-label" for="notifyOfUpdates">Check for DnsTube
+								updates</label>
+						</div>
+					</div>
+
+					<div class="form-group row" style="margin-top: 24px;">
+						<div class="d-grid gap-2 d-md-block">
+							<button type="button" class="btn btn-primary" id="saveSettings">Save</button>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<small class="fst-italic text-muted text-small">
+				Settings are saved in a SQLite Db at: <span id="dbPath"></span>
+			</small>
+
+		</div>
+
+		<div class="container body-content">
+			<hr />
+			<footer>
+				<p>&copy; 2022 - DnsTube</p>
+			</footer>
+		</div>
+
+		<script type="module" src="/src/controllers/settings.ts"></script>
+
+	</body>
+</html>
