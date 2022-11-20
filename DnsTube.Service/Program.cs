@@ -8,6 +8,7 @@ using DnsTube.Service;
 using Lib.AspNetCore.ServerSentEvents;
 
 using Microsoft.Extensions.Hosting.WindowsServices;
+using Microsoft.Net.Http.Headers;
 
 var options = new WebApplicationOptions
 {
@@ -40,7 +41,17 @@ app.MapControllers();
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapServerSentEvents("/sse");
 app.MapGet("/", () => Results.Redirect("/index.html"));
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+	OnPrepareResponse = ctx =>
+	{
+		var requestPath = ctx.Context.Request.Path.Value;
+		if (requestPath != null && requestPath.EndsWith(".html"))
+		{
+			ctx.Context.Response.Headers[HeaderNames.CacheControl] = "no-cache";
+		}
+	}
+});
 var defaultFilesOptions = new DefaultFilesOptions { DefaultFileNames = new List<string> { "index.html" } };
 app.UseDefaultFiles(defaultFilesOptions);
 
