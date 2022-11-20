@@ -47,7 +47,7 @@ export async function saveDomainsAsync(domains: SelectedDomain[]): Promise<boole
 }
 
 export async function getDbFolderAsync(): Promise<string | null> {
-	let response = await fetch("/api/settings/dbfolder");
+	let response = await fetch("/api/settings/dbpath");
 	if (response.ok) {
 		return await response.text();
 	}

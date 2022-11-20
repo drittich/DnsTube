@@ -15,8 +15,8 @@
 				border-bottom">
 				<a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto
 					text-dark text-decoration-none">
-					<svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap" /></svg>
-						<span class="fs-4">DnsTube v2</span>
+					<!-- <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap" /></svg> -->
+						<span class="fs-4">DnsTube v2.0</span>
 					</a>
 
 					<ul class="nav nav-pills">
@@ -36,12 +36,9 @@
 						padding-bottom: 6px;
 					}
 				</style>
-
-
 				<h4>Settings</h4>
 
 				<div>
-					<hr />
 
 					<form id="settings">
 						<div class="form-group row">
@@ -73,9 +70,11 @@
 						</div>
 
 						<div class="form-group row">
-							<label for="apiKeyOrToken" id="apiKeyTokenLabel" class="col-sm-2 col-form-label">Authorization Key/Token</label>
+							<label for="apiKeyOrToken" id="apiKeyTokenLabel" class="col-sm-2
+								col-form-label">Authorization Key/Token</label>
 							<div class="col-6">
-								<input type="text" class="form-control" name="ApiKeyOrToken" id="apiKeyOrToken">
+								<input type="text" class="form-control" name="ApiKeyOrToken"
+									id="apiKeyOrToken">
 							</div>
 						</div>
 
@@ -132,11 +131,11 @@
 								<input type="number" class="form-control" name="UpdateIntervalMinutes"
 									id="updateIntervalMinutes" value="30">
 							</div>
-							<label class="col-sm-2 col-form-label">(minutes)</label>							
+							<label class="col-sm-2 col-form-label">(minutes)</label>
 						</div>
 						<div class="form-group row">
 							<label for="ipv6Api" class="col-sm-2 col-form-label"></label>
-							<div class="form-check form-check-inline">
+							<div class="form-check form-check-inline" style="margin-left:12px;">
 								<input class="form-check-input" type="checkbox" name="NotifyOfUpdates"
 									id="notifyOfUpdates" value="true">
 								<label class="form-check-label" for="notifyOfUpdates">Check for DnsTube
@@ -144,26 +143,28 @@
 							</div>
 						</div>
 
-						<div class="form-group row">
-							<button type="button" class="btn btn-primary" id="saveSettings">Save</button>
-						</div>
-					</form>
+						<div class="form-group row" style="margin-top: 12px;">
+								<div class="d-grid gap-2 d-md-block">
+									<button type="button" class="btn btn-primary" id="saveSettings">Save</button>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<small class="fst-italic text-muted text-small">
+						Settings saved in SQLite Db at: <span id="dbPath"></span>
+					</small>
+
 				</div>
-				<br />
-				<div class="alert alert-secondary" role="alert">
-					Settings saved in SQLite Db at: <span id="dbPath"></span>
+
+				<div class="container body-content">
+					<hr />
+					<footer>
+						<p>&copy; 2022 - DnsTube</p>
+					</footer>
 				</div>
 
-			</div>
+				<script type="module" src="/src/controllers/settings.ts"></script>
 
-			<div class="container body-content">
-				<hr />
-				<footer>
-					<p>&copy; 2022 - DnsTube</p>
-				</footer>
-			</div>
-
-			<script type="module" src="/src/controllers/settings.ts"></script>
-
-		</body>
-	</html>
+			</body>
+		</html>

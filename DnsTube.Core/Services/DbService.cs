@@ -42,12 +42,16 @@ namespace DnsTube.Core.Services
 			return _dbFolder;
 		}
 
-		public async Task<SqliteConnection> GetConnectionAsync()
+		public string GetDbPath()
 		{
 			var dbFolder = GetDbFolder();
-			string dbpath = Path.Combine(dbFolder, "DnsTube.db");
+			string dbPath = Path.Combine(dbFolder, "DnsTube.db");
+			return dbPath;
+		}
 
-			var cn = new SqliteConnection($"Data Source={dbpath};");
+		public async Task<SqliteConnection> GetConnectionAsync()
+		{
+			var cn = new SqliteConnection($"Data Source={GetDbPath()};");
 			await cn.OpenAsync();
 
 			return cn;

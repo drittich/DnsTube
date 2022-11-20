@@ -47,11 +47,11 @@ namespace DnsTube.Service.Controllers.Api
 			return await _settingsService.GetAsync();
 		}
 
-		// GET api/<SettingsController>/dbfolder
-		[HttpGet("dbfolder")]
+		// GET api/<SettingsController>/dbpath
+		[HttpGet("dbpath")]
 		public string Get()
 		{
-			return _dbService.GetDbFolder();
+			return _dbService.GetDbPath();
 		}
 	}
 }
