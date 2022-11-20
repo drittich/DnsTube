@@ -30,7 +30,7 @@ namespace DnsTube.Service
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
 			// log DnsTube version
-			var version = $"DnsTube {Application.RELEASE_TAG}";
+			var version = $"Running DnsTube {Application.RELEASE_TAG}";
 			_logger.LogInformation(version);
 			await _logService.WriteAsync(version, LogLevel.Information);
 
