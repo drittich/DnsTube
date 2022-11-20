@@ -20,9 +20,9 @@ namespace DnsTube.Service.Controllers.Api
 
 		// GET: api/<LogController>
 		[HttpGet]
-		public async Task<IEnumerable<LogEntry>> GetAsync()
+		public async Task<IEnumerable<LogEntry>> GetAsync([FromQuery] int? pageSize, int? lastId = null)
 		{
-			return await _logService.GetAsync();
+			return await _logService.GetAsync(pageSize, lastId);
 		}
 
 		// DELETE api/<LogController>

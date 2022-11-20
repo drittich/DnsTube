@@ -67,7 +67,7 @@ namespace DnsTube.Core.Services
 			});
 		}
 
-		public async Task<List<LogEntry>> GetAsync(int pageSize = 10, int? lastLogId = null)
+		public async Task<List<LogEntry>> GetAsync(int? pageSize = 10, int? lastLogId = null)
 		{
 			string where = "";
 
@@ -83,7 +83,7 @@ namespace DnsTube.Core.Services
 
 			using (var cn = await _dbService.GetConnectionAsync())
 			{
-				var logEntryDTOs = await cn.QueryAsync<LogEntryDTO>(sql, new { pageSize, lastLogId });
+				var logEntryDTOs = await cn.QueryAsync<LogEntryDTO>(sql, new { lastLogId, pageSize });
 				return logEntryDTOs.Select(le => new LogEntry(le, _dbService)).ToList();
 			}
 		}

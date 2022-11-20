@@ -4,7 +4,7 @@ import 'three-dots/dist/three-dots.css'
 
 import { format, parseISO } from 'date-fns'
 import linkifyHtml from "linkify-html";
-import { getLogAsync } from '../services/log';
+import { deleteLogAsync, getLogAsync } from '../services/log';
 import { getSettingsAsync, saveDomainsAsync } from '../services/settings';
 import { getIp } from '../services/ip';
 import { getDnsEntries } from '../services/dns';
@@ -38,49 +38,62 @@ function init() {
 	getPublicIp();
 }
 
-async function getLog(): Promise<void> {
-	let logEntries = await getLogAsync();
+async function getLog(lastId?: number): Promise<void> {
+	let pageSize = 10;
+	let isAppending = lastId != null;
+	let logEntries = await getLogAsync(pageSize, lastId);
+
 	let tableBodyEl = document.getElementById("log-table-body") as HTMLTableSectionElement;
 
-	// remove old log
-	tableBodyEl.innerHTML = "";
+	if (!isAppending)
+		tableBodyEl.innerHTML = "";
 
 	logEntries.forEach((entry) => {
-		let color: string = "";
+		let color: string;
 		if (entry.logLevelText == "Error")
 			color = "text-danger";
-		if (entry.logLevelText == "Warning")
+		else if (entry.logLevelText == "Warning")
 			color = "text-warning";
+		else
+			color = "text-body";
 
 		let row = document.createElement('tr');
-
-		if (color != "")
-			row.classList.add(color);
+		row.setAttribute("data-id", entry.id!.toString());
+		row.classList.add(color);
 
 		row.insertCell().innerHTML = format(parseISO(entry.created!), "yyyy-MM-dd HH:mm:ss");
 		row.insertCell().innerHTML = linkifyHtml(entry.text!);
 		row.insertCell().innerHTML = entry.logLevelText!;
 		tableBodyEl.appendChild(row);
 	});
+
+	document.getElementById("log-clear")!.classList.toggle("d-none", tableBodyEl.rows.length == 0);
+	document.getElementById("log-load-more")!.classList.toggle("d-none", logEntries.length != pageSize);
 }
 
-document.getElementById('clearLog')!.addEventListener('click', function (e) {
+document.getElementById('log-clear')!.addEventListener('click', async function (e) {
 	e.preventDefault();
 
 	if (!confirm("Are you sure you want to clear the log?"))
 		return;
 
-	fetch("api/log",
-		{
-			method: "delete"
-		})
-		.then(() => {
-			location.reload();
-			return false;
-		})
-		.catch(error => {
-			console.error('Error:', error);
-		});
+	let msg = await deleteLogAsync();
+
+	if (msg == "ok") {
+		let tableBodyEl = document.getElementById("log-table-body") as HTMLTableSectionElement;
+		tableBodyEl.innerHTML = "";
+		document.getElementById("log-clear")!.classList.add("d-none");
+		document.getElementById("log-load-more")!.classList.add("d-none");
+	}
+	else
+		alert(msg);
+}, false);
+
+document.getElementById('log-load-more')!.addEventListener('click', function (e) {
+	e.preventDefault();
+
+	let lastId = document.querySelector("#log-table-body tr:last-child")?.getAttribute("data-id");
+	getLog(parseInt(lastId!));
 }, false);
 
 async function getLastPublicIp() {

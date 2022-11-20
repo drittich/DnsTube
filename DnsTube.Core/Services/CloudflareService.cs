@@ -183,7 +183,7 @@ namespace DnsTube.Core.Services
 			{
 				var cfError = JsonSerializer.Deserialize<CloudflareApiError>(result);
 				var cfMsg = cfError?.errors?.First().message;
-				await _logService.WriteAsync($"Cloudfalre API error: {cfMsg}", LogLevel.Error);
+				await _logService.WriteAsync($"Cloudflare API error: {cfMsg}", LogLevel.Error);
 				if (settings.IsUsingToken)
 				{
 
