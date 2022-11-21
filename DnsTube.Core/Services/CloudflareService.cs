@@ -154,6 +154,7 @@ namespace DnsTube.Core.Services
 			var ret = new List<Result>();
 
 			var httpClient = _httpClientFactory.CreateClient(HttpClientName.Cloudflare.ToString());
+			httpClient.DefaultRequestHeaders.ConnectionClose = true;
 			do
 			{
 				var req = await GetRequestMessageAsync(HttpMethod.Get, $"zones/{zoneIdentifier}/dns_records?type={recordType}&page={pageNumber}&per_page={pageSize}&order=name&direction=asc&match=all");
