@@ -21,6 +21,9 @@ namespace DnsTube.Service
 		private IConfiguration _configuration;
 		private IServerSentEventsService _serverSentEventsService;
 
+		public static DateTime LastRun;
+		public static DateTime NextRun;
+
 		public WorkerService(ILogger<WorkerService> logger, ISettingsService settingsService, IGitHubService githubService, ICloudflareService cloudflareService, ILogService logService, IIpAddressService ipAddressService, IConfiguration configuration, IServerSentEventsService serverSentEventsService)
 		{
 			_logger = logger;
@@ -63,6 +66,13 @@ namespace DnsTube.Service
 
 				string? currentPublicIpv4Address = await GetIpAddressAsync(IpSupport.IPv4, previousIpv4Address, settings);
 				string? currentPublicIpv6Address = await GetIpAddressAsync(IpSupport.IPv6, previousIpv6Address, settings);
+
+				bool ipAddressChanged = false;
+				if (previousIpv4Address != currentPublicIpv4Address || previousIpv6Address != currentPublicIpv6Address)
+				{
+					ipAddressChanged = true;
+				}
+
 				previousIpv4Address = currentPublicIpv4Address;
 				previousIpv6Address = currentPublicIpv6Address;
 
@@ -100,15 +110,28 @@ namespace DnsTube.Service
 					var selectedDomainsValid = await _cloudflareService.ValidateSelectedDomainsAsync();
 					if (selectedDomainsValid)
 						await DoUpdateAsync(currentPublicIpv4Address, currentPublicIpv6Address);
+
+					if (ipAddressChanged)
+						await _serverSentEventsService.SendEventAsync(new ServerSentEvent
+						{
+							Type = "ip-address-changed",
+							Data = new List<string> { "N/A" }
+						});
 				}
 
+				LastRun = DateTime.Now;
 				var intervalMs = Debugger.IsAttached ? 30000 : settings.UpdateIntervalMinutes * 60 * 1000;
-				var nextUpdate = DateTime.Now.AddMilliseconds(intervalMs);
+				NextRun = DateTime.Now.AddMilliseconds(intervalMs);
 
 				await _serverSentEventsService.SendEventAsync(new ServerSentEvent
 				{
-					Type = "next-update",
-					Data = new List<string> { $"{nextUpdate.ToString("yyyy-MM-ddTHH:mm:ss")}" }
+					Type = "last-run",
+					Data = new List<string> { $"{LastRun.ToString("yyyy-MM-ddTHH:mm:ss")}" }
+				});
+				await _serverSentEventsService.SendEventAsync(new ServerSentEvent
+				{
+					Type = "next-run",
+					Data = new List<string> { $"{NextRun.ToString("yyyy-MM-ddTHH:mm:ss")}" }
 				});
 
 				await Task.Delay(intervalMs, stoppingToken);

@@ -61,7 +61,8 @@ namespace DnsTube.Core.Services
 
 			await _serverSentEventsService.SendEventAsync(new ServerSentEvent
 			{
-				Type = "log-updated"
+				Type = "log-updated",
+				Data = new List<string> { "N/A" }
 			});
 		}
 

@@ -1,3 +1,4 @@
+import { RunInfo } from "../model/RunInfo";
 import { SelectedDomain } from "../model/SelectedDomain";
 import { Settings } from "../model/Settings";
 
@@ -50,6 +51,17 @@ export async function getDbFolderAsync(): Promise<string | null> {
 	let response = await fetch("/api/settings/dbpath");
 	if (response.ok) {
 		return await response.text();
+	}
+	else {
+		console.log(response.statusText);
+		return null;
+	}
+}
+
+export async function getRunInfoAsync(): Promise<RunInfo | null> {
+	let response = await fetch("/api/settings/runinfo");
+	if (response.ok) {
+		return await response.json() as RunInfo;
 	}
 	else {
 		console.log(response.statusText);

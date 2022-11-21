@@ -60,6 +60,10 @@ namespace DnsTube.Core.Services
 			{
 				await _logService.WriteAsync("Error getting DNS records", LogLevel.Error);
 				await _logService.WriteAsync(ex.Message, LogLevel.Error);
+				if (ex.InnerException != null)
+				{
+					await _logService.WriteAsync(ex.InnerException.Message, LogLevel.Error);
+				}
 			}
 
 			// TODO:determine which specific ones need updating
@@ -155,6 +159,7 @@ namespace DnsTube.Core.Services
 
 			var httpClient = _httpClientFactory.CreateClient(HttpClientName.Cloudflare.ToString());
 			httpClient.DefaultRequestHeaders.ConnectionClose = true;
+
 			do
 			{
 				var req = await GetRequestMessageAsync(HttpMethod.Get, $"zones/{zoneIdentifier}/dns_records?type={recordType}&page={pageNumber}&per_page={pageSize}&order=name&direction=asc&match=all");

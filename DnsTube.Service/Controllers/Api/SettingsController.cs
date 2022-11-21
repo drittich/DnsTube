@@ -53,5 +53,15 @@ namespace DnsTube.Service.Controllers.Api
 		{
 			return _dbService.GetDbPath();
 		}
+
+		public record RunInfo(string LastRun, string NextRun);
+
+		// GET api/<SettingsController>/runinfo
+		[HttpGet]
+		[Route("runinfo")]
+		public RunInfo GetRunInfo()
+		{
+			return new RunInfo(WorkerService.LastRun.ToString("yyyy-MM-ddTHH:mm:ss"), WorkerService.NextRun.ToString("yyyy-MM-ddTHH:mm:ss"));
+		}
 	}
 }

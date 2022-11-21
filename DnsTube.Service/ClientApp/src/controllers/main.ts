@@ -5,12 +5,11 @@ import 'three-dots/dist/three-dots.css'
 import { format, parseISO, parseJSON } from 'date-fns'
 import linkifyHtml from "linkify-html";
 import { deleteLogAsync, getLogAsync } from '../services/log';
-import { getSettingsAsync, saveDomainsAsync } from '../services/settings';
+import { getRunInfoAsync, getSettingsAsync, saveDomainsAsync } from '../services/settings';
 import { getIp } from '../services/ip';
 import { getDnsEntries } from '../services/dns';
 import { Settings } from '../model/Settings';
 import { SelectedDomain } from '../model/SelectedDomain';
-import { json } from 'stream/consumers';
 
 let _settings: Settings | null = null;
 
@@ -21,6 +20,7 @@ function init() {
 
 	// get old log right away
 	getLog();
+	getRunInfo();
 
 	getSettingsAsync().then(async Settings => {
 		_settings = Settings;
@@ -127,10 +127,12 @@ async function getSelectedDnsEntries() {
 	spinnerEl.classList.remove("d-none");
 	tableEl.classList.add("d-none");
 
+	//remove existing rows
+	let tableBodyEl = document.getElementById("dns-entries-body") as HTMLTableSectionElement;
+	tableBodyEl.innerHTML = "";
+
 	//TODO: if dnsEntries is null, show error message
 	let dnsEntries = await getDnsEntries();
-	// console.log('dnsEntries', dnsEntries);
-	let tableBodyEl = document.getElementById("dns-entries-body") as HTMLTableSectionElement;
 	let customTtl: boolean = false;
 	dnsEntries!.forEach((entry, i) => {
 		let row = document.createElement('tr');
@@ -201,7 +203,12 @@ function setupSse() {
 		getLog();
 	}, false);
 
-	source.addEventListener('next-update', function (e) {
+	source.addEventListener('last-run', function (e) {
+		let lastUpdateDate = format(parseISO(e.data), "yyyy-MM-dd HH:mm:ss");
+		(document.getElementById("last-update")! as HTMLInputElement).value = lastUpdateDate;
+	}, false);
+
+	source.addEventListener('next-run', function (e) {
 		let nextUpdateDate = format(parseISO(e.data), "yyyy-MM-dd HH:mm:ss");
 		(document.getElementById("next-update")! as HTMLInputElement).value = nextUpdateDate;
 	}, false);
@@ -213,4 +220,14 @@ function setupSse() {
 	source.addEventListener('ipv6-address', function (e) {
 		(document.getElementById("public-ipv6")! as HTMLInputElement).value = e.data;
 	}, false);
+
+	source.addEventListener('ip-address-changed', function (e) {
+		getSelectedDnsEntries();
+	}, false);	
 }
+async function getRunInfo() {
+	let runInfo = await getRunInfoAsync();
+	(document.getElementById("last-update")! as HTMLInputElement).value = format(parseJSON(runInfo!.lastRun), "yyyy-MM-dd HH:mm:ss");
+	(document.getElementById("next-update")! as HTMLInputElement).value = format(parseJSON(runInfo!.nextRun), "yyyy-MM-dd HH:mm:ss");
+}
+
