@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using DnsTube.Core.Interfaces;
+﻿using DnsTube.Core.Interfaces;
+
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

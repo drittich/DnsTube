@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-using Dapper;
+﻿using Dapper;
 
 using DnsTube.Core.Interfaces;
 using DnsTube.Core.Models;
@@ -63,7 +61,7 @@ namespace DnsTube.Core.Services
 
 			await _serverSentEventsService.SendEventAsync(new ServerSentEvent
 			{
-				Data = new List<string> { "log updated" }
+				Type = "log-updated"
 			});
 		}
 

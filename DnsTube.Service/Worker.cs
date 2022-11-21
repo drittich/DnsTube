@@ -4,6 +4,10 @@ using DnsTube.Core.Enums;
 using DnsTube.Core.Interfaces;
 using DnsTube.Core.Models;
 
+using Lib.AspNetCore.ServerSentEvents;
+
+//using Newtonsoft.Json;
+
 namespace DnsTube.Service
 {
 	public class WorkerService : BackgroundService
@@ -15,8 +19,9 @@ namespace DnsTube.Service
 		private ILogService _logService;
 		private IIpAddressService _ipAddressService;
 		private IConfiguration _configuration;
+		private IServerSentEventsService _serverSentEventsService;
 
-		public WorkerService(ILogger<WorkerService> logger, ISettingsService settingsService, IGitHubService githubService, ICloudflareService cloudflareService, ILogService logService, IIpAddressService ipAddressService, IConfiguration configuration)
+		public WorkerService(ILogger<WorkerService> logger, ISettingsService settingsService, IGitHubService githubService, ICloudflareService cloudflareService, ILogService logService, IIpAddressService ipAddressService, IConfiguration configuration, IServerSentEventsService serverSentEventsService)
 		{
 			_logger = logger;
 			_settingsService = settingsService;
@@ -25,6 +30,7 @@ namespace DnsTube.Service
 			_logService = logService;
 			_ipAddressService = ipAddressService;
 			_configuration = configuration;
+			_serverSentEventsService = serverSentEventsService;
 		}
 
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -47,7 +53,7 @@ namespace DnsTube.Service
 
 			string? previousIpv4Address = null;
 			string? previousIpv6Address = null;
-			
+
 			while (!stoppingToken.IsCancellationRequested)
 			{
 				var msg = $"Worker running at: {DateTimeOffset.Now}";
@@ -83,8 +89,16 @@ namespace DnsTube.Service
 					if (selectedDomainsValid)
 						await DoUpdateAsync(currentPublicIpv4Address, currentPublicIpv6Address);
 				}
-				
-				var intervalMs = Debugger.IsAttached? 30000 : settings.UpdateIntervalMinutes * 60 * 1000;
+
+				var intervalMs = Debugger.IsAttached ? 30000 : settings.UpdateIntervalMinutes * 60 * 1000;
+				var nextUpdate = DateTime.Now.AddMilliseconds(intervalMs);
+
+				await _serverSentEventsService.SendEventAsync(new ServerSentEvent
+				{
+					Type = "next-update",
+					Data = new List<string> { $"{nextUpdate.ToString("yyyy-MM-ddTHH:mm:ss")}" }
+				});
+
 				await Task.Delay(intervalMs, stoppingToken);
 			}
 		}

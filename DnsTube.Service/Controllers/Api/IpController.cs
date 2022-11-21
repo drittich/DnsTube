@@ -23,7 +23,7 @@ namespace DnsTube.Service.Controllers.Api
 			_logService = logService;
 			_ipAddressService = ipAddressService;
 		}
-		
+
 		// GET: api/<IpController>
 		[HttpGet]
 		public async Task<Ip> Get()

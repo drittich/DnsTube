@@ -30,7 +30,7 @@ namespace DnsTube.Service.Controllers.Api
 			var settings = await _settingsService.GetAsync();
 			return settings;
 		}
-		
+
 		// POST api/<SettingsController>
 		[HttpPost]
 		public async Task<ISettings> Post([FromForm] Settings settings)

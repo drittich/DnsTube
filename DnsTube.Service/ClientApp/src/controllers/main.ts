@@ -2,7 +2,7 @@ import '../style.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'three-dots/dist/three-dots.css'
 
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, parseJSON } from 'date-fns'
 import linkifyHtml from "linkify-html";
 import { deleteLogAsync, getLogAsync } from '../services/log';
 import { getSettingsAsync, saveDomainsAsync } from '../services/settings';
@@ -10,6 +10,7 @@ import { getIp } from '../services/ip';
 import { getDnsEntries } from '../services/dns';
 import { Settings } from '../model/Settings';
 import { SelectedDomain } from '../model/SelectedDomain';
+import { json } from 'stream/consumers';
 
 let _settings: Settings | null = null;
 
@@ -196,8 +197,12 @@ function setUiElementState() {
 function setupSse() {
 	let source = new EventSource('/sse');
 
-	source.onmessage = function (/* event */) {
+	source.addEventListener('log-updated', function (e) {
 		getLog();
-	};
-}
+	}, false);
 
+	source.addEventListener('next-update', function (e) {
+		let nextUpdateDate = format(parseISO(e.data), "yyyy-MM-dd HH:mm:ss");
+		(document.getElementById("next-update")! as HTMLInputElement).value = nextUpdateDate;
+	}, false);
+}
