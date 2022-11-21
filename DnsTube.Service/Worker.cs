@@ -21,8 +21,8 @@ namespace DnsTube.Service
 		private IConfiguration _configuration;
 		private IServerSentEventsService _serverSentEventsService;
 
-		public static DateTime LastRun;
-		public static DateTime NextRun;
+		public static DateTimeOffset LastRun;
+		public static DateTimeOffset NextRun;
 
 		public WorkerService(ILogger<WorkerService> logger, ISettingsService settingsService, IGitHubService githubService, ICloudflareService cloudflareService, ILogService logService, IIpAddressService ipAddressService, IConfiguration configuration, IServerSentEventsService serverSentEventsService)
 		{

@@ -61,7 +61,9 @@ namespace DnsTube.Service.Controllers.Api
 		[Route("runinfo")]
 		public RunInfo GetRunInfo()
 		{
-			return new RunInfo(WorkerService.LastRun.ToString("yyyy-MM-ddTHH:mm:ss"), WorkerService.NextRun.ToString("yyyy-MM-ddTHH:mm:ss"));
+			if (WorkerService.LastRun == DateTimeOffset.MinValue)
+				throw new Exception("not ready");
+			return new RunInfo(WorkerService.LastRun.ToString("yyyy-MM-ddTHH:mm:sszzz"), WorkerService.NextRun.ToString("yyyy-MM-ddTHH:mm:sszzz"));
 		}
 	}
 }

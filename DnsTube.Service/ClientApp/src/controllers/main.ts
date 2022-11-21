@@ -20,7 +20,6 @@ function init() {
 
 	// get old log right away
 	getLog();
-	getRunInfo();
 
 	getSettingsAsync().then(async Settings => {
 		_settings = Settings;
@@ -34,6 +33,7 @@ function init() {
 			// refresh log to show DNS entry fetch status
 			getLog();
 			setupSse();
+			getRunInfo();
 		});
 
 	getPublicIp();
@@ -227,7 +227,7 @@ function setupSse() {
 }
 async function getRunInfo() {
 	let runInfo = await getRunInfoAsync();
-	(document.getElementById("last-update")! as HTMLInputElement).value = format(parseJSON(runInfo!.lastRun), "yyyy-MM-dd HH:mm:ss");
-	(document.getElementById("next-update")! as HTMLInputElement).value = format(parseJSON(runInfo!.nextRun), "yyyy-MM-dd HH:mm:ss");
+	(document.getElementById("last-update")! as HTMLInputElement).value = format(parseISO(runInfo!.lastRun), "yyyy-MM-dd HH:mm:ss");
+	(document.getElementById("next-update")! as HTMLInputElement).value = format(parseISO(runInfo!.nextRun), "yyyy-MM-dd HH:mm:ss");
 }
 
