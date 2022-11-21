@@ -16,25 +16,39 @@ This is where DnsTube comes in. Cloudflare provides free DNS hosting for your do
 * Can update A (IPv4), AAAA (IPv6), SPF, and TXT records.
 * Support both Cloudflare API keys and tokens
 * Supports API tokens scoped to specific zones
-* Does updates on an adjustable timer, e.g., every 30 minutes
-* Supports minimize on load, check for updates
+* Runs as a service
 
-## Downloading & Installation
+## Downloading 
 
 Head over to the [Releases](https://github.com/drittich/DnsTube/releases/latest) page to download the latest binary.
 
-You have four executables to choose from, and you can extract and copy the application files to a folder of your choice. (DnsTube requires .NET 6, so you may be prompted to install it if you choose a non-self-contained version.)
+## Installing
 
-- *DnsTube-vX.X.X.7z*: normal application, requires .NET 6 runtime to be installed
-- *DnsTube-SelfContained-vX.X.X.7z*: normal self-contained application, does not require .NET 6 runtime to be installed
-- *DnsTube-Portable-vX.X.X.7z*: portable application, requires .NET 6 runtime to be installed
-- *DnsTube-Portable-SelfContained-vX.X.X.7z*: portable self-contained application, does not require .NET 6 runtime to be installed
+- Extract the package to a folder of your choice
+- Open a command prompt as Administrator and install the service using  `install-service.bat`.
+You should see the following output:
+```
+PS C:\Program Files\DnsTubeService> .\install-service.bat
+sc create "DnsTube Service" binPath="C:\Program Files\DnsTubeService\DnsTube.Service.exe" start=auto
+[SC] CreateService SUCCESS
+[SC] ChangeServiceConfig2 SUCCESS
 
-You can choose to manually launch the application, or make it [run automatically at startup in Windows 10](https://support.microsoft.com/en-us/windows/add-an-app-to-run-automatically-at-startup-in-windows-10-150da165-dcd9-7230-517b-cf3c295d89dd).
+SERVICE_NAME: DnsTube Service
+		TYPE               : 10  WIN32_OWN_PROCESS
+		STATE              : 2  START_PENDING
+								(NOT_STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)
+		WIN32_EXIT_CODE    : 0  (0x0)
+		SERVICE_EXIT_CODE  : 0  (0x0)
+		CHECKPOINT         : 0x0
+		WAIT_HINT          : 0x7d0
+		PID                : 21408
+		FLAGS              :
+PS C:\Program Files\DnsTubeService>
+```
 
 ## Configuration & Usage
 
-You will need to create an account with Cloudflare and make it the DNS authority for your domain. You then need to configure your DNS entries as appropriate. See [Managing DNS records in Cloudflare](https://support.cloudflare.com/hc/en-us/articles/360019093151-Managing-DNS-records-in-Cloudflare) for more info.
+If you haven't already done so, you will need to create an account with Cloudflare and make it the DNS authority for your domain. You then need to configure your DNS entries as appropriate. See [Managing DNS records in Cloudflare](https://support.cloudflare.com/hc/en-us/articles/360019093151-Managing-DNS-records-in-Cloudflare) for more info.
 
 You can use [nslookup](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup) to make sure DNS resolution is working correctly, e.g., 
 ```
@@ -43,24 +57,18 @@ nslookup mydomain.com
 
 After that, you'll need to generate an API Token (preferred) or Key in order to access the API via DnsTube. The details for doing that can be found at [Creating API tokens](https://developers.cloudflare.com/api/tokens/create).
 
-Once you have done this, enter your Cloudflare email address, token or key, and zone ID. You'll also went to select whether you are updating IPv4 addresses, ipv6 addresses or both.
 
-After you have the settings configured, from then on you just launch it and leave it running.
+
 
 ## UI
 
-**Top Pane**: The UI shows a list of domains for zone you have provded at the top, and you can check off the ones you want DnsTube to update. 
+**Top Pane**: The UI shows a list of domains for the zone(s) you have provided, and you can check off the ones you want DnsTube to update. 
 
 **Lower Pane**: The lower pane shows a running log of activity. 
-
-**Fetch List** button: If you have modified your DNS entries manually in Cloudflare, you can click **Fetch List** to update the list of domains shown in DnsTube. 
-
-**Manual Update** button: You can click **Manual Update** whenever you want to force an IP address update before the timer interval occurs - I often do this when I have just finished using a VPN.
 
 ## Notes
 
 1. DnsTube only updates existing Cloudflare records. It will not create or remove records.
-2. DnsTube must currently be run as a logged-in Windows user. A future release will support running it as a service.
 
 ## Building
 
