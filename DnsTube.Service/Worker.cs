@@ -60,13 +60,25 @@ namespace DnsTube.Service
 				_logger.LogTrace(msg);
 
 				var settings = await _settingsService.GetAsync(true);
-				string? currentPublicIpv4Address = null;
-				string? currentPublicIpv6Address = null;
 
-				currentPublicIpv4Address = await GetIpAddressAsync(IpSupport.IPv4, previousIpv4Address, settings);
-				currentPublicIpv6Address = await GetIpAddressAsync(IpSupport.IPv6, previousIpv6Address, settings);
+				string? currentPublicIpv4Address = await GetIpAddressAsync(IpSupport.IPv4, previousIpv4Address, settings);
+				string? currentPublicIpv6Address = await GetIpAddressAsync(IpSupport.IPv6, previousIpv6Address, settings);
 				previousIpv4Address = currentPublicIpv4Address;
 				previousIpv6Address = currentPublicIpv6Address;
+
+				if (currentPublicIpv4Address != null)
+					await _serverSentEventsService.SendEventAsync(new ServerSentEvent
+					{
+						Type = "ipv4-address",
+						Data = new List<string> { currentPublicIpv4Address }
+					});
+
+				if (currentPublicIpv6Address != null)
+					await _serverSentEventsService.SendEventAsync(new ServerSentEvent
+					{
+						Type = "ipv6-address",
+						Data = new List<string> { currentPublicIpv6Address }
+					});
 
 				var validationErrorMessage = _settingsService.ValidateSettings(settings);
 

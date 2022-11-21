@@ -205,4 +205,12 @@ function setupSse() {
 		let nextUpdateDate = format(parseISO(e.data), "yyyy-MM-dd HH:mm:ss");
 		(document.getElementById("next-update")! as HTMLInputElement).value = nextUpdateDate;
 	}, false);
+
+	source.addEventListener('ipv4-address', function (e) {
+		(document.getElementById("public-ipv4")! as HTMLInputElement).value = e.data;
+	}, false);
+
+	source.addEventListener('ipv6-address', function (e) {
+		(document.getElementById("public-ipv6")! as HTMLInputElement).value = e.data;
+	}, false);
 }
