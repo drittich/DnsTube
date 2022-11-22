@@ -32,23 +32,5 @@ namespace DnsTube.Service.Controllers.Api
 			var ipv6 = await _ipAddressService.GetPublicIpAddressAsync(IpSupport.IPv6);
 			return new Ip(Ipv4: ipv4, Ipv6: ipv6);
 		}
-
-		// POST api/<IpController>
-		[HttpPost]
-		public void Post([FromBody] string value)
-		{
-		}
-
-		// PUT api/<IpController>/5
-		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] string value)
-		{
-		}
-
-		// DELETE api/<IpController>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id)
-		{
-		}
 	}
 }

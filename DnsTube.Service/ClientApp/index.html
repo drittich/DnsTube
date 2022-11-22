@@ -16,7 +16,7 @@
 				<a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto
 					text-dark text-decoration-none">
 					<!-- <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap" /></svg> -->
-					<span class="fs-4">DnsTube v2.0</span>
+					<span class="fs-2">DnsTube v2.0</span>
 				</a>
 
 				<ul class="nav nav-pills">
@@ -54,14 +54,18 @@
 					</div>
 					<div class="form-group col">
 						<label for="colFormLabel" class="col-sm-3 col-form-label">Next Update</label>
+						<a href="javascript:" id="dns-update">update DNS now</a>
 						<div class="col-sm-10">
 							<input type="text" class="form-control" id="next-update" readonly>
+
+
 						</div>
-					</div>					
+					</div>
 				</div>
 			</form>
 
-			<h4>Cloudflare DNS</h4>
+			<h4 style="display:inline-block;">Cloudflare DNS</h4>
+			<a href="javascript:" id="entries-refetch">refetch entries</a>
 
 			<div id="dns-entries-spinner" class="position-relative my-5 d-none">
 				<div class="dot-elastic position-absolute
@@ -82,8 +86,8 @@
 			</table>
 
 			<h4 style="display:inline-block;">Log</h4>
-
 			<a href="javascript:" id="log-clear">clear</a>
+
 			<table id="log-table" class="table">
 				<thead>
 					<tr>
@@ -99,8 +103,17 @@
 
 		<div class="container body-content">
 			<hr />
-			<footer>
-				<p>&copy; <span id="currentYear"></span> - DnsTube</p>
+			<footer style="text-align: center;">
+				<ul class="list-inline">
+					<li class="list-inline-item"><a href="https://github.com/drittich/DnsTube">GitHub</a></li>
+					<li class="list-inline-item"><a
+							href="https://github.com/drittich/DnsTube/blob/main/LICENSE">License</a></li>
+					<li class="list-inline-item"><a
+							href="https://github.com/drittich/DnsTube/releases">Releases</a></li>
+					<li class="list-inline-item"><a
+							href="https://github.com/drittich/DnsTube/issues">Bug Report</a></li>
+					<!-- <li class="list-inline-item"><a href="#">Privacy Policy</a></li> -->
+				</ul>
 			</footer>
 		</div>
 

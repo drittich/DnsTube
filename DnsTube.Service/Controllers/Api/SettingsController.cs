@@ -59,10 +59,12 @@ namespace DnsTube.Service.Controllers.Api
 		// GET api/<SettingsController>/runinfo
 		[HttpGet]
 		[Route("runinfo")]
-		public RunInfo GetRunInfo()
+		public async Task<RunInfo> GetRunInfo()
 		{
-			if (WorkerService.LastRun == DateTimeOffset.MinValue)
-				throw new Exception("not ready");
+			
+			while (WorkerService.LastRun == DateTimeOffset.MinValue)
+				await Task.Delay(100);
+			
 			return new RunInfo(WorkerService.LastRun.ToString("yyyy-MM-ddTHH:mm:sszzz"), WorkerService.NextRun.ToString("yyyy-MM-ddTHH:mm:sszzz"));
 		}
 	}

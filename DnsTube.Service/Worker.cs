@@ -23,6 +23,7 @@ namespace DnsTube.Service
 
 		public static DateTimeOffset LastRun;
 		public static DateTimeOffset NextRun;
+		public static CancellationTokenSource? DelayCancellationTokenSource;
 
 		public WorkerService(ILogger<WorkerService> logger, ISettingsService settingsService, IGitHubService githubService, ICloudflareService cloudflareService, ILogService logService, IIpAddressService ipAddressService, IConfiguration configuration, IServerSentEventsService serverSentEventsService)
 		{
@@ -134,7 +135,15 @@ namespace DnsTube.Service
 					Data = new List<string> { $"{NextRun.ToString("yyyy-MM-ddTHH:mm:ss")}" }
 				});
 
-				await Task.Delay(intervalMs, stoppingToken);
+				DelayCancellationTokenSource = new CancellationTokenSource();
+				try
+				{
+					await Task.Delay(intervalMs, DelayCancellationTokenSource.Token);
+				}
+				catch (TaskCanceledException)
+				{
+					// ignore
+				}
 			}
 		}
 

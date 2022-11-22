@@ -1,13 +1,13 @@
-import '../style.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'three-dots/dist/three-dots.css'
+import '../style.css'
 
-import { format, parseISO, parseJSON } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import linkifyHtml from "linkify-html";
 import { deleteLogAsync, getLogAsync } from '../services/log';
 import { getRunInfoAsync, getSettingsAsync, saveDomainsAsync } from '../services/settings';
 import { getIp } from '../services/ip';
-import { getDnsEntries } from '../services/dns';
+import { getDnsEntriesAsync, updateDnsAsync } from '../services/dns';
 import { Settings } from '../model/Settings';
 import { SelectedDomain } from '../model/SelectedDomain';
 
@@ -16,8 +16,6 @@ let _settings: Settings | null = null;
 init();
 
 function init() {
-	(document.getElementById("currentYear") as HTMLElement)!.innerText = new Date().getFullYear().toString();
-
 	// get old log right away
 	getLog();
 
@@ -27,7 +25,10 @@ function init() {
 		setUiElementState();
 
 		getLastPublicIp();
+
+		document.getElementById('entries-refetch')?.classList.add("d-none");
 		await getSelectedDnsEntries();
+		document.getElementById('entries-refetch')?.classList.remove("d-none");
 	})
 		.then(() => {
 			// refresh log to show DNS entry fetch status
@@ -97,6 +98,22 @@ document.getElementById('log-load-more')!.addEventListener('click', function (e)
 	getLog(parseInt(lastId!));
 }, false);
 
+document.getElementById('dns-update')!.addEventListener('click', async function (e) {
+	e.preventDefault();
+
+	document.getElementById('dns-update')?.classList.add("d-none");
+	await updateDnsAsync();
+	document.getElementById('dns-update')?.classList.remove("d-none");
+}, false);
+
+document.getElementById('entries-refetch')!.addEventListener('click', async function (e) {
+	e.preventDefault();
+
+	document.getElementById('entries-refetch')?.classList.add("d-none");
+	await getSelectedDnsEntries();
+	document.getElementById('entries-refetch')?.classList.remove("d-none");
+}, false);
+
 async function getLastPublicIp() {
 	if (_settings == null)
 		return;
@@ -122,17 +139,19 @@ async function getPublicIp() {
 async function getSelectedDnsEntries() {
 	let spinnerEl = document.getElementById("dns-entries-spinner") as HTMLDivElement;
 	let tableEl = document.getElementById("dns-entries-table") as HTMLTableElement;
+	let dnsUpdateEl = document.getElementById("dns-update") as HTMLAnchorElement;
 
-	// show spinner
+	// show spinner, hide some other elements
 	spinnerEl.classList.remove("d-none");
 	tableEl.classList.add("d-none");
+	dnsUpdateEl.classList.add("d-none");
 
 	//remove existing rows
 	let tableBodyEl = document.getElementById("dns-entries-body") as HTMLTableSectionElement;
 	tableBodyEl.innerHTML = "";
 
 	//TODO: if dnsEntries is null, show error message
-	let dnsEntries = await getDnsEntries();
+	let dnsEntries = await getDnsEntriesAsync();
 	let customTtl: boolean = false;
 	dnsEntries!.forEach((entry, i) => {
 		let row = document.createElement('tr');
@@ -170,9 +189,10 @@ async function getSelectedDnsEntries() {
 	if (customTtl)
 		(document.getElementById("ttlHeader") as HTMLElement)!.innerText = 'TTL (minutes)';
 
-	// show table
+	// show table and some other elements
 	spinnerEl.classList.add("d-none");
 	tableEl.classList.remove("d-none");
+	dnsUpdateEl.classList.remove("d-none");
 }
 
 async function saveDnsUpdatable() {
@@ -199,7 +219,7 @@ function setUiElementState() {
 function setupSse() {
 	let source = new EventSource('/sse');
 
-	source.addEventListener('log-updated', function (e) {
+	source.addEventListener('log-updated', function () {
 		getLog();
 	}, false);
 
@@ -221,7 +241,7 @@ function setupSse() {
 		(document.getElementById("public-ipv6")! as HTMLInputElement).value = e.data;
 	}, false);
 
-	source.addEventListener('ip-address-changed', function (e) {
+	source.addEventListener('ip-address-changed', function () {
 		getSelectedDnsEntries();
 	}, false);	
 }

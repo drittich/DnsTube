@@ -51,29 +51,12 @@ namespace DnsTube.Service.Controllers.Api
 			return dnsEntries;
 		}
 
-		// GET api/<DnsController>/5
-		[HttpGet("{id}")]
-		public string Get(int id)
+		// POST api/<DnsController>/update
+		[HttpPost("update")]
+		public string GetUpdate(int id)
 		{
-			return "value";
-		}
-
-		// POST api/<DnsController>
-		[HttpPost]
-		public void Post([FromBody] string value)
-		{
-		}
-
-		// PUT api/<DnsController>/5
-		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] string value)
-		{
-		}
-
-		// DELETE api/<DnsController>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id)
-		{
+			WorkerService.DelayCancellationTokenSource.Cancel();
+			return "ok";
 		}
 	}
 }
