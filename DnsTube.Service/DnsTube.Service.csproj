@@ -9,26 +9,27 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <DebugType>full</DebugType>
+		<DebugType>full</DebugType>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <DebugType>full</DebugType>
+		<DebugSymbols>False</DebugSymbols>
+		<DebugType>None</DebugType>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="ClientApp\**" />
-	  <Compile Remove="Data\**" />
-	  <Compile Remove="Models\**" />
-	  <Content Remove="ClientApp\**" />
-	  <Content Remove="Data\**" />
-	  <Content Remove="Models\**" />
-	  <EmbeddedResource Remove="ClientApp\**" />
-	  <EmbeddedResource Remove="Data\**" />
-	  <EmbeddedResource Remove="Models\**" />
-	  <None Remove="ClientApp\**" />
-	  <None Remove="Data\**" />
-	  <None Remove="Models\**" />
+		<Compile Remove="ClientApp\**" />
+		<Compile Remove="Data\**" />
+		<Compile Remove="Models\**" />
+		<Content Remove="ClientApp\**" />
+		<Content Remove="Data\**" />
+		<Content Remove="Models\**" />
+		<EmbeddedResource Remove="ClientApp\**" />
+		<EmbeddedResource Remove="Data\**" />
+		<EmbeddedResource Remove="Models\**" />
+		<None Remove="ClientApp\**" />
+		<None Remove="Data\**" />
+		<None Remove="Models\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -39,32 +40,32 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="wwwroot\images\" />
+		<Folder Include="wwwroot\images\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\DnsTube.Core\DnsTube.Core.csproj" />
+		<ProjectReference Include="..\DnsTube.Core\DnsTube.Core.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Update="appsettings.Development.json">
-	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-	  </Content>
+		<Content Update="appsettings.Development.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="install-service.bat">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	  <None Update="start-service.bat">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	  <None Update="stop-service.bat">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	  <None Update="uninstall-service.bat">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
+		<None Update="install-service.bat">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="start-service.bat">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="stop-service.bat">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="uninstall-service.bat">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 </Project>

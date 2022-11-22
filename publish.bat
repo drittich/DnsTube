@@ -12,7 +12,7 @@ cd %PROJECT_PATH%
 
 :: framework-dependent x64
 echo publishing framework-dependent x64 version...
-dotnet publish --nologo -r win-x64 -c Release --self-contained false -p:PublishSingleFile=true -o %PUBLISH_PATH%\TEMP
+dotnet publish --nologo -r win-x64 -c Release --self-contained false -p:PublishSingleFile=true /p:PublishProfile=x64 -o %PUBLISH_PATH%\TEMP
 copy ..\README.md %PUBLISH_PATH%\TEMP
 
 cd %PUBLISH_PATH%\TEMP
@@ -22,7 +22,7 @@ del /f/s/q %PUBLISH_PATH%\TEMP > nul & rmdir /s/q %PUBLISH_PATH%\TEMP
 
 :: framework-dependent x86
 echo publishing framework-dependent x86 version...
-dotnet publish --nologo -r win-x86 -c Release --self-contained false -p:PublishSingleFile=true -o %PUBLISH_PATH%\TEMP
+dotnet publish --nologo -r win-x86 -c Release --self-contained false -p:PublishSingleFile=true /p:PublishProfile=x86 -o %PUBLISH_PATH%\TEMP
 copy ..\README.md %PUBLISH_PATH%\TEMP
 
 cd %PUBLISH_PATH%\TEMP
