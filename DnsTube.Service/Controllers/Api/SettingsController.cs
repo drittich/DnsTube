@@ -35,6 +35,12 @@ namespace DnsTube.Service.Controllers.Api
 		[HttpPost]
 		public async Task<ISettings> Post([FromForm] Settings settings)
 		{
+			// persist settings not saved through the Setting UI
+			var currentSettings = await _settingsService.GetAsync();
+			settings.SelectedDomains = currentSettings.SelectedDomains;
+			settings.PublicIpv4Address = currentSettings.PublicIpv4Address;
+			settings.PublicIpv6Address = currentSettings.PublicIpv6Address;
+			
 			await _settingsService.SaveAsync(settings);
 			return await _settingsService.GetAsync();
 		}
