@@ -23,7 +23,7 @@ namespace DnsTube.Service
 
 		public static DateTimeOffset LastRun;
 		public static DateTimeOffset NextRun;
-		public static CancellationTokenSource? DelayCancellationTokenSource;
+		public static CancellationTokenSource? TimerCancellationTokenSource;
 
 		public WorkerService(ILogger<WorkerService> logger, ISettingsService settingsService, IGitHubService githubService, ICloudflareService cloudflareService, ILogService logService, IIpAddressService ipAddressService, IConfiguration configuration, IServerSentEventsService serverSentEventsService)
 		{
@@ -37,7 +37,7 @@ namespace DnsTube.Service
 			_serverSentEventsService = serverSentEventsService;
 		}
 
-		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+		protected override async Task ExecuteAsync(CancellationToken serviceStoppingToken)
 		{
 			// log DnsTube version
 			var version = $"Running DnsTube {Application.RELEASE_TAG}";
@@ -58,7 +58,7 @@ namespace DnsTube.Service
 			string? previousIpv4Address = null;
 			string? previousIpv6Address = null;
 
-			while (!stoppingToken.IsCancellationRequested)
+			while (!serviceStoppingToken.IsCancellationRequested)
 			{
 				var msg = $"Worker running at: {DateTimeOffset.Now}";
 				_logger.LogTrace(msg);
@@ -121,7 +121,7 @@ namespace DnsTube.Service
 				}
 
 				LastRun = DateTime.Now;
-				var intervalMs = Debugger.IsAttached ? 30000 : settings.UpdateIntervalMinutes * 60 * 1000;
+				var intervalMs = settings.UpdateIntervalMinutes * 60 * 1000;
 				NextRun = DateTime.Now.AddMilliseconds(intervalMs);
 
 				await _serverSentEventsService.SendEventAsync(new ServerSentEvent
@@ -135,15 +135,8 @@ namespace DnsTube.Service
 					Data = new List<string> { $"{NextRun.ToString("yyyy-MM-ddTHH:mm:ss")}" }
 				});
 
-				DelayCancellationTokenSource = new CancellationTokenSource();
-				try
-				{
-					await Task.Delay(intervalMs, DelayCancellationTokenSource.Token);
-				}
-				catch (TaskCanceledException)
-				{
-					// ignore
-				}
+				TimerCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(serviceStoppingToken);
+				await Task.Delay(intervalMs, TimerCancellationTokenSource.Token);
 			}
 		}
 

@@ -29,12 +29,13 @@ namespace DnsTube.Core.Services
 			{
 				Environment.SpecialFolder rootFolder;
 
-				if (Debugger.IsAttached)
-					rootFolder = Environment.SpecialFolder.LocalApplicationData;
-				else
-					rootFolder = Environment.SpecialFolder.CommonApplicationData;
+			// use a separate folder for the database if we're developing
+			if (Debugger.IsAttached)
+				rootFolder = Environment.SpecialFolder.LocalApplicationData;
+			else
+				rootFolder = Environment.SpecialFolder.CommonApplicationData;
 
-				_dbFolder = Path.Combine(Environment.GetFolderPath(rootFolder), "DnsTube");
+			_dbFolder = Path.Combine(Environment.GetFolderPath(rootFolder), "DnsTube");
 				_logger.LogInformation($"Db folder: {_dbFolder}");
 
 				Directory.CreateDirectory(_dbFolder);

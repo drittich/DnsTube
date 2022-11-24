@@ -55,7 +55,7 @@ namespace DnsTube.Service.Controllers.Api
 		[HttpPost("update")]
 		public string GetUpdate(int id)
 		{
-			WorkerService.DelayCancellationTokenSource.Cancel();
+			WorkerService.TimerCancellationTokenSource.Cancel();
 			return "ok";
 		}
 	}
