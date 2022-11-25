@@ -136,7 +136,13 @@ namespace DnsTube.Service
 				});
 
 				TimerCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(serviceStoppingToken);
-				await Task.Delay(intervalMs, TimerCancellationTokenSource.Token);
+				try
+				{
+					await Task.Delay(intervalMs, TimerCancellationTokenSource.Token);
+				}
+				catch (TaskCanceledException) when (TimerCancellationTokenSource.IsCancellationRequested)
+				{
+				}
 			}
 		}
 
