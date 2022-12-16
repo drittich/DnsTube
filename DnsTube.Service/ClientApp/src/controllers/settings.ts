@@ -1,5 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import '@picocss/pico'
 import '../style.css'
 
 import { getDbFolderAsync, getSettingsAsync, saveSettingsAsync } from "../services/Settings";
@@ -15,7 +14,7 @@ function init() {
 		(document.getElementById('saveSettings') as (HTMLButtonElement)).disabled = true;
 
 		var form = document.getElementById('settings')! as HTMLFormElement;
-		form.style.display = 'none';
+		form.classList.add("hidden");
 		var processing = document.createElement('div');
 		processing.appendChild(document.createTextNode('processing ...'));
 		form.parentNode!.insertBefore(processing, form);

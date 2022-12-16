@@ -13,11 +13,26 @@ a {
 	text-decoration: none;
 }
 
-a:hover {
-	text-decoration: underline;
+a:not([role=button]):hover {
+	cursor: pointer;
 }
 
 h4 {
-	font-size: 18px;
-	margin-top: 24px;
+	margin-bottom: 12px;
+}
+
+.hidden {
+	display: none;
+}
+
+#dnsEntriesSpinner {
+	margin-top: 0%;
+}
+
+.small-button {
+	padding: 2px 3px 3px 3px;
+	font-size: 12px;
+	margin-left: 5px;
+	position: relative;
+	top: -2px;
 }

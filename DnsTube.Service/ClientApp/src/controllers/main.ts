@@ -1,4 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
+import '@picocss/pico'
 import 'three-dots/dist/three-dots.css'
 import '../style.css'
 
@@ -26,9 +26,9 @@ function init() {
 
 		getLastPublicIp();
 
-		document.getElementById('entries-refetch')?.classList.add("d-none");
+		document.getElementById('entries-refetch')?.classList.add("hidden");
 		await getSelectedDnsEntries();
-		document.getElementById('entries-refetch')?.classList.remove("d-none");
+		document.getElementById('entries-refetch')?.classList.remove("hidden");
 	})
 		.then(() => {
 			// refresh log to show DNS entry fetch status
@@ -69,8 +69,8 @@ async function getLog(lastId?: number): Promise<void> {
 		tableBodyEl.appendChild(row);
 	});
 
-	document.getElementById("log-clear")!.classList.toggle("d-none", tableBodyEl.rows.length == 0);
-	document.getElementById("log-load-more")!.classList.toggle("d-none", logEntries.length != pageSize);
+	document.getElementById("log-clear")!.classList.toggle("hidden", tableBodyEl.rows.length == 0);
+	document.getElementById("log-load-more")!.classList.toggle("hidden", logEntries.length != pageSize);
 }
 
 document.getElementById('log-clear')!.addEventListener('click', async function (e) {
@@ -84,8 +84,8 @@ document.getElementById('log-clear')!.addEventListener('click', async function (
 	if (msg == "ok") {
 		let tableBodyEl = document.getElementById("log-table-body") as HTMLTableSectionElement;
 		tableBodyEl.innerHTML = "";
-		document.getElementById("log-clear")!.classList.add("d-none");
-		document.getElementById("log-load-more")!.classList.add("d-none");
+		document.getElementById("log-clear")!.classList.add("hidden");
+		document.getElementById("log-load-more")!.classList.add("hidden");
 	}
 	else
 		alert(msg);
@@ -98,20 +98,21 @@ document.getElementById('log-load-more')!.addEventListener('click', function (e)
 	getLog(parseInt(lastId!));
 }, false);
 
-document.getElementById('dns-update')!.addEventListener('click', async function (e) {
+document.getElementById('dnsUpdate')!.addEventListener('click', async function (e) {
 	e.preventDefault();
 
-	document.getElementById('dns-update')?.classList.add("d-none");
+	document.getElementById('ipAddressInfoSpinner')?.classList.remove("hidden");
+	document.getElementById('ipAddressInfo')?.classList.add("hidden");
+
 	await updateDnsAsync();
-	document.getElementById('dns-update')?.classList.remove("d-none");
 }, false);
 
 document.getElementById('entries-refetch')!.addEventListener('click', async function (e) {
 	e.preventDefault();
 
-	document.getElementById('entries-refetch')?.classList.add("d-none");
+	document.getElementById('entries-refetch')?.classList.add("hidden");
 	await getSelectedDnsEntries();
-	document.getElementById('entries-refetch')?.classList.remove("d-none");
+	document.getElementById('entries-refetch')?.classList.remove("hidden");
 }, false);
 
 async function getLastPublicIp() {
@@ -137,17 +138,17 @@ async function getPublicIp() {
 }
 
 async function getSelectedDnsEntries() {
-	let spinnerEl = document.getElementById("dns-entries-spinner") as HTMLDivElement;
-	let tableEl = document.getElementById("dns-entries-table") as HTMLTableElement;
-	let dnsUpdateEl = document.getElementById("dns-update") as HTMLAnchorElement;
+	let spinnerEl = document.getElementById("dnsEntriesSpinner") as HTMLDivElement;
+	let dnsEntriesContainerEl = document.getElementById("dnsEntriesContainer") as HTMLTableElement;
+	let dnsUpdateEl = document.getElementById("dnsUpdate") as HTMLAnchorElement;
 
 	// show spinner, hide some other elements
-	spinnerEl.classList.remove("d-none");
-	tableEl.classList.add("d-none");
-	dnsUpdateEl.classList.add("d-none");
+	spinnerEl.classList.remove("hidden");
+	dnsEntriesContainerEl.classList.add("hidden");
+	dnsUpdateEl.classList.add("hidden");
 
 	//remove existing rows
-	let tableBodyEl = document.getElementById("dns-entries-body") as HTMLTableSectionElement;
+	let tableBodyEl = document.getElementById("dnsEntriesBody") as HTMLTableSectionElement;
 	tableBodyEl.innerHTML = "";
 
 	//TODO: if dnsEntries is null, show error message
@@ -190,9 +191,9 @@ async function getSelectedDnsEntries() {
 		(document.getElementById("ttlHeader") as HTMLElement)!.innerText = 'TTL (minutes)';
 
 	// show table and some other elements
-	spinnerEl.classList.add("d-none");
-	tableEl.classList.remove("d-none");
-	dnsUpdateEl.classList.remove("d-none");
+	spinnerEl.classList.add("hidden");
+	dnsEntriesContainerEl.classList.remove("hidden");
+	dnsUpdateEl.classList.remove("hidden");
 }
 
 async function saveDnsUpdatable() {
@@ -211,9 +212,9 @@ async function saveDnsUpdatable() {
 
 function setUiElementState() {
 	if (_settings?.protocolSupport != 1)
-		(document.getElementById("public-ipv4-info") as HTMLDivElement).classList.remove("d-none");
+		(document.getElementById("public-ipv4-info") as HTMLDivElement).classList.remove("hidden");
 	if (_settings?.protocolSupport != 0)
-		(document.getElementById("public-ipv6-info") as HTMLDivElement).classList.remove("d-none");
+		(document.getElementById("public-ipv6-info") as HTMLDivElement).classList.remove("hidden");
 }
 
 function setupSse() {
@@ -225,29 +226,37 @@ function setupSse() {
 
 	source.addEventListener('last-run', function (e) {
 		let lastUpdateDate = format(parseISO(e.data), "yyyy-MM-dd HH:mm:ss");
-		(document.getElementById("last-update")! as HTMLInputElement).value = lastUpdateDate;
+		(document.getElementById("lastUpdate")! as HTMLInputElement).value = lastUpdateDate;
+		document.getElementById('ipAddressInfoSpinner')?.classList.add("hidden");
+		document.getElementById('ipAddressInfo')?.classList.remove("hidden");
 	}, false);
 
 	source.addEventListener('next-run', function (e) {
 		let nextUpdateDate = format(parseISO(e.data), "yyyy-MM-dd HH:mm:ss");
-		(document.getElementById("next-update")! as HTMLInputElement).value = nextUpdateDate;
+		(document.getElementById("nextUpdate")! as HTMLInputElement).value = nextUpdateDate;
+		document.getElementById('ipAddressInfoSpinner')?.classList.add("hidden");
+		document.getElementById('ipAddressInfo')?.classList.remove("hidden");
 	}, false);
 
 	source.addEventListener('ipv4-address', function (e) {
 		(document.getElementById("public-ipv4")! as HTMLInputElement).value = e.data;
+		document.getElementById('ipAddressInfoSpinner')?.classList.add("hidden");
+		document.getElementById('ipAddressInfo')?.classList.remove("hidden");
 	}, false);
 
 	source.addEventListener('ipv6-address', function (e) {
 		(document.getElementById("public-ipv6")! as HTMLInputElement).value = e.data;
+		document.getElementById('ipAddressInfoSpinner')?.classList.add("hidden");
+		document.getElementById('ipAddressInfo')?.classList.remove("hidden");
 	}, false);
 
 	source.addEventListener('ip-address-changed', function () {
 		getSelectedDnsEntries();
-	}, false);	
+	}, false);
 }
 async function getRunInfo() {
 	let runInfo = await getRunInfoAsync();
-	(document.getElementById("last-update")! as HTMLInputElement).value = format(parseISO(runInfo!.lastRun), "yyyy-MM-dd HH:mm:ss");
-	(document.getElementById("next-update")! as HTMLInputElement).value = format(parseISO(runInfo!.nextRun), "yyyy-MM-dd HH:mm:ss");
+	(document.getElementById("lastUpdate")! as HTMLInputElement).value = format(parseISO(runInfo!.lastRun), "yyyy-MM-dd HH:mm:ss");
+	(document.getElementById("nextUpdate")! as HTMLInputElement).value = format(parseISO(runInfo!.nextRun), "yyyy-MM-dd HH:mm:ss");
 }
 
