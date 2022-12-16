@@ -12,7 +12,7 @@
     "path": "^0.12.7",
     "sass": "^1.55.0",
     "typescript": "^4.6.4",
-    "vite": "^3.1.0"
+    "vite": "^4.0.1"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.6",
@@ -21,6 +21,6 @@
     "date-fns": "^2.29.3",
     "linkify-html": "^4.0.2",
     "linkifyjs": "^4.0.2",
-    "three-dots": "^0.2.3"
+    "three-dots": "^0.3.2"
   }
 }

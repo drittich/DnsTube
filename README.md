@@ -53,7 +53,7 @@ PS C:\Program Files\DnsTubeService>
 ## Project Structure
 
 - **DnsTube.Core project**: Holds core application code 
-- **DnsTube.Service project**: Contains the Windows service, the REST API for the web application, and the web applicaiton itself.
+- **DnsTube.Service project**: Contains the Windows service, the REST API for the web application, and the web application itself.
 
 ## Development
 
