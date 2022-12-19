@@ -2,6 +2,13 @@ import { RunInfo } from "../model/RunInfo";
 import { SelectedDomain } from "../model/SelectedDomain";
 import { Settings } from "../model/Settings";
 
+import { library, dom } from '@fortawesome/fontawesome-svg-core';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+
+// render fontawesome icons
+library.add(faEye, faEyeSlash);
+dom.watch();
+
 export async function getSettingsAsync(): Promise<Settings | null> {
 	let response = await fetch("/api/settings");
 	if (response.ok) {

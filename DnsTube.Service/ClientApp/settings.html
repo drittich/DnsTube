@@ -6,175 +6,167 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<title>DnsTube v2</title>
+		<title>DnsTube v2.0</title>
 
 	</head>
 	<body>
+
+		<!-- header -->
 		<div class="container">
-			<header class="">
-				<a href="/" class="">
-					<span class="">DnsTube v2.0</span>
-				</a>
+			<article class="content">
+				<nav>
+					<ul>
+						<li><strong class="title">DnsTube v2.0</strong></li>
+					</ul>
+					<ul>
+						<li><a href="/index.html"
+								aria-current="page">Home</a></li>
+						<li><a href="/settings.html">Settings</a></li>
+					</ul>
+				</nav>
+			</article>
 
-				<ul class="nav nav-pills">
-					<li class=""><a href="/index.html" class=""
-							aria-current="page">Home</a></li>
-					<li class=""><a href="/settings.html" class="">Settings</a></li>
-				</ul>
-			</header>
-		</div>
+			<div class="content">
+				<h4>Settings</h4>
 
-		<div class="container body-content">
+				<small class="hint">
+					To get a Cloudflare API token see <a
+						href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/"
+						target="_blank">Create an API token</a>
+				</small>
+				<br><br>
 
-			<style>
-					.form-group.row {
-						padding-bottom: 6px;
-					}
-				</style>
-			<h4>Settings</h4>
+				<div>
 
-			<div class="" role="alert">
-				To get a Cloudflare API token see <a
-					href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/"
-					target="_blank">Create an API token</a>
+					<form id="settings">
+						<div>
+							<label for="email">Email</label>
+							<div>
+								<input type="email" name="EmailAddress"
+									id="emailAddress">
+							</div>
+						</div>
+
+						<div>
+							<label for="apiToken">Authorization Type</label>
+							<div style="padding-top:8px;">
+								<div>
+									<input type="radio" name="IsUsingToken"
+										id="authorizationKey" value="false">
+									<label for="authorizationKey">
+										Use key
+									</label>
+								</div>
+								<div>
+									<input type="radio" name="IsUsingToken"
+										id="authorizationToken" value="true">
+									<label for="authorizationToken">
+										Use token
+									</label>
+								</div>
+							</div>
+						</div>
+
+						<div>
+							<label for="apiKeyOrToken" id="apiKeyTokenLabel">Authorization Key/Token</label>
+							<div>
+								<input type="password" name="ApiKeyOrToken"
+									id="apiKeyOrToken" style="display:inline-block">
+								<span id="togglePassword"><i class="fas fa-eye" style="margin-left: -48px;
+									cursor: pointer;display:inline-block"></i></span>
+							</div>
+						</div>
+
+						<div>
+							<label for="zoneIDs">Zone IDs</label>
+							<div>
+								<input type="text" name="ZoneIDs" id="zoneIDs">
+							</div>
+						</div>
+
+						<div>
+							<label for="apiToken">Protocol</label>
+							<div style="padding-top:8px;">
+								<div>
+									<input type="radio" name="ProtocolSupport"
+										id="protocolIpv4" value="0">
+									<label for="protocolIpv4">
+										IPv4
+									</label>
+								</div>
+								<div>
+									<input type="radio" name="ProtocolSupport"
+										id="protocolIpv6" value="1">
+									<label for="protocolIpv6">
+										IPv6
+									</label>
+								</div>
+								<div>
+									<input type="radio" name="ProtocolSupport"
+										id="protocolBoth" value="2">
+									<label for="protocolBoth">
+										Both
+									</label>
+								</div>
+							</div>
+						</div>
+
+						<div>
+							<label for="ipv4Api">IPv4 API</label>
+							<div>
+								<input type="url" name="Ipv4_API" id="ipv4Api">
+							</div>
+						</div>
+						<div>
+							<label for="ipv6Api">IPv6 API</label>
+							<div>
+								<input type="url" name="Ipv6_API" id="ipv6Api">
+							</div>
+						</div>
+						<div>
+							<label for="updateIntervalMinutes">Update
+								Interval (minutes)</label>
+							<div>
+								<input type="number" name="UpdateIntervalMinutes"
+									id="updateIntervalMinutes" value="30">
+							</div>
+						</div>
+						<div>
+							<label for="ipv6Api"></label>
+							<div style="margin-left:14px;">
+								<input type="checkbox" name="NotifyOfUpdates"
+									id="notifyOfUpdates" value="true">
+								<label for="notifyOfUpdates">Check for DnsTube
+									updates</label>
+							</div>
+						</div>
+
+						<div style="margin-top: 24px;">
+							<div>
+								<a href="javascript:" role="button" style="width:200px"
+									id="saveSettings">Save</a>
+								<a href="/" role="button" style="width:200px" class="secondary"
+									id="cancelSettings">Cancel</a>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<small class="hint">
+					Settings are saved in a SQLite Db at: <code id="dbPath"></code>
+				</small>
+
+				<hr />
+				<nav>
+					<ul style="margin: auto; padding: 0;">
+						<li><a href="https://github.com/drittich/DnsTube">GitHub</a></li>
+						<li><a href="https://github.com/drittich/DnsTube/blob/main/LICENSE">License</a></li>
+						<li><a href="https://github.com/drittich/DnsTube/releases">Releases</a></li>
+						<li><a href="https://github.com/drittich/DnsTube/issues">Bug Report</a></li>
+					</ul>
+				</nav>
+
 			</div>
-
-			<div>
-
-				<form id="settings">
-					<div class="">
-						<label for="email" class="">Email</label>
-						<div class="">
-							<input type="email" class="" name="EmailAddress"
-								id="emailAddress">
-						</div>
-					</div>
-
-					<div class="">
-						<label for="apiToken" class="">Authorization Type</label>
-						<div class="" style="padding-top:8px;">
-							<div class="">
-								<input class="" type="radio" name="IsUsingToken"
-									id="authorizationKey" value="false">
-								<label class="" for="authorizationKey">
-									Use key
-								</label>
-							</div>
-							<div class="">
-								<input class="" type="radio" name="IsUsingToken"
-									id="authorizationToken" value="true">
-								<label class="" for="authorizationToken">
-									Use token
-								</label>
-							</div>
-						</div>
-					</div>
-
-					<div class="">
-						<label for="apiKeyOrToken" id="apiKeyTokenLabel" class="col-sm-2
-							col-form-label">Authorization Key/Token</label>
-						<div class="">
-							<input type="password" class="" name="ApiKeyOrToken"
-								id="apiKeyOrToken" style="display:inline-block">
-							<!-- FIXME: replace with FontAwesome icon? -->
-							<i class="bi-eye" id="togglePassword" style="margin-left: -30px;
-								cursor: pointer;"></i>
-						</div>
-					</div>
-
-					<div class="">
-						<label for="zoneIDs" class="">Zone IDs</label>
-						<div class="">
-							<input type="text" class="" name="ZoneIDs" id="zoneIDs">
-						</div>
-					</div>
-
-					<div class="">
-						<label for="apiToken" class="">Protocol</label>
-						<div class="col-sm-10" style="padding-top:8px;">
-							<div class="">
-								<input class="" type="radio" name="ProtocolSupport"
-									id="protocolIpv4" value="0">
-								<label class="" for="protocolIpv4">
-									IPv4
-								</label>
-							</div>
-							<div class="">
-								<input class="" type="radio" name="ProtocolSupport"
-									id="protocolIpv6" value="1">
-								<label class="" for="protocolIpv6">
-									IPv6
-								</label>
-							</div>
-							<div class="">
-								<input class="" type="radio" name="ProtocolSupport"
-									id="protocolBoth" value="2">
-								<label class="" for="protocolBoth">
-									Both
-								</label>
-							</div>
-						</div>
-					</div>
-
-					<div class="">
-						<label for="ipv4Api" class="">IPv4 API</label>
-						<div class="">
-							<input type="url" class="" name="Ipv4_API" id="ipv4Api">
-						</div>
-					</div>
-					<div class="">
-						<label for="ipv6Api" class="">IPv6 API</label>
-						<div class="">
-							<input type="url" class="" name="Ipv6_API" id="ipv6Api">
-						</div>
-					</div>
-					<div class="">
-						<label for="updateIntervalMinutes" class="">Update
-							Interval</label>
-						<div class="">
-							<input type="number" class="" name="UpdateIntervalMinutes"
-								id="updateIntervalMinutes" value="30">
-						</div>
-						<label class="">(minutes)</label>
-					</div>
-					<div class="">
-						<label for="ipv6Api" class=""></label>
-						<div class="" style="margin-left:14px;">
-							<input class="" type="checkbox" name="NotifyOfUpdates"
-								id="notifyOfUpdates" value="true">
-							<label class="" for="notifyOfUpdates">Check for DnsTube
-								updates</label>
-						</div>
-					</div>
-
-					<div class="" style="margin-top: 24px;">
-						<div class="">
-							<button type="button" class="btn btn-primary" id="saveSettings">Save</button>
-						</div>
-					</div>
-				</form>
-			</div>
-
-			<small class="fst-italic text-muted text-small">
-				Settings are saved in a SQLite Db at: <span id="dbPath"></span>
-			</small>
-
-		</div>
-
-		<div class="container body-content">
-			<hr />
-			<footer style="text-align: center;">
-				<ul class="">
-					<li class=""><a href="https://github.com/drittich/DnsTube">GitHub</a></li>
-					<li class=""><a
-							href="https://github.com/drittich/DnsTube/blob/main/LICENSE">License</a></li>
-					<li class=""><a
-							href="https://github.com/drittich/DnsTube/releases">Releases</a></li>
-					<li class=""><a
-							href="https://github.com/drittich/DnsTube/issues">Bug Report</a></li>
-					<!-- <li class=""><a href="#">Privacy Policy</a></li> -->
-				</ul>
-			</footer>
 		</div>
 
 		<script type="module" src="/src/controllers/settings.ts"></script>

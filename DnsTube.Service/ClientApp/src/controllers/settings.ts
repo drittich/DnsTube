@@ -42,8 +42,9 @@ function handleViewTokenClick(this: HTMLElement) {
 	const type = tokenInput.getAttribute('type') === 'password' ? 'text' : 'password';
 	tokenInput.setAttribute('type', type);
 
-	(this as HTMLElement).classList.toggle('bi-eye-slash', type == "text");
-	(this as HTMLElement).classList.toggle('bi-eye', type == "password");
+	let icon = this.querySelector('svg') as unknown as HTMLElement;
+	icon.classList.toggle('fa-eye-slash', type == "text");
+	icon.classList.toggle('fa-eye', type == "password");
 }
 
 async function getSettings(): Promise<void> {

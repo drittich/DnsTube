@@ -39,46 +39,6 @@ namespace DnsTube.Core.Interfaces
 			ZoneIDs = settingDTO.ZoneIDs;
 		}
 
-		//public void LoadFromConfigFile(string configPath)
-		//{
-		//	ConfigPath = configPath;
-
-		//	if (!File.Exists(ConfigPath))
-		//	{
-		//		UpdateIntervalMinutes = 30;
-		//		SelectedDomains = new List<SelectedDomain>();
-		//		IsUsingToken = true;
-		//		ProtocolSupport = IpSupport.IPv4;
-		//		ZoneIDs = "";
-		//		IPv4_API = "https://api.ipify.org/";
-		//		IPv6_API = "https://api64.ipify.org/";
-
-		//		Save();
-
-		//		return;
-		//	}
-
-		//	string json = File.ReadAllText(ConfigPath);
-		//	var settings = JsonSerializer.Deserialize<Settings>(json);
-
-		//	if (settings == null)
-		//		throw new Exception($"Unable to parse {ConfigPath}");
-
-		//	EmailAddress = settings.EmailAddress;
-		//	IsUsingToken = settings.IsUsingToken;
-		//	ApiKey = settings.ApiKey;
-		//	ApiToken = settings.ApiToken;
-		//	UpdateIntervalMinutes = settings.UpdateIntervalMinutes;
-		//	SelectedDomains = settings.SelectedDomains;
-		//	ProtocolSupport = settings.ProtocolSupport;
-		//	SkipCheckForNewReleases = settings.SkipCheckForNewReleases;
-		//	ZoneIDs = settings.ZoneIDs ?? "";
-		//	IPv4_API = settings.IPv4_API ?? "https://api.ipify.org/";
-		//	IPv6_API = settings.IPv6_API ?? "https://api64.ipify.org/";
-		//	StartMinimized = settings.StartMinimized;
-		//	MinimizeToTray = settings.MinimizeToTray;
-		//}
-
 		/// <summary>
 		/// Make sure settings are populated
 		/// </summary>

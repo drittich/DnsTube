@@ -1,131 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xdata-theme="light">
 	<head>
 		<meta charset="UTF-8">
 		<link rel="icon" type="image/ico" href="/dnstube.ico" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<title>DnsTube v2</title>
+		<title>DnsTube v2.0</title>
 
 	</head>
 	<body>
 
 		<!-- header -->
 		<div class="container">
-			<nav>
-				<ul>
-					<li><strong>DnsTube v2.0</strong></li>
-				</ul>
-				<ul>
-					<li class=""><a href="/index.html" class=""
-							aria-current="page">Home</a></li>
-					<li class=""><a href="/settings.html" class="">Settings</a></li>
-				</ul>
-			</nav>
-		</div>
+			<article class="content">
+				<nav>
+					<ul>
+						<li><strong class="title">DnsTube v2.0</strong></li>
+					</ul>
+					<ul>
+						<li><a href="/index.html"
+								aria-current="page">Home</a></li>
+						<li><a href="/settings.html">Settings</a></li>
+					</ul>
+				</nav>
+			</article>
 
-		<!-- body -->
-		<div class="container body-content">
+			<div class="content">
+				<!-- body -->
+				<!-- IP address info -->
+				<h4>IP Address</h4>
+				<article id="ipAddressInfoSpinner" class="hidden" aria-busy="true">Updating
+					IP address…</article>
 
-			<!-- IP address info -->
-			<h4>IP Address</h4>
-			<article id="ipAddressInfoSpinner" class="hidden" aria-busy="true">Updating
-				IP address…</article>
-
-			<form class="grid" id="ipAddressInfo">
-				<div class="hidden" id="public-ipv4-info">
-					<label for="colFormLabel" class="">Public IPv4</label>
-					<div class="">
-						<input type="text" class="" id="public-ipv4" readonly>
+				<form class="grid" id="ipAddressInfo">
+					<div class="hidden" id="public-ipv4-info">
+						<label for="colFormLabel">Public IPv4</label>
+						<div>
+							<input type="text" id="public-ipv4" readonly>
+						</div>
 					</div>
-				</div>
-				<div class="hidden" id="public-ipv6-info">
-					<label for="colFormLabel" class="">Public IPv6</label>
-					<div class="">
-						<input type="text" class="" id="public-ipv6" readonly
-							value="">
+					<div class="hidden" id="public-ipv6-info">
+						<label for="colFormLabel">Public IPv6</label>
+						<div>
+							<input type="text" id="public-ipv6" readonly
+								value="">
+						</div>
 					</div>
-				</div>
-				<div class="">
-					<label for="colFormLabel" class="">Last Update</label>
-					<div class="">
-						<input type="text" class="" id="lastUpdate" readonly>
+					<div>
+						<label for="colFormLabel">Last Update</label>
+						<div>
+							<input type="text" id="lastUpdate" readonly>
+						</div>
 					</div>
-				</div>
-				<div class="">
-					<label for="colFormLabel" class="">Next Update
-						<a href="javascript:{}" id="dnsUpdate" role="button" class="outline
-							small-button">update now</a>
-					</label>
+					<div>
+						<label for="colFormLabel">Next Update
+							<a href="javascript:" id="dnsUpdate" role="button" class="outline
+								small-button">update now</a>
+						</label>
 
-					<div class="">
-						<input type="text" class="" id="nextUpdate" readonly>
+						<div>
+							<input type="text" id="nextUpdate" readonly>
+						</div>
 					</div>
-				</div>
-			</form>
+				</form>
 
-			<!-- Cloudflare DNS entries -->
-			<h4 style="display:inline-block;">Cloudflare DNS Entries</h4>
-			<a href="javascript:{}" id="entries-refetch" role="button" class="outline
-				small-button">refetch</a>
-			<article id="dnsEntriesSpinner" class="hidden" aria-busy="true">Fetching
-				Cloudflare DNS Entries…</article>
+				<!-- Cloudflare DNS entries -->
+				<h4 style="display:inline-block;">Cloudflare DNS Entries</h4>
+				<a href="javascript:" id="entries-refetch" role="button" class="outline
+					small-button">refetch</a>
+				<article id="dnsEntriesSpinner" class="hidden" aria-busy="true">Fetching
+					Cloudflare DNS Entries…</article>
 
-			<div id="dnsEntriesContainer" class="hidden">
-				<div>
-					<small style="color:var(--muted-color);">Check the entries below that you
-						want updated</small>
+				<div id="dnsEntriesContainer" class="hidden">
+					<div>
+						<small class="hint">Check the entries to update</small>
+					</div>
+					<table>
+						<thead>
+							<tr>
+								<th scope="col">Update</th>
+								<th scope="col">Type</th>
+								<th scope="col">Name</th>
+								<th scope="col">Address</th>
+								<th scope="col" id="ttlHeader">TTL</th>
+								<th scope="col">Proxied</th>
+							</tr>
+						</thead>
+						<tbody id="dnsEntriesBody"></tbody>
+					</table>
+
 				</div>
-				<table>
+
+				<!-- log -->
+				<h4 style="display:inline-block;">Log</h4>
+				<a href="javascript:" id="log-clear" role="button" class="outline
+					small-button">clear</a>
+
+				<table id="log-table">
 					<thead>
 						<tr>
-							<th scope="col">Update</th>
+							<th scope="col">Date</th>
+							<th scope="col">Message</th>
 							<th scope="col">Type</th>
-							<th scope="col">Name</th>
-							<th scope="col">Address</th>
-							<th scope="col" id="ttlHeader">TTL</th>
-							<th scope="col">Proxied</th>
 						</tr>
 					</thead>
-					<tbody id="dnsEntriesBody"></tbody>
+					<tbody id="log-table-body"></tbody>
 				</table>
+				<button id="log-load-more">Load More</button>
 
+				<!-- footer -->
+				<hr />
+				<nav>
+					<ul style="margin: auto; padding: 0;">
+						<li><a href="https://github.com/drittich/DnsTube">GitHub</a></li>
+						<li><a href="https://github.com/drittich/DnsTube/blob/main/LICENSE">License</a></li>
+						<li><a href="https://github.com/drittich/DnsTube/releases">Releases</a></li>
+						<li><a href="https://github.com/drittich/DnsTube/issues">Bug Report</a></li>
+					</ul>
+				</nav>
 			</div>
-
-			<!-- log -->
-			<h4 style="display:inline-block;">Log</h4>
-			<a href="javascript:{}" id="log-clear" role="button" class="outline
-				small-button">clear</a>
-
-			<table id="log-table" class="">
-				<thead>
-					<tr>
-						<th scope="col">Date</th>
-						<th scope="col">Message</th>
-						<th scope="col">Type</th>
-					</tr>
-				</thead>
-				<tbody id="log-table-body"></tbody>
-			</table>
-			<button id="log-load-more" class="">Load More</button>
-		</div>
-
-		<!-- footer -->
-		<div class="container body-content">
-			<hr />
-			<footer style="text-align: center;">
-				<ul class="">
-					<li class=""><a href="https://github.com/drittich/DnsTube">GitHub</a></li>
-					<li class=""><a
-							href="https://github.com/drittich/DnsTube/blob/main/LICENSE">License</a></li>
-					<li class=""><a
-							href="https://github.com/drittich/DnsTube/releases">Releases</a></li>
-					<li class=""><a
-							href="https://github.com/drittich/DnsTube/issues">Bug Report</a></li>
-					<!-- <li class=""><a href="#">Privacy Policy</a></li> -->
-				</ul>
-			</footer>
 		</div>
 
 		<script type="module" src="/src/controllers/main.ts" async></script>

@@ -1,12 +1,6 @@
 ﻿body {
-	padding-top: 50px;
+	padding-top: 0px;
 	padding-bottom: 20px;
-}
-
-/* Set padding to keep content from hitting the edges */
-.body-content {
-	padding-left: 15px;
-	padding-right: 15px;
 }
 
 a {
@@ -19,6 +13,7 @@ a:not([role=button]):hover {
 
 h4 {
 	margin-bottom: 12px;
+	font-size: 20px;
 }
 
 .hidden {
@@ -30,9 +25,35 @@ h4 {
 }
 
 .small-button {
-	padding: 2px 3px 3px 3px;
+	padding: 2px 4px 3px 4px;
 	font-size: 12px;
 	margin-left: 5px;
 	position: relative;
 	top: -2px;
+}
+
+.word-break {
+	word-break: break-all;
+}
+
+.title {
+	font-size: 24px;
+}
+
+.content {
+	padding: 0px 16px 0px 16px;
+}
+
+.hint {
+	color: var(--muted-color);
+}
+
+input:not([type=checkbox], [type=radio]), select, textarea {
+	width: 95%;
+}
+
+@media only screen and (min-width: 992px) {
+	input:not([type=checkbox], [type=radio]), select, textarea {
+		width: 70%;
+	}
 }

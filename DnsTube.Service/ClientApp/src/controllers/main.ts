@@ -177,7 +177,7 @@ async function getSelectedDnsEntries() {
 		row.insertCell().appendChild(checkbox);
 		row.insertCell().innerHTML = entry.type!;
 		row.insertCell().innerHTML = entry.dnsName!;
-		row.insertCell().innerHTML = entry.address!;
+		row.insertCell().innerHTML = `<span class="word-break">${entry.address!}</span>`;
 		let ttlDisplay = entry.ttl! == 1 ? 'Auto' : (entry.ttl! / 60).toString();
 		if (ttlDisplay != 'Auto')
 			customTtl = true;
