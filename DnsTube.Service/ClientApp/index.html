@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xdata-theme="light">
+<html lang="en">
 	<head>
 		<meta charset="UTF-8">
 		<link rel="icon" type="image/ico" href="/dnstube.ico" />
@@ -13,13 +13,13 @@
 
 		<!-- header -->
 		<div class="container">
-			<article class="content">
+			<article class="content border">
 				<nav>
 					<ul>
-						<li><strong class="title">DnsTube v2.0</strong></li>
+						<li><strong class="title">DnsTube v2.0.0-beta4</strong></li>
 					</ul>
 					<ul>
-						<li><a href="/index.html"
+						<li><a role="button" href="/index.html"
 								aria-current="page">Home</a></li>
 						<li><a href="/settings.html">Settings</a></li>
 					</ul>
@@ -27,87 +27,94 @@
 			</article>
 
 			<div class="content">
-				<!-- body -->
-				<!-- IP address info -->
-				<h4>IP Address</h4>
-				<article id="ipAddressInfoSpinner" class="hidden" aria-busy="true">Updating
-					IP address…</article>
 
-				<form class="grid" id="ipAddressInfo">
-					<div class="hidden" id="public-ipv4-info">
-						<label for="colFormLabel">Public IPv4</label>
-						<div>
-							<input type="text" id="public-ipv4" readonly>
-						</div>
-					</div>
-					<div class="hidden" id="public-ipv6-info">
-						<label for="colFormLabel">Public IPv6</label>
-						<div>
-							<input type="text" id="public-ipv6" readonly
-								value="">
-						</div>
-					</div>
-					<div>
-						<label for="colFormLabel">Last Update</label>
-						<div>
-							<input type="text" id="lastUpdate" readonly>
-						</div>
-					</div>
-					<div>
-						<label for="colFormLabel">Next Update
-							<a href="javascript:" id="dnsUpdate" role="button" class="outline
-								small-button">update now</a>
-						</label>
+				<article>
+					<!-- body -->
+					<!-- IP address info -->
+					<h4>IP Address</h4>
+					<article id="ipAddressInfoSpinner" class="hidden" aria-busy="true">Updating
+						IP address…</article>
 
-						<div>
-							<input type="text" id="nextUpdate" readonly>
+					<form class="grid" id="ipAddressInfo">
+						<div class="hidden" id="public-ipv4-info">
+							<label for="colFormLabel">Public IPv4</label>
+							<div>
+								<input type="text" id="public-ipv4" readonly>
+							</div>
 						</div>
-					</div>
-				</form>
+						<div class="hidden" id="public-ipv6-info">
+							<label for="colFormLabel">Public IPv6</label>
+							<div>
+								<input type="text" id="public-ipv6" readonly
+									value="">
+							</div>
+						</div>
+						<div>
+							<label for="colFormLabel">Last Update</label>
+							<div>
+								<input type="text" id="lastUpdate" readonly>
+							</div>
+						</div>
+						<div>
+							<label for="colFormLabel">Next Update
+								<a href="javascript:" id="dnsUpdate" role="button" class="outline
+									small-button">update now</a>
+							</label>
+
+							<div>
+								<input type="text" id="nextUpdate" readonly>
+							</div>
+						</div>
+					</form>
+				</article>
 
 				<!-- Cloudflare DNS entries -->
-				<h4 style="display:inline-block;">Cloudflare DNS Entries</h4>
-				<a href="javascript:" id="entries-refetch" role="button" class="outline
-					small-button">refetch</a>
-				<article id="dnsEntriesSpinner" class="hidden" aria-busy="true">Fetching
-					Cloudflare DNS Entries…</article>
+				<article>
+					<h4 style="display:inline-block;">Cloudflare DNS Entries</h4>
+					<a href="javascript:" id="entries-refetch" role="button" class="outline
+						small-button">refetch</a>
+					<article id="dnsEntriesSpinner" class="hidden" aria-busy="true">Fetching
+						Cloudflare DNS Entries…</article>
 
-				<div id="dnsEntriesContainer" class="hidden">
-					<div>
-						<small class="hint">Check the entries to update</small>
+					<div id="dnsEntriesContainer" class="hidden">
+						<div>
+							<small class="hint">Check the entries to update</small>
+						</div>
+						<table>
+							<thead>
+								<tr>
+									<th scope="col">Update</th>
+									<th scope="col">Type</th>
+									<th scope="col">Name</th>
+									<th scope="col">Address</th>
+									<th scope="col" id="ttlHeader">TTL</th>
+									<th scope="col">Proxied</th>
+								</tr>
+							</thead>
+							<tbody id="dnsEntriesBody"></tbody>
+						</table>
+
 					</div>
-					<table>
-						<thead>
-							<tr>
-								<th scope="col">Update</th>
-								<th scope="col">Type</th>
-								<th scope="col">Name</th>
-								<th scope="col">Address</th>
-								<th scope="col" id="ttlHeader">TTL</th>
-								<th scope="col">Proxied</th>
-							</tr>
-						</thead>
-						<tbody id="dnsEntriesBody"></tbody>
-					</table>
-
-				</div>
+				</article>
 
 				<!-- log -->
-				<h4 style="display:inline-block;">Log</h4>
-				<a href="javascript:" id="log-clear" role="button" class="outline
-					small-button">clear</a>
+				<article>
+					<h4 style="display:inline-block;">Log</h4>
+					<a href="javascript:" id="log-clear" role="button" class="outline
+						small-button">clear</a>
 
-				<table id="log-table">
-					<thead>
-						<tr>
-							<th scope="col">Date</th>
-							<th scope="col">Message</th>
-							<th scope="col">Type</th>
-						</tr>
-					</thead>
-					<tbody id="log-table-body"></tbody>
-				</table>
-				<button id="log-load-more">Load More</button>
+					<table id="log-table">
+						<thead>
+							<tr>
+								<th scope="col">Date</th>
+								<th scope="col">Message</th>
+								<th scope="col">Type</th>
+							</tr>
+						</thead>
+						<tbody id="log-table-body"></tbody>
+					</table>
+					<button id="log-load-more">Load More</button>
+				</article>
 
 				<!-- footer -->
 				<hr />

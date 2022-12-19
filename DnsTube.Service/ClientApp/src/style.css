@@ -57,3 +57,17 @@ input:not([type=checkbox], [type=radio]), select, textarea {
 		width: 70%;
 	}
 }
+
+.border {
+	--border-color: var(--form-element-border-color);
+	border: var(--border-width) solid var(--border-color);
+	border-radius: var(--border-radius);
+}
+
+.tooltip {
+	border-bottom: none !important;
+}
+
+label {
+	display: inline-block;
+}

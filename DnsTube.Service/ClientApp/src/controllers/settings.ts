@@ -3,6 +3,13 @@ import '../style.css'
 
 import { getDbFolderAsync, getSettingsAsync, saveSettingsAsync } from "../services/Settings";
 
+import { library, dom } from '@fortawesome/fontawesome-svg-core';
+import { faEye, faEyeSlash, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+
+// render fontawesome icons
+library.add(faEye, faEyeSlash, faCircleInfo);
+dom.watch();
+
 init();
 
 function init() {

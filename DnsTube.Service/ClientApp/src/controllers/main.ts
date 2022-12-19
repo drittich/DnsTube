@@ -64,7 +64,7 @@ async function getLog(lastId?: number): Promise<void> {
 		row.classList.add(color);
 
 		row.insertCell().innerHTML = format(parseISO(entry.created!), "yyyy-MM-dd HH:mm:ss");
-		row.insertCell().innerHTML = linkifyHtml(entry.text!);
+		row.insertCell().innerHTML = `<span class="word-break">${linkifyHtml(entry.text!) }</span>`;
 		row.insertCell().innerHTML = entry.logLevelText!;
 		tableBodyEl.appendChild(row);
 	});

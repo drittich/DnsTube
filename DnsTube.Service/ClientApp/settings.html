@@ -13,148 +13,174 @@
 
 		<!-- header -->
 		<div class="container">
-			<article class="content">
+			<article class="content border">
 				<nav>
 					<ul>
-						<li><strong class="title">DnsTube v2.0</strong></li>
+						<li><strong class="title">DnsTube v2.0.0-beta4</strong></li>
 					</ul>
 					<ul>
 						<li><a href="/index.html"
 								aria-current="page">Home</a></li>
-						<li><a href="/settings.html">Settings</a></li>
+						<li><a role="button" href="/settings.html">Settings</a></li>
 					</ul>
 				</nav>
 			</article>
 
 			<div class="content">
-				<h4>Settings</h4>
+				<article>
+					<h4>Settings</h4>
 
-				<small class="hint">
-					To get a Cloudflare API token see <a
-						href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/"
-						target="_blank">Create an API token</a>
-				</small>
-				<br><br>
+					<small class="hint">
+						To get a Cloudflare API token see <a
+							href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/"
+							target="_blank">Create an API token</a>
+					</small>
+					<br><br>
 
-				<div>
+					<div>
 
-					<form id="settings">
-						<div>
-							<label for="email">Email</label>
+						<form id="settings">
 							<div>
-								<input type="email" name="EmailAddress"
-									id="emailAddress">
-							</div>
-						</div>
-
-						<div>
-							<label for="apiToken">Authorization Type</label>
-							<div style="padding-top:8px;">
+								<label for="email">Email</label>
 								<div>
-									<input type="radio" name="IsUsingToken"
-										id="authorizationKey" value="false">
-									<label for="authorizationKey">
-										Use key
-									</label>
-								</div>
-								<div>
-									<input type="radio" name="IsUsingToken"
-										id="authorizationToken" value="true">
-									<label for="authorizationToken">
-										Use token
-									</label>
+									<input type="email" name="EmailAddress"
+										id="emailAddress" placeholder="Enter your Cloudflare email address">
 								</div>
 							</div>
-						</div>
 
-						<div>
-							<label for="apiKeyOrToken" id="apiKeyTokenLabel">Authorization Key/Token</label>
 							<div>
-								<input type="password" name="ApiKeyOrToken"
-									id="apiKeyOrToken" style="display:inline-block">
-								<span id="togglePassword"><i class="fas fa-eye" style="margin-left: -48px;
-									cursor: pointer;display:inline-block"></i></span>
-							</div>
-						</div>
-
-						<div>
-							<label for="zoneIDs">Zone IDs</label>
-							<div>
-								<input type="text" name="ZoneIDs" id="zoneIDs">
-							</div>
-						</div>
-
-						<div>
-							<label for="apiToken">Protocol</label>
-							<div style="padding-top:8px;">
-								<div>
-									<input type="radio" name="ProtocolSupport"
-										id="protocolIpv4" value="0">
-									<label for="protocolIpv4">
-										IPv4
-									</label>
-								</div>
-								<div>
-									<input type="radio" name="ProtocolSupport"
-										id="protocolIpv6" value="1">
-									<label for="protocolIpv6">
-										IPv6
-									</label>
-								</div>
-								<div>
-									<input type="radio" name="ProtocolSupport"
-										id="protocolBoth" value="2">
-									<label for="protocolBoth">
-										Both
-									</label>
+								<label for="apiToken">Authorization Type</label>
+								<span data-tooltip="Cloudflare supports both keys and tokens. Tokens are
+									preferred for better security." data-placement="right" class="tooltip"><i
+										class="fa-solid
+										fa-circle-info"></i></span>
+								<div style="padding-top:8px;">
+									<div>
+										<input type="radio" name="IsUsingToken"
+											id="authorizationKey" value="false">
+										<label for="authorizationKey">
+											Use key
+										</label>
+									</div>
+									<div>
+										<input type="radio" name="IsUsingToken"
+											id="authorizationToken" value="true">
+										<label for="authorizationToken">
+											Use token
+										</label>
+									</div>
 								</div>
 							</div>
-						</div>
 
-						<div>
-							<label for="ipv4Api">IPv4 API</label>
 							<div>
-								<input type="url" name="Ipv4_API" id="ipv4Api">
+								<label for="apiKeyOrToken" id="apiKeyTokenLabel">Authorization Key/Token</label>
+								<div>
+									<input type="password" name="ApiKeyOrToken"
+										id="apiKeyOrToken">
+									<span id="togglePassword"><i class="fas fa-eye" style="margin-left:
+											-48px;
+											cursor: pointer;display:inline-block"></i></span>
+								</div>
 							</div>
-						</div>
-						<div>
-							<label for="ipv6Api">IPv6 API</label>
-							<div>
-								<input type="url" name="Ipv6_API" id="ipv6Api">
-							</div>
-						</div>
-						<div>
-							<label for="updateIntervalMinutes">Update
-								Interval (minutes)</label>
-							<div>
-								<input type="number" name="UpdateIntervalMinutes"
-									id="updateIntervalMinutes" value="30">
-							</div>
-						</div>
-						<div>
-							<label for="ipv6Api"></label>
-							<div style="margin-left:14px;">
-								<input type="checkbox" name="NotifyOfUpdates"
-									id="notifyOfUpdates" value="true">
-								<label for="notifyOfUpdates">Check for DnsTube
-									updates</label>
-							</div>
-						</div>
 
-						<div style="margin-top: 24px;">
 							<div>
-								<a href="javascript:" role="button" style="width:200px"
-									id="saveSettings">Save</a>
-								<a href="/" role="button" style="width:200px" class="secondary"
-									id="cancelSettings">Cancel</a>
+								<label for="zoneIDs">Zone IDs</label>
+								<span data-tooltip="Filter for specific zones by adding them
+									here, comma-separated" data-placement="right" class="tooltip"><i
+										class="fa-solid
+										fa-circle-info"></i></span>
+								<div>
+									<input type="text" name="ZoneIDs" id="zoneIDs">
+								</div>
 							</div>
-						</div>
-					</form>
-				</div>
 
-				<small class="hint">
-					Settings are saved in a SQLite Db at: <code id="dbPath"></code>
-				</small>
+							<div>
+								<label for="apiToken">Protocol</label>
+								<span data-tooltip="Which protocol to update DNS entries for"
+									data-placement="right" class="tooltip"><i class="fa-solid
+										fa-circle-info"></i></span>
+								<div style="padding-top:8px;">
+									<div>
+										<input type="radio" name="ProtocolSupport"
+											id="protocolIpv4" value="0">
+										<label for="protocolIpv4">
+											IPv4
+										</label>
+									</div>
+									<div>
+										<input type="radio" name="ProtocolSupport"
+											id="protocolIpv6" value="1">
+										<label for="protocolIpv6">
+											IPv6
+										</label>
+									</div>
+									<div>
+										<input type="radio" name="ProtocolSupport"
+											id="protocolBoth" value="2">
+										<label for="protocolBoth">
+											Both
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div>
+								<label for="ipv4Api">IPv4 API</label>
+								<span data-tooltip="An endpoint that returns your IPv4 address in its
+									response" data-placement="right" class="tooltip"><i class="fa-solid
+										fa-circle-info"></i></span>
+								<div>
+									<input type="url" name="Ipv4_API" id="ipv4Api">
+								</div>
+							</div>
+							<div>
+								<label for="ipv6Api">IPv6 API</label>
+								<span data-tooltip="An endpoint that returns your IPv6 address in its
+									response" data-placement="right" class="tooltip"><i class="fa-solid
+										fa-circle-info"></i></span>
+								<div>
+									<input type="url" name="Ipv6_API" id="ipv6Api">
+								</div>
+							</div>
+							<div>
+								<label for="updateIntervalMinutes">Update
+									Interval (minutes)</label>
+								<span data-tooltip="DnsTube will check and update your DNS if needed
+									every N minutes." data-placement="right" class="tooltip"><i
+										class="fa-solid fa-circle-info"></i></span>
+								<div>
+									<input type="number" name="UpdateIntervalMinutes"
+										id="updateIntervalMinutes" value="30" min="1">
+								</div>
+							</div>
+							<div>
+								<div>
+									<input type="checkbox" name="NotifyOfUpdates" id="notifyOfUpdates"
+										value="true">
+									<label for="notifyOfUpdates">Check for DnsTube
+										updates</label>
+									<span data-tooltip="Will add a log entry on startup when a new version
+										is available" data-placement="right" class="tooltip"><i
+											class="fa-solid
+											fa-circle-info"></i></span>
+								</div>
+							</div>
+
+							<div style="margin-top: 24px;">
+								<div>
+									<a href="javascript:" role="button" style="width:200px"
+										id="saveSettings">Save</a>
+									<a href="/" role="button" style="width:200px" class="secondary"
+										id="cancelSettings">Cancel</a>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<small class="hint">
+						Settings/logs are saved in a SQLite Db at: <code id="dbPath"></code>
+					</small>
+				</article>
 
 				<hr />
 				<nav>
@@ -165,7 +191,6 @@
 						<li><a href="https://github.com/drittich/DnsTube/issues">Bug Report</a></li>
 					</ul>
 				</nav>
-
 			</div>
 		</div>
 
