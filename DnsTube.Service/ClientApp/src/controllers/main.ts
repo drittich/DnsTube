@@ -2,9 +2,9 @@ import '@picocss/pico'
 import 'three-dots/dist/three-dots.css'
 import '../style.css'
 
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, isValid, intlFormatDistance } from 'date-fns'
 import linkifyHtml from "linkify-html";
-import { intlFormatDistance } from 'date-fns'
+import "linkify-plugin-ip";
 import { deleteLogAsync, getLogAsync } from '../services/log';
 import { getRunInfoAsync, getSettingsAsync, saveDomainsAsync } from '../services/settings';
 import { getIp } from '../services/ip';
@@ -44,13 +44,17 @@ function init() {
 	setInterval(() => {
 		let nextUpdate = document.getElementById('nextUpdate') as HTMLInputElement;
 		let nextUpdateDate = new Date(nextUpdate.value);
-		let nextUpdateRelative = document.getElementById('nextUpdateRelative')!;
-		nextUpdateRelative.innerHTML = intlFormatDistance(nextUpdateDate, new Date());
+		if (isValid(nextUpdateDate)) {
+			let nextUpdateRelative = document.getElementById('nextUpdateRelative')!;
+			nextUpdateRelative.innerHTML = intlFormatDistance(nextUpdateDate, new Date());
+		}
 
 		let lastUpdate = document.getElementById('lastUpdate') as HTMLInputElement;
 		let lastUpdateDate = new Date(lastUpdate.value);
-		let lastUpdateRelative = document.getElementById('lastUpdateRelative')!;
-		lastUpdateRelative.innerHTML = intlFormatDistance(lastUpdateDate, new Date());
+		if (isValid(lastUpdateDate)) {
+			let lastUpdateRelative = document.getElementById('lastUpdateRelative')!;
+			lastUpdateRelative.innerHTML = intlFormatDistance(lastUpdateDate, new Date());
+		}		
 	}, 1000);
 
 }
@@ -191,8 +195,8 @@ async function getSelectedDnsEntries() {
 		});
 		row.insertCell().appendChild(checkbox);
 		row.insertCell().innerHTML = entry.type!;
-		row.insertCell().innerHTML = entry.dnsName!;
-		row.insertCell().innerHTML = `<span class="word-break">${entry.address!}</span>`;
+		row.insertCell().innerHTML = linkifyHtml(entry.dnsName!);
+		row.insertCell().innerHTML = `<span class="word-break">${linkifyHtml(entry.address!)}</span>`;
 		let ttlDisplay = entry.ttl! == 1 ? 'Auto' : (entry.ttl! / 60).toString();
 		if (ttlDisplay != 'Auto')
 			customTtl = true;
