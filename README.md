@@ -1,7 +1,7 @@
 #### *"Access your home computer from anywhere"*
 
 ## DnsTube
-A Windows client for dynamically updating Cloudflare DNS entries with your public IP address.
+A Windows service for dynamically updating Cloudflare DNS entries with your public IP address.
 
 ## What is this?
 
