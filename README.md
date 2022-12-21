@@ -14,13 +14,15 @@ This is where DnsTube comes in. Cloudflare provides free DNS hosting for your do
 * Can update A (IPv4), AAAA (IPv6), SPF, and TXT records.
 * Support both Cloudflare API keys and tokens
 * Supports API tokens scoped to specific zones
-* Runs as a service
+* Runs as a Windows service, so login not required
 
-<img src="https://user-images.githubusercontent.com/1222810/202982497-10bdd8aa-457e-4032-8f72-ca404c5fd11c.png" width="800">
+## Main UI
 
-Settings:
+<img src="https://user-images.githubusercontent.com/1222810/208830234-1f54db2c-9090-44cc-8743-b3f3bbc84e2b.png" width="800">
 
-<img src="https://user-images.githubusercontent.com/1222810/202982705-fedaf22d-de6d-4c68-9077-e2c5386b4d67.png" width="800">
+## Settings UI
+
+<img src="https://user-images.githubusercontent.com/1222810/208830426-ac008974-1c28-47ab-94b4-acf6bbc433e3.png" width="800">
 
 ## Downloading 
 
