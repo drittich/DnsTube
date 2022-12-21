@@ -32,6 +32,13 @@ By default the service hosts the web application on your local machine at port 5
 
 Go the settings page and enter your email address, API key/token, etc. Go back to the main tab (refresh if necessary) and you should see a table listing your Cloudflare DNS entries. Check off the ones you want to dynamically update and the service should take it from there.
 
+## Updating
+
+- Download the latest release from https://github.com/drittich/DnsTube/releases/latest and uncompress
+- Open a command prompt as Administrator and stop the existing service by running `stop-service.bat` 
+- Copy the new uncompressed files over the existing ones. The configuration is stored elsewhere so will be preserved.
+- Start the service again by running `start-service.bat` 
+
 ## Uninstalling
 Open a command prompt as Administrator and uninstall the service using  `uninstall-service.bat`. You should see the following output:
 ```
@@ -48,7 +55,6 @@ SERVICE_NAME: DnsTube Service
 [SC] DeleteService SUCCESS
 PS C:\Program Files\DnsTubeService>
 ```
-
 
 ## Project Structure
 
