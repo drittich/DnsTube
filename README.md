@@ -63,15 +63,6 @@ nslookup mydomain.com
 
 After that, you'll need to generate an API Token (preferred) or Key in order to access the API via DnsTube. The details for doing that can be found at [Creating API tokens](https://developers.cloudflare.com/api/tokens/create).
 
-
-
-
-## UI
-
-**Top Pane**: The UI shows a list of domains for the zone(s) you have provided, and you can check off the ones you want DnsTube to update. 
-
-**Lower Pane**: The lower pane shows a running log of activity. 
-
 ## Notes
 
 1. DnsTube only updates existing Cloudflare records. It will not create or remove records.
