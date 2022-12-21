@@ -1,6 +1,7 @@
 ﻿body {
 	padding-top: 0px;
 	padding-bottom: 20px;
+	/* --font-size: 6px; */
 }
 
 a {
@@ -70,4 +71,16 @@ input:not([type=checkbox], [type=radio]), select, textarea {
 
 label {
 	display: inline-block;
+}
+
+.input-sub-hint {
+	color: var(--muted-color);
+	margin-left: 22px;
+}
+
+.ip-address-label {
+	margin-left: 22px;
+}
+article {
+	padding: 28px;
 }

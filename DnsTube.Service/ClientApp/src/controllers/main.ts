@@ -4,6 +4,7 @@ import '../style.css'
 
 import { format, parseISO } from 'date-fns'
 import linkifyHtml from "linkify-html";
+import { intlFormatDistance } from 'date-fns'
 import { deleteLogAsync, getLogAsync } from '../services/log';
 import { getRunInfoAsync, getSettingsAsync, saveDomainsAsync } from '../services/settings';
 import { getIp } from '../services/ip';
@@ -38,6 +39,20 @@ function init() {
 		});
 
 	getPublicIp();
+
+	//set a timer to update nextUpdateRelative every second
+	setInterval(() => {
+		let nextUpdate = document.getElementById('nextUpdate') as HTMLInputElement;
+		let nextUpdateDate = new Date(nextUpdate.value);
+		let nextUpdateRelative = document.getElementById('nextUpdateRelative')!;
+		nextUpdateRelative.innerHTML = intlFormatDistance(nextUpdateDate, new Date());
+
+		let lastUpdate = document.getElementById('lastUpdate') as HTMLInputElement;
+		let lastUpdateDate = new Date(lastUpdate.value);
+		let lastUpdateRelative = document.getElementById('lastUpdateRelative')!;
+		lastUpdateRelative.innerHTML = intlFormatDistance(lastUpdateDate, new Date());
+	}, 1000);
+
 }
 
 async function getLog(lastId?: number): Promise<void> {
@@ -64,7 +79,7 @@ async function getLog(lastId?: number): Promise<void> {
 		row.classList.add(color);
 
 		row.insertCell().innerHTML = format(parseISO(entry.created!), "yyyy-MM-dd HH:mm:ss");
-		row.insertCell().innerHTML = `<span class="word-break">${linkifyHtml(entry.text!) }</span>`;
+		row.insertCell().innerHTML = `<span class="word-break">${linkifyHtml(entry.text!)}</span>`;
 		row.insertCell().innerHTML = entry.logLevelText!;
 		tableBodyEl.appendChild(row);
 	});
@@ -225,15 +240,15 @@ function setupSse() {
 	}, false);
 
 	source.addEventListener('last-run', function (e) {
-		let lastUpdateDate = format(parseISO(e.data), "yyyy-MM-dd HH:mm:ss");
-		(document.getElementById("lastUpdate")! as HTMLInputElement).value = lastUpdateDate;
+		let date = parseISO(e.data);
+		(document.getElementById("lastUpdate")! as HTMLInputElement).value = format(date, "yyyy-MM-dd HH:mm:ss");
 		document.getElementById('ipAddressInfoSpinner')?.classList.add("hidden");
 		document.getElementById('ipAddressInfo')?.classList.remove("hidden");
 	}, false);
 
 	source.addEventListener('next-run', function (e) {
-		let nextUpdateDate = format(parseISO(e.data), "yyyy-MM-dd HH:mm:ss");
-		(document.getElementById("nextUpdate")! as HTMLInputElement).value = nextUpdateDate;
+		let date = parseISO(e.data);
+		(document.getElementById("nextUpdate")! as HTMLInputElement).value = format(date, "yyyy-MM-dd HH:mm:ss");
 		document.getElementById('ipAddressInfoSpinner')?.classList.add("hidden");
 		document.getElementById('ipAddressInfo')?.classList.remove("hidden");
 	}, false);
@@ -256,6 +271,7 @@ function setupSse() {
 }
 async function getRunInfo() {
 	let runInfo = await getRunInfoAsync();
+
 	(document.getElementById("lastUpdate")! as HTMLInputElement).value = format(parseISO(runInfo!.lastRun), "yyyy-MM-dd HH:mm:ss");
 	(document.getElementById("nextUpdate")! as HTMLInputElement).value = format(parseISO(runInfo!.nextRun), "yyyy-MM-dd HH:mm:ss");
 }

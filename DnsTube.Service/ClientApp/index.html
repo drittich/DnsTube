@@ -28,7 +28,7 @@
 
 			<div class="content">
 
-				<article>
+				<article style="padding-bottom: 2px;">
 					<!-- body -->
 					<!-- IP address info -->
 					<h4>IP Address</h4>
@@ -37,39 +37,40 @@
 
 					<form class="grid" id="ipAddressInfo">
 						<div class="hidden" id="public-ipv4-info">
-							<label for="colFormLabel">Public IPv4</label>
+							<label for="colFormLabel" class="ip-address-label">Public IPv4</label>
 							<div>
 								<input type="text" id="public-ipv4" readonly>
 							</div>
 						</div>
 						<div class="hidden" id="public-ipv6-info">
-							<label for="colFormLabel">Public IPv6</label>
+							<label for="colFormLabel" class="ip-address-label">Public IPv6</label>
 							<div>
 								<input type="text" id="public-ipv6" readonly
 									value="">
 							</div>
 						</div>
 						<div>
-							<label for="colFormLabel">Last Update</label>
+							<label for="colFormLabel" class="ip-address-label">Last Updated</label>
 							<div>
 								<input type="text" id="lastUpdate" readonly>
+								<small class="input-sub-hint" id="lastUpdateRelative"></small>
 							</div>
 						</div>
 						<div>
-							<label for="colFormLabel">Next Update
+							<label for="colFormLabel" class="ip-address-label">Next Update
 								<a href="javascript:" id="dnsUpdate" role="button" class="outline
 									small-button">update now</a>
 							</label>
-
 							<div>
 								<input type="text" id="nextUpdate" readonly>
+								<small class="input-sub-hint" id="nextUpdateRelative"></small>
 							</div>
 						</div>
 					</form>
 				</article>
 
 				<!-- Cloudflare DNS entries -->
-				<article>
+				<article style="padding-bottom: 2px;">
 					<h4 style="display:inline-block;">Cloudflare DNS Entries</h4>
 					<a href="javascript:" id="entries-refetch" role="button" class="outline
 						small-button">refetch</a>
@@ -78,7 +79,7 @@
 
 					<div id="dnsEntriesContainer" class="hidden">
 						<div>
-							<small class="hint">Check the entries to update</small>
+							<small class="hint">Select the entries to update</small>
 						</div>
 						<table>
 							<thead>
@@ -98,7 +99,7 @@
 				</article>
 
 				<!-- log -->
-				<article>
+				<article style="padding-bottom: 6px;">
 					<h4 style="display:inline-block;">Log</h4>
 					<a href="javascript:" id="log-clear" role="button" class="outline
 						small-button">clear</a>
@@ -106,7 +107,7 @@
 					<table id="log-table">
 						<thead>
 							<tr>
-								<th scope="col">Date</th>
+								<th scope="col" style="width: 207px;">Date</th>
 								<th scope="col">Message</th>
 								<th scope="col">Type</th>
 							</tr>
