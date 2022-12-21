@@ -54,9 +54,9 @@ PS C:\Program Files\DnsTubeService>
 
 ## Configuration
 
-By default the service hosts the web application on your local machine at port 5666. If you wish to change this, edit appsettings.json accordingly. Once the service is running you can launch the interface at http://localhost:5666/ (or whatever port you have chosen).
+>If you haven't already done so, you will need to create an account with Cloudflare and make it the DNS authority for your domain. You then need to configure your DNS entries as appropriate. See [Managing DNS records in Cloudflare](https://support.cloudflare.com/hc/en-us/articles/360019093151-Managing-DNS-records-in-Cloudflare) for more info.
 
-If you haven't already done so, you will need to create an account with Cloudflare and make it the DNS authority for your domain. You then need to configure your DNS entries as appropriate. See [Managing DNS records in Cloudflare](https://support.cloudflare.com/hc/en-us/articles/360019093151-Managing-DNS-records-in-Cloudflare) for more info.
+By default the service hosts the web application on your local machine at port 5666. If you wish to change this, edit appsettings.json accordingly. Once the service is running you can launch the interface at http://localhost:5666/ (or whatever port you have chosen).
 
 After that, you'll need to generate an API Token (preferred) or Key in order to access the API via DnsTube. The details for doing that can be found at [Creating API tokens](https://developers.cloudflare.com/api/tokens/create).
 
@@ -70,12 +70,12 @@ nslookup mydomain.com
 ## Updating
 
 - Download the latest release from https://github.com/drittich/DnsTube/releases/latest and uncompress
-- Open a command prompt as Administrator and stop the existing service by running `stop-service.bat` 
+- Open a command prompt as Administrator and stop the existing service by running `stop-service.bat`. Note, the service will stop more quickly if you close the web UI.
 - Copy the new uncompressed files over the existing ones. The configuration is stored elsewhere so will be preserved.
 - Start the service again by running `start-service.bat` 
 
 ## Uninstalling
-Open a command prompt as Administrator and uninstall the service using  `uninstall-service.bat`. You should see the following output:
+Open a command prompt as Administrator and uninstall the service using  `uninstall-service.bat`. Note, the service will stop more quickly if you close the web UI. You should see the following output:
 ```
 PS C:\Program Files\DnsTubeService> .\uninstall-service.bat
 
