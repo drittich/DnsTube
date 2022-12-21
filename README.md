@@ -52,24 +52,61 @@ SERVICE_NAME: DnsTube Service
 PS C:\Program Files\DnsTubeService>
 ```
 
-## Configuration & Usage
+## Configuration
+
+By default the service hosts the web application on your local machine at port 5666. If you wish to change this, edit appsettings.json accordingly. Once the service is running you can launch the interface at http://localhost:5666/ (or whatever port you have chosen).
 
 If you haven't already done so, you will need to create an account with Cloudflare and make it the DNS authority for your domain. You then need to configure your DNS entries as appropriate. See [Managing DNS records in Cloudflare](https://support.cloudflare.com/hc/en-us/articles/360019093151-Managing-DNS-records-in-Cloudflare) for more info.
+
+After that, you'll need to generate an API Token (preferred) or Key in order to access the API via DnsTube. The details for doing that can be found at [Creating API tokens](https://developers.cloudflare.com/api/tokens/create).
+
+Then, go the DsnTube settings page and enter your email address, API key/token, etc. Go back to the main tab (refresh if necessary) and you should see a table listing your Cloudflare DNS entries. Check off the ones you want to dynamically update and the service should take it from there.
 
 You can use [nslookup](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup) to make sure DNS resolution is working correctly, e.g., 
 ```
 nslookup mydomain.com
 ```
 
-After that, you'll need to generate an API Token (preferred) or Key in order to access the API via DnsTube. The details for doing that can be found at [Creating API tokens](https://developers.cloudflare.com/api/tokens/create).
+## Updating
+
+- Download the latest release from https://github.com/drittich/DnsTube/releases/latest and uncompress
+- Open a command prompt as Administrator and stop the existing service by running `stop-service.bat` 
+- Copy the new uncompressed files over the existing ones. The configuration is stored elsewhere so will be preserved.
+- Start the service again by running `start-service.bat` 
+
+## Uninstalling
+Open a command prompt as Administrator and uninstall the service using  `uninstall-service.bat`. You should see the following output:
+```
+PS C:\Program Files\DnsTubeService> .\uninstall-service.bat
+
+SERVICE_NAME: DnsTube Service
+		TYPE               : 10  WIN32_OWN_PROCESS
+		STATE              : 3  STOP_PENDING
+								(STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
+		WIN32_EXIT_CODE    : 0  (0x0)
+		SERVICE_EXIT_CODE  : 0  (0x0)
+		CHECKPOINT         : 0x0
+		WAIT_HINT          : 0x0
+[SC] DeleteService SUCCESS
+PS C:\Program Files\DnsTubeService>
+```
 
 ## Notes
 
 1. DnsTube only updates existing Cloudflare records. It will not create or remove records.
 
-## Building
+## Development
 
-This solution can be built using Visual Studio 2022.
+The front-end application must be built before starting the .NET application. To do this, open a command prompt and go to `[YOUR_INSTALL_FOLDER]\DnsTube.Service\ClientApp`. Then run
+```
+npm install
+npm run build
+```
+
+This will build your files and copy them to the `[YOUR_INSTALL_FOLDER]\DnsTube.Service\wwwroot` folder.
+
+At this point you can load the solution in Visual Studio 2022 and run the application with `Ctrl - F5`. You should then be able to load the application UI at the URL http://localhost:5666.
+
 
 ## The Name
 
