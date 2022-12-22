@@ -32,6 +32,7 @@ Head over to the [Releases](https://github.com/drittich/DnsTube/releases/latest)
 
 - Extract the package to a folder of your choice
 - Open a command prompt as Administrator and install the service using  `install-service.bat`.
+
 You should see the following output:
 ```
 PS C:\Program Files\DnsTubeService> .\install-service.bat
@@ -76,6 +77,7 @@ nslookup mydomain.com
 
 ## Uninstalling
 Open a command prompt as Administrator and uninstall the service using  `uninstall-service.bat`. Note, the service will stop more quickly if you close the web UI. You should see the following output:
+
 ```
 PS C:\Program Files\DnsTubeService> .\uninstall-service.bat
 
