@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-using DnsTube.Core.Enums;
+﻿using DnsTube.Core.Enums;
 using DnsTube.Core.Interfaces;
 using DnsTube.Core.Models;
 
@@ -172,42 +170,15 @@ namespace DnsTube.Service
 
 		private async Task DoUpdateAsync(string? publicIpv4Address, string? publicIpv6Address)
 		{
-			var updatedAddress = false;
 			var settings = await _settingsService.GetAsync();
+
 			// if IPv6-only support was not specified, do the IPv4 update
 			if (settings.ProtocolSupport != IpSupport.IPv6)
-				if (await _cloudflareService.UpdateDnsRecordsAsync(IpSupport.IPv4, publicIpv4Address))
-					updatedAddress = true;
+				await _cloudflareService.UpdateDnsRecordsAsync(IpSupport.IPv4, publicIpv4Address);
 
 			// if IPv4-only support was not specified, do the IPv6 update
 			if (settings.ProtocolSupport != IpSupport.IPv4)
-				if (await _cloudflareService.UpdateDnsRecordsAsync(IpSupport.IPv6, publicIpv6Address))
-					updatedAddress = true;
-
-			// fetch and update listview with current status of records if necessary
-			//TODO: make web ui update records listview
-			//if (updatedAddress)
-			//	await FetchDsnEntriesAsync();
+				await _cloudflareService.UpdateDnsRecordsAsync(IpSupport.IPv6, publicIpv6Address);
 		}
-
-
-		//private void FetchDsnEntries()
-		//{
-		//	if (!PreflightSettingsCheck())
-		//		return;
-
-		//	try
-		//	{
-		//		var allDnsRecordsByZone = _engine.CloudflareApi.GetAllDnsRecordsByZone();
-		//		//FIXME
-		//		//LogDnsEntriesToUpdate(allDnsRecordsByZone);
-		//	}
-		//	catch (Exception e)
-		//	{
-		//		_logger.LogError($"Error fetching list: {e.Message}");
-		//		if (_settings.IsUsingToken && e.Message.Contains("403 (Forbidden)"))
-		//			_logger.LogError($"Make sure your token has Zone:Read permissions. See https://dash.cloudflare.com/profile/api-tokens to configure.");
-		//	}
-		//}
 	}
 }

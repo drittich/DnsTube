@@ -28,11 +28,6 @@ namespace DnsTube.Core.Services
 			_ipAddressService = ipAddressService;
 		}
 
-		/// <summary>
-		/// Returns true if an update was performed
-		/// </summary>
-		/// <param name="protocol"></param>
-		/// <returns></returns>
 		public async Task<bool> UpdateDnsRecordsAsync(IpSupport protocol, string publicIpAddress)
 		{
 			bool updateWasDone = false;
