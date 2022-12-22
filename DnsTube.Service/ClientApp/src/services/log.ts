@@ -1,7 +1,7 @@
 import { LogEntry } from "../model/LogEntry";
 
 export async function getLogAsync(pageSize?: number, lastId?: number): Promise<LogEntry[]> {
-	let url = "/api/log";
+	let url = "/api/history";
 	let params = new URLSearchParams();
 	if (pageSize != null) {
 		params.append("pageSize", pageSize.toString());
@@ -23,7 +23,7 @@ export async function getLogAsync(pageSize?: number, lastId?: number): Promise<L
 }
 
 export async function deleteLogAsync(): Promise<string> {
-	let response = await fetch("api/log",
+	let response = await fetch("api/history",
 		{
 			method: "delete"
 		});

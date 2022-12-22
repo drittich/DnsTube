@@ -6,27 +6,29 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DnsTube.Service.Controllers.Api
 {
+	// Note: I renamed this from LogController to HistoryController, because uBlock
+	// was blocking the API requests
 	[Route("api/[controller]")]
 	[ApiController]
-	public class LogController : ControllerBase
+	public class HistoryController : ControllerBase
 	{
-		ILogger<LogController> _logger;
+		ILogger<HistoryController> _logger;
 		ILogService _logService;
 
-		public LogController(ILogger<LogController> logger, ILogService logService)
+		public HistoryController(ILogger<HistoryController> logger, ILogService logService)
 		{
 			_logger = logger;
 			_logService = logService;
 		}
 
-		// GET: api/<LogController>
+		// GET: api/<HistoryController>
 		[HttpGet]
 		public async Task<IEnumerable<LogEntry>> GetAsync([FromQuery] int? pageSize, int? lastId = null)
 		{
 			return await _logService.GetAsync(pageSize, lastId);
 		}
 
-		// DELETE api/<LogController>
+		// DELETE api/<HistoryController>
 		[HttpDelete]
 		public async Task Delete()
 		{
