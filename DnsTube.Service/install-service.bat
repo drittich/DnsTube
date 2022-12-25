@@ -5,7 +5,7 @@ rem abort if we're not running in an elevated command prompt
 net.exe session 1>NUL 2>NUL || goto :not_admin
 
 rem check that .NET 7 SDK is installed
-dotnet --list-sdks | findstr /C:8. /B
+dotnet --list-sdks | findstr /C:7. /B
 if %ErrorLevel% equ 0 (
     echo Found .NET 7 SDK
 ) else (
