@@ -100,6 +100,8 @@ PS C:\Program Files\DnsTubeService>
 ## Notes
 
 1. DnsTube only updates existing Cloudflare records. It will not create or remove records.
+2. Configuration is stored in a separate folder than the application, so when you updated, your configuration is preserved. (An exception to this is if you have chnged the port the application is host with in `appsettings.json`.)
+3. The location of your configuration file is shown in UI on the Settings page.
 
 ## Development
 
