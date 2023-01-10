@@ -30,7 +30,9 @@ Head over to the [Releases](https://github.com/drittich/DnsTube/releases/latest)
 
 ## Installing
 
-- Extract the package to a folder of your choice
+Note: This application is built using .NET 7. You may need to download and install it from here: https://dotnet.microsoft.com/en-us/download. Once you've installed .NET 7:
+
+- Extract the DnsTube package to a folder of your choice
 - Open a command prompt as Administrator and install the service using  `install-service.bat`.
 
 You should see the following output:
@@ -53,11 +55,13 @@ SERVICE_NAME: DnsTube Service
 PS C:\Program Files\DnsTubeService>
 ```
 
+Once the service has started you can view the UI at the URL http://localhost:5666/index.html. See the **Configuration** section for additional config, or if you need to host the UI on a different port.
+
 ## Configuration
 
 >If you haven't already done so, you will need to create an account with Cloudflare and make it the DNS authority for your domain. You then need to configure your DNS entries as appropriate. See [Managing DNS records in Cloudflare](https://support.cloudflare.com/hc/en-us/articles/360019093151-Managing-DNS-records-in-Cloudflare) for more info.
 
-By default the service hosts the web application on your local machine at port 5666. If you wish to change this, edit appsettings.json accordingly. Once the service is running you can launch the interface at http://localhost:5666/ (or whatever port you have chosen).
+By default the service hosts the web application on your local machine at port 5666. If you wish to change this, edit `appsettings.json` accordingly. Once the service is running you can launch the interface at http://localhost:5666/ (or whatever port you have chosen).
 
 After that, you'll need to generate an API Token (preferred) or Key in order to access the API via DnsTube. The details for doing that can be found at [Creating API tokens](https://developers.cloudflare.com/api/tokens/create).
 
