@@ -15,7 +15,7 @@ if %ErrorLevel% equ 0 (
 )
 
 echo Creating service...
-sc create %SERVICE_NAME% binPath="%~dp0DnsTube.Service.exe" start=auto 
+sc create %SERVICE_NAME% binPath= "%~dp0DnsTube.Service.exe" start= auto
 sc description %SERVICE_NAME% "Updates Cloudflare DNS entries with the public IP address of this computer"
 echo Starting service...
 sc start %SERVICE_NAME%
