@@ -107,12 +107,12 @@ namespace DnsTube.Service
 				}
 				else
 				{
-					var selectedDomainsValid = await _cloudflareService.ValidateSelectedDomainsAsync();
-					if (selectedDomainsValid)
-						await DoUpdateAsync(currentPublicIpv4Address, currentPublicIpv6Address);
-
 					if (ipAddressChanged)
 					{
+						var selectedDomainsValid = await _cloudflareService.ValidateSelectedDomainsAsync();
+						if (selectedDomainsValid)
+							await DoUpdateAsync(currentPublicIpv4Address, currentPublicIpv6Address);
+
 						await _serverSentEventsService.SendEventAsync(new ServerSentEvent
 						{
 							Type = "ip-address-changed",
