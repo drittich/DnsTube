@@ -2,6 +2,7 @@
 using DnsTube.Core.Interfaces;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -53,9 +54,9 @@ namespace DnsTube.Service.Controllers.Api
 
 		// POST api/<DnsController>/update
 		[HttpPost("update")]
-		public string GetUpdate(int id)
+		public async Task<string> GetUpdateAsync(int id)
 		{
-			WorkerService.TimerCancellationTokenSource.Cancel();
+			await WorkerService.RequestManualUpdateAsync(_logService);
 			return "ok";
 		}
 	}

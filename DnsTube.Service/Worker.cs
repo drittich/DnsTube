@@ -18,6 +18,7 @@ namespace DnsTube.Service
 		private IIpAddressService _ipAddressService;
 		private IConfiguration _configuration;
 		private IServerSentEventsService _serverSentEventsService;
+		private static bool isManualUpdate = false;
 
 		public static DateTimeOffset LastRun;
 		public static DateTimeOffset NextRun;
@@ -111,11 +112,21 @@ namespace DnsTube.Service
 						await DoUpdateAsync(currentPublicIpv4Address, currentPublicIpv6Address);
 
 					if (ipAddressChanged)
+					{
 						await _serverSentEventsService.SendEventAsync(new ServerSentEvent
 						{
 							Type = "ip-address-changed",
 							Data = new List<string> { "N/A" }
 						});
+					}
+					else
+					{
+						if (isManualUpdate)
+						{
+							await _logService.WriteAsync("Public IP address has not changed", LogLevel.Information);
+							isManualUpdate = false;
+						}
+					}
 				}
 
 				LastRun = DateTime.Now;
@@ -179,6 +190,13 @@ namespace DnsTube.Service
 			// if IPv4-only support was not specified, do the IPv6 update
 			if (settings.ProtocolSupport != IpSupport.IPv4)
 				await _cloudflareService.UpdateDnsRecordsAsync(IpSupport.IPv6, publicIpv6Address);
+		}
+
+		public static async Task RequestManualUpdateAsync(ILogService logService)
+		{
+			isManualUpdate = true;
+			await logService.WriteAsync("Manual update requested", LogLevel.Information);
+			WorkerService.TimerCancellationTokenSource!.Cancel();
 		}
 	}
 }
