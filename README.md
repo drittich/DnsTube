@@ -5,7 +5,12 @@
 <h4 align="center">*"Access your home computer from anywhere"*</h4>
 
 <p align="center">
-	<a href="https://github.com/drittich/DnsTube"><img src="https://img.shields.io/github/downloads/drittich/DnsTube/total" height="20"/></a>
+	<a href="https://github.com/drittich/DnsTube">
+		<img src="https://img.shields.io/github/downloads/drittich/DnsTube/total" height="20"/>
+		<img src="https://img.shields.io/github/downloads/drittich/dnstube/v2.0.1/total" height="20"/>
+		<img src="https://img.shields.io/github/issues-raw/drittich/dnstube" height="20"/>
+		<img src="https://img.shields.io/github/stars/drittich/dnstube?style=social" height="20"/>
+	</a>
 </p>
 
 A Windows service for dynamically updating Cloudflare DNS entries with your public IP address.
