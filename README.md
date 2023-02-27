@@ -1,6 +1,13 @@
-#### *"Access your home computer from anywhere"*
 
-## DnsTube
+
+<h2 align="center">DnsTube</h2>
+
+<h4 align="center">*"Access your home computer from anywhere"*</h4>
+
+<p align="center">
+	<a href="https://github.com/drittich/DnsTube"><img src="https://img.shields.io/github/downloads/drittich/DnsTube/total" height="20"/></a>
+</p>
+
 A Windows service for dynamically updating Cloudflare DNS entries with your public IP address.
 
 ## What is this?
@@ -16,11 +23,11 @@ This is where DnsTube comes in. Cloudflare provides free DNS hosting for your do
 * Supports both Cloudflare API keys and tokens
 * Supports API tokens scoped to specific zones
 
-## Main UI
+## UI
 
 <img src="https://user-images.githubusercontent.com/1222810/208830234-1f54db2c-9090-44cc-8743-b3f3bbc84e2b.png" width="800">
 
-## Settings UI
+## Settings
 
 <img src="https://user-images.githubusercontent.com/1222810/208830426-ac008974-1c28-47ab-94b4-acf6bbc433e3.png" width="800">
 
