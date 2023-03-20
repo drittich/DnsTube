@@ -2,7 +2,7 @@
 
 <h2 align="center">DnsTube</h2>
 
-<h4 align="center"><b>Access your home computer from anywhere</b></h4>
+<h4 align="center"><b>Access your computer from anywhere</b></h4>
 
 <p align="center">
 	<a href="https://github.com/drittich/DnsTube">
