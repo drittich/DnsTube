@@ -58,7 +58,7 @@ namespace DnsTube.Service
 			var latestReleaseTag = await _githubService.GetLatestReleaseTagNameAsync();
 			if (latestReleaseTag != Application.RELEASE_TAG)
 			{
-				var msg = "You are not running the latest release. See https://github.com/drittich/DnsTube/releases/latest for more information.";
+				var msg = $"There is a newer release available ({latestReleaseTag}). See https://github.com/drittich/DnsTube/releases/latest for more information.";
 				_logger.LogInformation(msg);
 				await _logService.WriteAsync(msg, LogLevel.Information);
 			}
