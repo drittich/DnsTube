@@ -10,14 +10,12 @@ namespace DnsTube.Core.Services
 {
 	public class IpAddressService : IIpAddressService
 	{
-		private readonly ILogger<IpAddressService> _logger;
 		private readonly ISettingsService _settingsService;
 		private readonly ILogService _logService;
 		private readonly IHttpClientFactory _httpClientFactory;
 
-		public IpAddressService(ILogger<IpAddressService> logger, ISettingsService settingsService, ILogService logService, IHttpClientFactory httpClientFactory)
+		public IpAddressService(ISettingsService settingsService, ILogService logService, IHttpClientFactory httpClientFactory)
 		{
-			_logger = logger;
 			_settingsService = settingsService;
 			_logService = logService;
 			_httpClientFactory = httpClientFactory;
@@ -95,8 +93,7 @@ namespace DnsTube.Core.Services
 				if (splitValues.Length != 4)
 					return false;
 
-				byte tempForParsing;
-				return splitValues.All(r => byte.TryParse(r, out tempForParsing));
+				return splitValues.All(r => byte.TryParse(r, out byte tempForParsing));
 			}
 			else
 			{

@@ -57,7 +57,7 @@ app.UseDefaultFiles(defaultFilesOptions);
 
 await app.RunAsync();
 
-void ConfigureHttpClients(WebApplicationBuilder builder)
+static void ConfigureHttpClients(WebApplicationBuilder builder)
 {
 	// use TLS 1.2
 	System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;

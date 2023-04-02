@@ -1,4 +1,6 @@
-﻿using DnsTube.Core.Enums;
+﻿using System.Net.NetworkInformation;
+
+using DnsTube.Core.Enums;
 using DnsTube.Core.Interfaces;
 using DnsTube.Core.Models;
 
@@ -11,13 +13,13 @@ namespace DnsTube.Service
 	public class WorkerService : BackgroundService
 	{
 		private readonly ILogger<WorkerService> _logger;
-		private ISettingsService _settingsService;
-		private IGitHubService _githubService;
-		private ICloudflareService _cloudflareService;
-		private ILogService _logService;
-		private IIpAddressService _ipAddressService;
-		private IConfiguration _configuration;
-		private IServerSentEventsService _serverSentEventsService;
+		private readonly ISettingsService _settingsService;
+		private readonly IGitHubService _githubService;
+		private readonly ICloudflareService _cloudflareService;
+		private readonly ILogService _logService;
+		private readonly IIpAddressService _ipAddressService;
+		private readonly IConfiguration _configuration;
+		private readonly IServerSentEventsService _serverSentEventsService;
 		private static bool isManualUpdate = false;
 
 		public static DateTimeOffset LastRun;
@@ -34,6 +36,13 @@ namespace DnsTube.Service
 			_ipAddressService = ipAddressService;
 			_configuration = configuration;
 			_serverSentEventsService = serverSentEventsService;
+
+			NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
+		}
+
+		private async void NetworkChange_NetworkAddressChanged(object? sender, EventArgs e)
+		{
+			await NetworkChangeUpdateAsync(_logService);
 		}
 
 		protected override async Task ExecuteAsync(CancellationToken serviceStoppingToken)
@@ -136,12 +145,12 @@ namespace DnsTube.Service
 				await _serverSentEventsService.SendEventAsync(new ServerSentEvent
 				{
 					Type = "last-run",
-					Data = new List<string> { $"{LastRun.ToString("yyyy-MM-ddTHH:mm:ss")}" }
+					Data = new List<string> { $"{LastRun:yyyy-MM-ddTHH:mm:ss}" }
 				});
 				await _serverSentEventsService.SendEventAsync(new ServerSentEvent
 				{
 					Type = "next-run",
-					Data = new List<string> { $"{NextRun.ToString("yyyy-MM-ddTHH:mm:ss")}" }
+					Data = new List<string> { $"{NextRun:yyyy-MM-ddTHH:mm:ss}" }
 				});
 
 				TimerCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(serviceStoppingToken);
@@ -197,6 +206,26 @@ namespace DnsTube.Service
 			isManualUpdate = true;
 			await logService.WriteAsync("Manual update requested", LogLevel.Information);
 			WorkerService.TimerCancellationTokenSource!.Cancel();
+		}
+
+		private static DateTime lastNetworkChangeUpdate = DateTime.MinValue;
+		public static async Task NetworkChangeUpdateAsync(ILogService logService)
+		{
+			//This gets invoked for both ipv4 and ipv6 changes, so we need to debounce it
+			if (DateTime.Now - lastNetworkChangeUpdate < TimeSpan.FromSeconds(1))
+			{
+				return;
+			}
+
+			lastNetworkChangeUpdate = DateTime.Now;
+			isManualUpdate = true;
+
+			//wait 5 seconds before updating to let the network settle
+			int networkChangeDelaySeconds = 5;
+			await logService.WriteAsync($"Network change detected, updating in {networkChangeDelaySeconds} seconds", LogLevel.Information);
+			await Task.Delay(networkChangeDelaySeconds * 1000);
+
+			TimerCancellationTokenSource!.Cancel();
 		}
 	}
 }
