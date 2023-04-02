@@ -27,6 +27,11 @@ DnsTube is a Windows service that helps you access your computer remotely even i
 * Supports both Cloudflare API keys and tokens
 * Supports API tokens scoped to specific zones
 
+## Requirements
+
+* You must set Cloudflare as the DNS authority for your domain
+* You must have .NET 7 installed
+
 ## UI
 
 <img src="https://user-images.githubusercontent.com/1222810/208830234-1f54db2c-9090-44cc-8743-b3f3bbc84e2b.png" width="800">
