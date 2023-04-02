@@ -30,6 +30,7 @@ DnsTube is a Windows service that helps you access your computer remotely even i
 ## Requirements
 
 * You must set Cloudflare as the DNS authority for your domain
+* You must have Administrator permissions for the computer you are installing DnsTube on
 * You must have .NET 7 installed
 
 ## UI
