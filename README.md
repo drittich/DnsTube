@@ -23,7 +23,7 @@ DnsTube is a Windows service that helps you access your computer remotely even i
 
 * Runs as a Windows service, so login not required
 * Can update A (IPv4), AAAA (IPv6), SPF, and TXT records
-* Detects network changes (e.g., VPN) and updates automatically
+* Detects network changes (e.g., VPN) and updates DNS automatically
 * Supports both Cloudflare API keys and tokens
 * Supports API tokens scoped to specific zones
 
