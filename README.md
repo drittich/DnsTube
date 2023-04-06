@@ -13,7 +13,7 @@
 	</a>
 </p>
 
-A Windows service for dynamically updating Cloudflare DNS entries with your public IP address.
+A Dynamic DNS (DDNS) Windows service for Cloudflare.
 
 ## What is this?
 
