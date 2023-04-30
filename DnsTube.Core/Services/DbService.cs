@@ -6,6 +6,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+using Dapper;
+
 using DnsTube.Core.Interfaces;
 
 using Microsoft.Data.Sqlite;
@@ -21,6 +23,16 @@ namespace DnsTube.Core.Services
 		public DbService(ILogger<DbService> logger)
 		{
 			_logger = logger;
+
+			Task.Run(() => EnableWalAsync().Wait());
+		}
+
+		private async Task EnableWalAsync()
+		{
+			using (var cn = await GetConnectionAsync())
+			{
+				await cn.ExecuteAsync("PRAGMA journal_mode=WAL;");
+			}
 		}
 
 		public string GetDbFolder()

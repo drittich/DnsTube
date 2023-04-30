@@ -211,7 +211,7 @@ namespace DnsTube.Service
 		private static DateTime lastNetworkChangeUpdate = DateTime.MinValue;
 		public static async Task NetworkChangeUpdateAsync(ILogService logService)
 		{
-			//This gets invoked for both ipv4 and ipv6 changes, so we need to debounce it
+			// This gets invoked for both ipv4 and ipv6 changes, so we need to debounce it
 			if (DateTime.Now - lastNetworkChangeUpdate < TimeSpan.FromSeconds(1))
 			{
 				return;
@@ -220,7 +220,7 @@ namespace DnsTube.Service
 			lastNetworkChangeUpdate = DateTime.Now;
 			isManualUpdate = true;
 
-			//wait 5 seconds before updating to let the network settle
+			// wait 5 seconds before updating to let the network settle
 			int networkChangeDelaySeconds = 5;
 			await logService.WriteAsync($"Network change detected, updating in {networkChangeDelaySeconds} seconds", LogLevel.Information);
 			await Task.Delay(networkChangeDelaySeconds * 1000);
