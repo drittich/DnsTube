@@ -59,8 +59,8 @@ await app.RunAsync();
 
 static void ConfigureHttpClients(WebApplicationBuilder builder)
 {
-	// use TLS 1.2
-	System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
+	System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Tls13;
+
 	builder.Services.AddHttpClient(
 		"Cloudflare",
 		client =>
