@@ -75,7 +75,9 @@ namespace DnsTube.Core.Services
 				catch (Exception e)
 				{
 					if (attempts >= maxAttempts)
-						await _logService.WriteAsync(e.Message, LogLevel.Error);
+					{
+						await _logService.WriteAsync(e.ToString(), LogLevel.Error);
+					}
 				}
 			}
 			return publicIpAddress;

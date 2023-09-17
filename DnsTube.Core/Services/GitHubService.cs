@@ -45,7 +45,7 @@ namespace DnsTube.Core.Services
 			}
 			catch (Exception ex)
 			{
-				_logger.LogWarning($"Error getting latest release from GitHub: {ex.Message}");
+				_logger.LogWarning($"Error getting latest release from GitHub: {ex.ToString()}");
 			}
 
 			return null;

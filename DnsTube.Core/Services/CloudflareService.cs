@@ -54,7 +54,7 @@ namespace DnsTube.Core.Services
 			catch (Exception ex)
 			{
 				await _logService.WriteAsync("Error getting DNS records", LogLevel.Error);
-				await _logService.WriteAsync(ex.Message, LogLevel.Error);
+				await _logService.WriteAsync(ex.ToString(), LogLevel.Error);
 				if (ex.InnerException != null)
 				{
 					await _logService.WriteAsync(ex.InnerException.Message, LogLevel.Error);
@@ -85,7 +85,7 @@ namespace DnsTube.Core.Services
 				catch (Exception ex)
 				{
 					await _logService.WriteAsync($"Error updating [{entry.type}] record [{entry.name}] in zone [{entry.zone_name}] to {content}", LogLevel.Error);
-					await _logService.WriteAsync(ex.Message, LogLevel.Error);
+					await _logService.WriteAsync(ex.ToString(), LogLevel.Error);
 				}
 			}
 
@@ -239,7 +239,7 @@ namespace DnsTube.Core.Services
 					var aaaaRecords = await GetRecordsByTypeAsync(zoneID, "AAAA");
 					allDnsEntries.AddRange(aaaaRecords);
 				}
-				
+
 				var txtRecords = await GetRecordsByTypeAsync(zoneID, "TXT");
 				allDnsEntries.AddRange(txtRecords);
 
