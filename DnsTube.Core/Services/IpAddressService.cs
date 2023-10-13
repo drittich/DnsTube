@@ -25,63 +25,62 @@ namespace DnsTube.Core.Services
 		{
 			string? publicIpAddress = null;
 			var maxAttempts = 3;
-			var attempts = 0;
 
 			var settings = await _settingsService.GetAsync();
 			var url = protocol == IpSupport.IPv4 ? settings.IPv4_API : settings.IPv6_API;
 
-			var httpClient = _httpClientFactory.CreateClient(HttpClientName.IpAddress.ToString());
+			//var httpClient = _httpClientFactory.CreateClient(HttpClientName.IpAddress.ToString());
+			// create an HttpClient with a handler bound to a specific local IP address
+			var httpClient = _httpClientFactory.CreateClient(HttpClientName.IpAddress.ToString(), protocol);
 
-			// TODO: replace with Polly
-			while (publicIpAddress == null && attempts < maxAttempts)
+			for (var attempts = 0; attempts < maxAttempts; attempts++)
 			{
 				try
 				{
-					attempts++;
 					var response = await httpClient.GetStringAsync(url);
 					var candidatePublicIpAddress = response.Replace("\n", "");
 
-					if (protocol == IpSupport.IPv6 && !IsValidIpAddress(protocol, candidatePublicIpAddress))
+					if (!IsValidIpAddress(protocol, candidatePublicIpAddress))
 					{
-						return "";
-					}
-					if (protocol == IpSupport.IPv4 && !IsValidIpAddress(protocol, candidatePublicIpAddress))
-					{
+						if (protocol == IpSupport.IPv6)
+						{
+							return string.Empty;
+						}
+
 						throw new Exception($"Malformed response, expected IP address: {response}");
 					}
 
 					publicIpAddress = candidatePublicIpAddress;
 
-					//save to settings
-					var ipAddressChanged = false;
-					if (protocol == IpSupport.IPv4)
-					{
-						if (settings.PublicIpv4Address != publicIpAddress)
-							ipAddressChanged = true;
-
-						settings.PublicIpv4Address = publicIpAddress;
-					}
-					else
-					{
-						if (settings.PublicIpv6Address != publicIpAddress)
-							ipAddressChanged = true;
-
-						settings.PublicIpv6Address = publicIpAddress;
-					}
-
-					if (ipAddressChanged)
-						await _settingsService.SaveAsync(settings);
+					await SaveIpAddressIfChanged(protocol, publicIpAddress, settings);
+					break;
 				}
 				catch (Exception e)
 				{
-					if (attempts >= maxAttempts)
+					if (attempts >= maxAttempts - 1)
 					{
 						await _logService.WriteAsync(e.ToString(), LogLevel.Error);
 					}
 				}
 			}
+
 			return publicIpAddress;
 		}
+
+		private async Task SaveIpAddressIfChanged(IpSupport protocol, string ipAddress, ISettings settings)
+		{
+			if (protocol == IpSupport.IPv4 && settings.PublicIpv4Address != ipAddress)
+			{
+				settings.PublicIpv4Address = ipAddress;
+				await _settingsService.SaveAsync(settings);
+			}
+			else if (protocol == IpSupport.IPv6 && settings.PublicIpv6Address != ipAddress)
+			{
+				settings.PublicIpv6Address = ipAddress;
+				await _settingsService.SaveAsync(settings);
+			}
+		}
+
 
 		public bool IsValidIpAddress(IpSupport protocol, string ipString)
 		{
