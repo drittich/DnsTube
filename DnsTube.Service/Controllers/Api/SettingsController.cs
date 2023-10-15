@@ -1,4 +1,7 @@
-﻿using DnsTube.Core.Interfaces;
+﻿using System.Net.NetworkInformation;
+using System.Net.Sockets;
+
+using DnsTube.Core.Interfaces;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +43,7 @@ namespace DnsTube.Service.Controllers.Api
 			settings.SelectedDomains = currentSettings.SelectedDomains;
 			settings.PublicIpv4Address = currentSettings.PublicIpv4Address;
 			settings.PublicIpv6Address = currentSettings.PublicIpv6Address;
-			
+
 			await _settingsService.SaveAsync(settings);
 			return await _settingsService.GetAsync();
 		}
@@ -67,11 +70,35 @@ namespace DnsTube.Service.Controllers.Api
 		[Route("runinfo")]
 		public async Task<RunInfo> GetRunInfo()
 		{
-			
+
 			while (WorkerService.LastRun == DateTimeOffset.MinValue)
 				await Task.Delay(100);
-			
+
 			return new RunInfo(WorkerService.LastRun.ToString("yyyy-MM-ddTHH:mm:sszzz"), WorkerService.NextRun.ToString("yyyy-MM-ddTHH:mm:sszzz"));
+		}
+
+
+		public record NetworkAdapter(string Name, string IpAddress);
+
+		// GET api/<SettingsController>/adapters
+		[HttpGet]
+		[Route("adapters")]
+		public List<NetworkAdapter> GetAdapters()
+		{
+			var adapters = new List<NetworkAdapter>();
+			var candidateAdapters = NetworkInterface.GetAllNetworkInterfaces()
+				.Where(ni => ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet);
+			foreach (var adapter in candidateAdapters)
+			{
+				var addresses = adapter.GetIPProperties().UnicastAddresses;
+
+				if (addresses.Any(a => a.Address.AddressFamily == AddressFamily.InterNetwork))
+				{
+					adapters.Add(new NetworkAdapter(adapter.Name, addresses.First(a => a.Address.AddressFamily == AddressFamily.InterNetwork).Address.ToString()));
+				}
+			}
+
+			return adapters.OrderBy(a => a.Name).ToList();
 		}
 	}
 }
