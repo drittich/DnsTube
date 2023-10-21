@@ -8,6 +8,7 @@
 	<a href="https://github.com/drittich/DnsTube">
 		<img src="https://img.shields.io/github/downloads/drittich/DnsTube/total" height="20"/>
 		<img src="https://img.shields.io/github/downloads/drittich/dnstube/v2.3.0/total" height="20"/>
+		<img src="https://img.shields.io/github/downloads/drittich/dnstube/v2.4.0-beta/total" height="20"/>
 		<img src="https://img.shields.io/github/issues-raw/drittich/dnstube" height="20"/>
 		<img src="https://img.shields.io/github/stars/drittich/dnstube?style=social" height="20"/>
 	</a>
