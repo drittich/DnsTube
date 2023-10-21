@@ -6,18 +6,18 @@ namespace DnsTube.Core.Interfaces
 {
 	public class Settings : ISettings
 	{
-		public string EmailAddress { get; set; } = "";
+		public string EmailAddress { get; set; } = string.Empty;
 		public bool IsUsingToken { get; set; }
-		public string ApiKeyOrToken { get; set; } = "";
+		public string ApiKeyOrToken { get; set; } = string.Empty;
 		public int UpdateIntervalMinutes { get; set; }
-		public string PublicIpv4Address { get; set; } = "";
-		public string PublicIpv6Address { get; set; } = "";
+		public string PublicIpv4Address { get; set; } = string.Empty;
+		public string PublicIpv6Address { get; set; } = string.Empty;
 		public List<SelectedDomain> SelectedDomains { get; set; } = new List<SelectedDomain>();
 		public bool SkipCheckForNewReleases { get; set; }
 		public IpSupport ProtocolSupport { get; set; }
-		public string? ZoneIDs { get; set; } = "";
-		public string IPv4_API { get; set; } = "";
-		public string IPv6_API { get; set; } = "";
+		public string? ZoneIDs { get; set; } = string.Empty;
+		public string IPv4_API { get; set; } = string.Empty;
+		public string IPv6_API { get; set; } = string.Empty;
 
 		public Settings()
 		{

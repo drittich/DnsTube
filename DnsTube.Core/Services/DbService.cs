@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 using Dapper;
 
@@ -41,13 +35,13 @@ namespace DnsTube.Core.Services
 			{
 				Environment.SpecialFolder rootFolder;
 
-			// use a separate folder for the database if we're developing
-			if (Debugger.IsAttached)
-				rootFolder = Environment.SpecialFolder.LocalApplicationData;
-			else
-				rootFolder = Environment.SpecialFolder.CommonApplicationData;
+				// use a separate folder for the database if we're developing
+				if (Debugger.IsAttached)
+					rootFolder = Environment.SpecialFolder.LocalApplicationData;
+				else
+					rootFolder = Environment.SpecialFolder.CommonApplicationData;
 
-			_dbFolder = Path.Combine(Environment.GetFolderPath(rootFolder), "DnsTube");
+				_dbFolder = Path.Combine(Environment.GetFolderPath(rootFolder), "DnsTube");
 				_logger.LogInformation($"Db folder: {_dbFolder}");
 
 				Directory.CreateDirectory(_dbFolder);
