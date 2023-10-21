@@ -32,8 +32,6 @@ namespace DnsTube.Core.Services
 			var url = protocol == IpSupport.IPv4 ? settings.IPv4_API : settings.IPv6_API;
 
 			var httpClient = _httpClientFactory.CreateClient(HttpClientName.IpAddress.ToString());
-			// create an HttpClient with a handler bound to a specific local IP address
-			//var httpClient = _httpClientFactory.CreateClient(HttpClientName.IpAddress.ToString(), protocol);
 
 			for (var attempts = 0; attempts < maxAttempts; attempts++)
 			{

@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Net.Http.Headers;
 
+using DnsTube.Core.Enums;
 using DnsTube.Core.Interfaces;
 using DnsTube.Core.Services;
 using DnsTube.Service;
@@ -62,7 +63,7 @@ static void ConfigureHttpClients(WebApplicationBuilder builder)
 	System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Tls13;
 
 	builder.Services.AddHttpClient(
-		"Cloudflare",
+		HttpClientName.Cloudflare.ToString(),
 		client =>
 		{
 			client.BaseAddress = new Uri("https://api.cloudflare.com/client/v4/");
@@ -70,7 +71,7 @@ static void ConfigureHttpClients(WebApplicationBuilder builder)
 			client.DefaultRequestHeaders.UserAgent.ParseAdd("DnsTube");
 		});
 	builder.Services.AddHttpClient(
-		"GitHub",
+		HttpClientName.GitHub.ToString(),
 		client =>
 		{
 			client.BaseAddress = new Uri("https://api.github.com/");
@@ -79,7 +80,7 @@ static void ConfigureHttpClients(WebApplicationBuilder builder)
 			client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
 		});
 	builder.Services.AddHttpClient(
-		"IpAddress",
+		HttpClientName.IpAddress.ToString(),
 		client =>
 		{
 			client.DefaultRequestHeaders.UserAgent.ParseAdd("DnsTube");
