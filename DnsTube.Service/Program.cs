@@ -144,7 +144,7 @@ static string GetNetworkAdapterIPAddress(string? adapterName)
 
 	if (adapter is null)
 	{
-		throw new Exception($"Can't find adapter [{adapterName}]");
+		throw new Exception($"Can't find adapter [{adapterName}], check your settings");
 	}
 
 	var properties = adapter.GetIPProperties();
