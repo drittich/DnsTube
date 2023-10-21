@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Text.RegularExpressions;
 
 using DnsTube.Core.Enums;
 using DnsTube.Core.Interfaces;
@@ -29,9 +31,9 @@ namespace DnsTube.Core.Services
 			var settings = await _settingsService.GetAsync();
 			var url = protocol == IpSupport.IPv4 ? settings.IPv4_API : settings.IPv6_API;
 
-			//var httpClient = _httpClientFactory.CreateClient(HttpClientName.IpAddress.ToString());
+			var httpClient = _httpClientFactory.CreateClient(HttpClientName.IpAddress.ToString());
 			// create an HttpClient with a handler bound to a specific local IP address
-			var httpClient = _httpClientFactory.CreateClient(HttpClientName.IpAddress.ToString(), protocol);
+			//var httpClient = _httpClientFactory.CreateClient(HttpClientName.IpAddress.ToString(), protocol);
 
 			for (var attempts = 0; attempts < maxAttempts; attempts++)
 			{
@@ -81,7 +83,6 @@ namespace DnsTube.Core.Services
 			}
 		}
 
-
 		public bool IsValidIpAddress(IpSupport protocol, string ipString)
 		{
 			if (string.IsNullOrWhiteSpace(ipString))
@@ -102,6 +103,31 @@ namespace DnsTube.Core.Services
 				var match = regex.Match(ipString);
 				return match.Success;
 			}
+		}
+
+		public List<NetworkAdapter> GetNetworkAdapters()
+		{
+			var adapters = new List<NetworkAdapter>();
+			var candidateAdapters = NetworkInterface.GetAllNetworkInterfaces()
+				.Where(ni => ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet);
+
+			foreach (var adapter in candidateAdapters)
+			{
+				var interNetworkAddresses = adapter
+					.GetIPProperties().UnicastAddresses
+					.Where(a => a.Address.AddressFamily == AddressFamily.InterNetwork);
+
+				if (interNetworkAddresses.Any())
+				{
+					adapters.Add(new NetworkAdapter()
+					{
+						Name = adapter.Name,
+						IpAddress = interNetworkAddresses.First().Address.ToString()
+					});
+				}
+			}
+
+			return adapters;
 		}
 	}
 }
