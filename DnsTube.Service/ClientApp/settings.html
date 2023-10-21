@@ -50,7 +50,8 @@
 
 							<div>
 								<label for="apiToken">Authorization Type</label>
-								<span data-tooltip="Cloudflare supports both keys and tokens. Tokens are
+								<span
+									data-tooltip="Cloudflare supports both keys and tokens. Tokens are
 									preferred for better security." data-placement="right" class="tooltip"><i
 										class="fa-solid
 										fa-circle-info"></i></span>
@@ -151,9 +152,23 @@
 								<div>
 									<input type="number" name="UpdateIntervalMinutes"
 										id="updateIntervalMinutes" value="30" min="1">
-									<small>Changes to interval take effect the next time the timer fires. Click the <b>update now</b> button on the <a href="/index.html">Home</a> page to immediately change the schedule</small>
+									<small>Changes to interval take effect the next time the timer fires.
+										Click the <b>update now</b> button on the <a href="/index.html">Home</a>
+										page to immediately change the schedule</small>
 								</div>
 							</div>
+
+							<div>
+								<label for="fruit">Network Adapter</label>
+								<span
+									data-tooltip="Select an interface to use for determining public IP address."
+									data-placement="right" class="tooltip"><i
+										class="fa-solid fa-circle-info"></i></span>
+								<div>
+									<select id="networkAdapter"> </select>
+								</div>
+							</div>
+
 							<div>
 								<div>
 									<input type="checkbox" name="NotifyOfUpdates" id="notifyOfUpdates"

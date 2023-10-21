@@ -1,3 +1,4 @@
+import { NetworkAdapter } from "../model/NetworkAdapter";
 import { RunInfo } from "../model/RunInfo";
 import { SelectedDomain } from "../model/SelectedDomain";
 import { Settings } from "../model/Settings";
@@ -62,6 +63,17 @@ export async function getRunInfoAsync(): Promise<RunInfo | null> {
 	let response = await fetch("/api/settings/runinfo");
 	if (response.ok) {
 		return await response.json() as RunInfo;
+	}
+	else {
+		console.log(response.statusText);
+		return null;
+	}
+}
+
+export async function getNetworkAdapters(): Promise<NetworkAdapter[] | null> {
+	let response = await fetch("/api/settings/adapters");
+	if (response.ok) {
+		return await response.json();
 	}
 	else {
 		console.log(response.statusText);

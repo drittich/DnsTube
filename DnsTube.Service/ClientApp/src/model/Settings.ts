@@ -14,4 +14,5 @@ export class Settings
 	public skipCheckForNewReleases:boolean | undefined;
 	public updateIntervalMinutes: number | undefined;
 	public zoneIDs: string | undefined;
+	public networkAdapter: string | undefined;
 }

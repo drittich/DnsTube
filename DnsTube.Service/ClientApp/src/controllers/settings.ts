@@ -1,10 +1,12 @@
 import '@picocss/pico'
 import '../style.css'
 
-import { getDbFolderAsync, getSettingsAsync, saveSettingsAsync } from "../services/Settings";
+import { getDbFolderAsync, getNetworkAdapters, getSettingsAsync, saveSettingsAsync } from "../services/settings";
 
 import { library, dom } from '@fortawesome/fontawesome-svg-core';
 import { faEye, faEyeSlash, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { Settings } from '../model/Settings';
+
 
 // render fontawesome icons
 library.add(faEye, faEyeSlash, faCircleInfo);
@@ -76,6 +78,39 @@ async function getSettings(): Promise<void> {
 	(document.getElementById('notifyOfUpdates') as (HTMLInputElement)).checked = !settings.skipCheckForNewReleases!;
 
 	setAuthLabel(settings.isUsingToken!)
+
+	await setNetworkAdapter(settings);
+}
+
+async function setNetworkAdapter(settings: Settings | null) {
+	let adapters = await getNetworkAdapters();
+
+	if (adapters == null) {
+		console.error('Error getting network adapters');
+		return;	
+	}
+
+	let adapterSelect = document.getElementById('networkAdapter') as HTMLSelectElement;
+
+	let option = document.createElement('option');
+	option.value = 'Default';
+	option.text = '(Default)';
+	adapterSelect.appendChild(option);
+
+	for (let i = 0; i < adapters.length; i++) {
+		let option = document.createElement('option');
+		option.value = adapters[i].name;
+		option.text = `${adapters[i].name} (${adapters[i].ipAddress})`;
+		adapterSelect.appendChild(option);
+	}
+
+	let selectedAdapter = adapters.find(a => a.name == settings!.networkAdapter);
+	if (selectedAdapter != null)
+		adapterSelect.value = selectedAdapter.name;
+	else {
+		// select the first (default) value
+		adapterSelect.selectedIndex = 0;
+	}
 }
 
 function setAuthLabel(isUsingToken: boolean) {
@@ -85,4 +120,3 @@ async function showDbFolder() {
 	let dbFolder = await getDbFolderAsync();
 	document.getElementById('dbPath')!.innerText = dbFolder!;
 }
-
