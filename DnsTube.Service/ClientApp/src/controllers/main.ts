@@ -16,12 +16,12 @@ let _settings: Settings | null = null;
 
 init();
 
-function init() {
+async function init() {
 	// get old log right away
 	getLog();
 
-	getSettingsAsync().then(async Settings => {
-		_settings = Settings;
+	try {
+		_settings = await getSettingsAsync();
 
 		setUiElementState();
 
@@ -30,13 +30,14 @@ function init() {
 		document.getElementById('entries-refetch')?.classList.add("hidden");
 		await getSelectedDnsEntries();
 		document.getElementById('entries-refetch')?.classList.remove("hidden");
-	})
-		.then(() => {
-			// refresh log to show DNS entry fetch status
-			getLog();
-			setupSse();
-			getRunInfo();
-		});
+
+		// refresh log to show DNS entry fetch status
+		getLog();
+		setupSse();
+		getRunInfo();
+	} catch (error) {
+		console.error(error);
+	}
 
 	getPublicIp();
 
@@ -54,10 +55,10 @@ function init() {
 		if (isValid(lastUpdateDate)) {
 			let lastUpdateRelative = document.getElementById('lastUpdateRelative')!;
 			lastUpdateRelative.innerHTML = intlFormatDistance(lastUpdateDate, new Date());
-		}		
+		}
 	}, 1000);
-
 }
+
 
 async function getLog(lastId?: number): Promise<void> {
 	let pageSize = 10;

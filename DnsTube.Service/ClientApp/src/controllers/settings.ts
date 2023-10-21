@@ -18,7 +18,7 @@ function init() {
 	getSettings();
 	showDbFolder();
 
-	document.getElementById('saveSettings')!.addEventListener('click', function (e) {
+	document.getElementById('saveSettings')!.addEventListener('click', async function (e) {
 		e.preventDefault();
 		(document.getElementById('saveSettings') as (HTMLButtonElement)).disabled = true;
 
@@ -29,10 +29,8 @@ function init() {
 		form.parentNode!.insertBefore(processing, form);
 
 		var formData = new FormData(form);
-		saveSettingsAsync(formData)
-			.then(() => {
-				location.reload();
-			});
+		await saveSettingsAsync(formData);
+		location.reload();
 	}, false);
 
 

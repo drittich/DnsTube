@@ -16,36 +16,34 @@ export async function getSettingsAsync(): Promise<Settings | null> {
 }
 
 export async function saveSettingsAsync(settings: FormData): Promise<boolean> {
-	return fetch("api/settings",
-		{
-			body: settings,
-			method: "post"
-		})
-		.then(() => {
-			return true;
-		})
-		.catch(error => {
-			console.error('Error:', error);
-			return false;
-		});
+	try {
+		await fetch("api/settings",
+			{
+				body: settings,
+				method: "post"
+			}
+		);
+		return true;
+	} catch (error) {
+		console.error('Error:', error);
+		return false;
+	}
 }
 
 export async function saveDomainsAsync(domains: SelectedDomain[]): Promise<boolean> {
-	return fetch("api/settings/entries",
-		{
+	try {
+		await fetch("api/settings/entries", {
 			body: JSON.stringify(domains),
 			method: "post",
 			headers: {
 				'Content-Type': 'application/json'
 			}
-		})
-		.then(() => {
-			return true;
-		})
-		.catch(error => {
-			console.error('Error:', error);
-			return false;
 		});
+		return true;
+	} catch (error) {
+		console.error('Error:', error);
+		return false;
+	}
 }
 
 export async function getDbFolderAsync(): Promise<string | null> {

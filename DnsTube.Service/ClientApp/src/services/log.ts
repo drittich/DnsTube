@@ -12,15 +12,13 @@ export async function getLogAsync(pageSize?: number, lastId?: number): Promise<L
 	if (params.toString() != "") {
 		url += "?" + params.toString();
 	}
-	
-	let logEntries = await fetch(url)
-		.then(response => response.json())
-		.then((obj: LogEntry[]) => {
-			return obj;
-		});
+
+	let response = await fetch(url);
+	let logEntries: LogEntry[] = await response.json();
 
 	return logEntries;
 }
+
 
 export async function deleteLogAsync(): Promise<string> {
 	let response = await fetch("api/history",
