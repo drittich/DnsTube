@@ -1,5 +1,8 @@
 using System.Diagnostics;
+using System.Net;
 using System.Net.Http.Headers;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 
 using DnsTube.Core.Enums;
 using DnsTube.Core.Interfaces;
@@ -22,17 +25,20 @@ var builder = WebApplication.CreateBuilder(options);
 builder.Logging.AddConsole();
 builder.Host.UseWindowsService();
 
-ConfigureHttpClients(builder);
-
 builder.Services.AddSingleton<ISettingsService, SettingsService>();
-builder.Services.AddSingleton<ICloudflareService, CloudflareService>();
 builder.Services.AddSingleton<IDbService, DbService>();
+
+var settingsService = builder.Services.BuildServiceProvider().GetRequiredService<ISettingsService>();
+await ConfigureHttpClientsAsync(builder, settingsService);
+
+builder.Services.AddSingleton<ICloudflareService, CloudflareService>();
 builder.Services.AddSingleton<IGitHubService, GitHubService>();
 builder.Services.AddSingleton<ILogService, LogService>();
 builder.Services.AddSingleton<IIpAddressService, IpAddressService>();
 
 builder.Services.AddMvc();
 builder.Services.AddServerSentEvents();
+
 builder.Services.AddHostedService<WorkerService>();
 
 var app = builder.Build();
@@ -58,11 +64,16 @@ app.UseDefaultFiles(defaultFilesOptions);
 
 await app.RunAsync();
 
-static void ConfigureHttpClients(WebApplicationBuilder builder)
+static async Task ConfigureHttpClientsAsync(WebApplicationBuilder builder, ISettingsService settingsService)
 {
-	System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Tls13;
+	ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
 
-	builder.Services.AddHttpClient(
+	var selectedAdapterName = (await settingsService.GetAsync()).NetworkAdapter;
+	bool needsCustomHandler = !string.IsNullOrWhiteSpace(selectedAdapterName) && selectedAdapterName != "_DEFAULT_";
+
+	IHttpClientBuilder httpClientBuilder;
+
+	httpClientBuilder = builder.Services.AddHttpClient(
 		HttpClientName.Cloudflare.ToString(),
 		client =>
 		{
@@ -70,7 +81,12 @@ static void ConfigureHttpClients(WebApplicationBuilder builder)
 			client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 			client.DefaultRequestHeaders.UserAgent.ParseAdd("DnsTube");
 		});
-	builder.Services.AddHttpClient(
+	if (needsCustomHandler)
+	{
+		ConfigureHandler(httpClientBuilder, selectedAdapterName!);
+	}
+
+	httpClientBuilder = builder.Services.AddHttpClient(
 		HttpClientName.GitHub.ToString(),
 		client =>
 		{
@@ -79,11 +95,65 @@ static void ConfigureHttpClients(WebApplicationBuilder builder)
 			client.DefaultRequestHeaders.UserAgent.ParseAdd("DnsTube");
 			client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
 		});
-	builder.Services.AddHttpClient(
+	if (needsCustomHandler)
+	{
+		ConfigureHandler(httpClientBuilder, selectedAdapterName!);
+	}
+
+	httpClientBuilder = builder.Services.AddHttpClient(
 		HttpClientName.IpAddress.ToString(),
-		client =>
+		(client) =>
 		{
 			client.DefaultRequestHeaders.UserAgent.ParseAdd("DnsTube");
 		});
+	if (needsCustomHandler)
+	{
+		ConfigureHandler(httpClientBuilder, selectedAdapterName!);
+	}
+}
 
+static void ConfigureHandler(IHttpClientBuilder httpClientBuilder, string selectedAdapterName)
+{
+	httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() =>
+	{
+		var handler = new SocketsHttpHandler();
+		handler.ConnectCallback = async (context, cancellationToken) =>
+		{
+			var socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+			var ipAddress = GetNetworkAdapterIPAddress(selectedAdapterName);
+			var localEndPoint = new IPEndPoint(IPAddress.Parse(ipAddress), 0);
+			socket.Bind(localEndPoint);
+			await socket.ConnectAsync(context.DnsEndPoint, cancellationToken);
+			return new NetworkStream(socket, ownsSocket: true);
+		};
+
+		return handler;
+	});
+}
+
+static string GetNetworkAdapterIPAddress(string? adapterName)
+{
+	if (adapterName is null)
+	{
+		throw new ArgumentNullException(nameof(adapterName));
+	}
+
+	var adapter = NetworkInterface.GetAllNetworkInterfaces()
+		.Where(a => a.Name == adapterName)
+		.FirstOrDefault();
+
+	if (adapter is null)
+	{
+		throw new Exception($"Can't find adapter [{adapterName}]");
+	}
+
+	var properties = adapter.GetIPProperties();
+	var ipAddress = properties.UnicastAddresses.FirstOrDefault(x => x.Address.AddressFamily == AddressFamily.InterNetwork)?.Address;
+
+	if (ipAddress is null)
+	{
+		throw new Exception($"Error getting IP address for adapter [{adapterName}]");
+	}
+
+	return ipAddress.ToString();
 }
