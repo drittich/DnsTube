@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 using DnsTube.Core.Enums;
 using DnsTube.Core.Interfaces;
@@ -45,7 +39,7 @@ namespace DnsTube.Core.Services
 			}
 			catch (Exception ex)
 			{
-				_logger.LogWarning($"Error getting latest release from GitHub: {ex.ToString()}");
+				_logger.LogWarning($"Error getting latest release from GitHub: {ex.Message}");
 			}
 
 			return null;

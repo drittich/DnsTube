@@ -59,7 +59,7 @@ namespace DnsTube.Core.Services
 				{
 					if (attempts >= maxAttempts - 1)
 					{
-						await _logService.WriteAsync(e.ToString(), LogLevel.Error);
+						await _logService.WriteAsync(e.Message, LogLevel.Error);
 					}
 				}
 			}
