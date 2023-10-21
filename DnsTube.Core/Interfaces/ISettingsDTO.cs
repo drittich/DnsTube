@@ -1,6 +1,4 @@
-﻿using DnsTube.Core.Enums;
-
-namespace DnsTube.Core.Interfaces
+﻿namespace DnsTube.Core.Interfaces
 {
 	public interface ISettingsDTO
 	{
@@ -9,6 +7,7 @@ namespace DnsTube.Core.Interfaces
 		string IPv4_API { get; set; }
 		string IPv6_API { get; set; }
 		bool IsUsingToken { get; set; }
+		string NetworkAdapter { get; set; }
 		int ProtocolSupport { get; set; }
 		string PublicIpv4Address { get; set; }
 		string PublicIpv6Address { get; set; }

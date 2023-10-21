@@ -93,7 +93,7 @@ async function setNetworkAdapter(settings: Settings | null) {
 	let adapterSelect = document.getElementById('networkAdapter') as HTMLSelectElement;
 
 	let option = document.createElement('option');
-	option.value = 'Default';
+	option.value = '_DEFAULT_';
 	option.text = '(Default)';
 	adapterSelect.appendChild(option);
 

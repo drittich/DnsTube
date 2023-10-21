@@ -18,6 +18,7 @@ namespace DnsTube.Core.Interfaces
 		public string? ZoneIDs { get; set; } = string.Empty;
 		public string IPv4_API { get; set; } = string.Empty;
 		public string IPv6_API { get; set; } = string.Empty;
+		public string? NetworkAdapter { get; set; }
 
 		public Settings()
 		{
@@ -30,6 +31,7 @@ namespace DnsTube.Core.Interfaces
 			IPv4_API = settingDTO.IPv4_API;
 			IPv6_API = settingDTO.IPv6_API;
 			IsUsingToken = settingDTO.IsUsingToken;
+			NetworkAdapter = settingDTO.NetworkAdapter;
 			ProtocolSupport = (IpSupport)settingDTO.ProtocolSupport;
 			PublicIpv4Address = settingDTO.PublicIpv4Address;
 			PublicIpv6Address = settingDTO.PublicIpv6Address;

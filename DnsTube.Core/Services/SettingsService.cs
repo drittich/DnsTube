@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 using Dapper;
 
@@ -29,6 +28,7 @@ namespace DnsTube.Core.Services
 		{
 			using (var cn = await _dbService.GetConnectionAsync())
 			{
+				// create Settings table for new installs
 				await cn.ExecuteAsync($@"
 					CREATE TABLE IF NOT EXISTS Settings (
 						ApiKeyOrToken TEXT,
@@ -42,9 +42,21 @@ namespace DnsTube.Core.Services
 						SelectedDomains TEXT,
 						SkipCheckForNewReleases BOOLEAN NOT NULL CHECK (SkipCheckForNewReleases IN (0, 1)),
 						UpdateIntervalMinutes INTEGER,
-						ZoneIDs TEXT
+						ZoneIDs TEXT,
+						NetworkAdapter TEXT
 					);
 				");
+
+				// migrate older installs
+				var tableColumns = await cn.QueryAsync<TableColumnInfo>(@"PRAGMA table_info(Settings);");
+				if (!tableColumns.Any(c => c.name == "NetworkAdapter"))
+				{
+					_logger.LogInformation("Migrating Settings table");
+					await cn.ExecuteAsync($@"
+						ALTER TABLE Settings
+						ADD COLUMN NetworkAdapter TEXT;
+					");
+				}
 			}
 		}
 
@@ -64,7 +76,8 @@ namespace DnsTube.Core.Services
 						SelectedDomains,
 						SkipCheckForNewReleases,
 						UpdateIntervalMinutes,
-						ZoneIDs
+						ZoneIDs,
+						NetworkAdapter
 					from Settings;";
 
 				using (var cn = await _dbService.GetConnectionAsync())
@@ -77,9 +90,10 @@ namespace DnsTube.Core.Services
 						settings.SelectedDomains = new List<SelectedDomain>();
 						settings.IsUsingToken = true;
 						settings.ProtocolSupport = IpSupport.IPv4;
-						settings.ZoneIDs = "";
+						settings.ZoneIDs = string.Empty;
 						settings.IPv4_API = "https://api.ipify.org/";
 						settings.IPv6_API = "https://api64.ipify.org/";
+						settings.NetworkAdapter = string.Empty;
 
 						await SaveAsync(settings);
 						_currentSettings = settings;
@@ -100,7 +114,8 @@ namespace DnsTube.Core.Services
 			{
 				using (var txn = await cn.BeginTransactionAsync())
 				{
-					var parms = new {
+					var parms = new
+					{
 						ApiKeyOrToken = settings.ApiKeyOrToken,
 						EmailAddress = settings.EmailAddress,
 						IPv4_API = settings.IPv4_API,
@@ -112,7 +127,8 @@ namespace DnsTube.Core.Services
 						SelectedDomains = JsonSerializer.Serialize(settings.SelectedDomains),
 						SkipCheckForNewReleases = settings.SkipCheckForNewReleases ? 1 : 0,
 						UpdateIntervalMinutes = settings.UpdateIntervalMinutes,
-						ZoneIDs = settings.ZoneIDs
+						ZoneIDs = settings.ZoneIDs,
+						NetworkAdapter = settings.NetworkAdapter
 					};
 					await cn.ExecuteAsync(@"
 						delete from Settings;
@@ -129,7 +145,8 @@ namespace DnsTube.Core.Services
 							SelectedDomains,
 							SkipCheckForNewReleases,
 							UpdateIntervalMinutes,
-							ZoneIDs
+							ZoneIDs,
+							NetworkAdapter
 						) values
 						(
 							@ApiKeyOrToken,
@@ -143,7 +160,8 @@ namespace DnsTube.Core.Services
 							@SelectedDomains,
 							@SkipCheckForNewReleases,
 							@UpdateIntervalMinutes,
-							@ZoneIDs
+							@ZoneIDs,
+							@NetworkAdapter
 						)", parms);
 					txn.Commit();
 				}
@@ -191,7 +209,8 @@ namespace DnsTube.Core.Services
 				SelectedDomains = JsonSerializer.Serialize(domains),
 				SkipCheckForNewReleases = settings.SkipCheckForNewReleases ? 1 : 0,
 				UpdateIntervalMinutes = settings.UpdateIntervalMinutes,
-				ZoneIDs = settings.ZoneIDs
+				ZoneIDs = settings.ZoneIDs,
+				NetworkAdapter = settings.NetworkAdapter
 			};
 
 			using (var cn = await _dbService.GetConnectionAsync())
@@ -213,7 +232,8 @@ namespace DnsTube.Core.Services
 							SelectedDomains,
 							SkipCheckForNewReleases,
 							UpdateIntervalMinutes,
-							ZoneIDs
+							ZoneIDs,
+							NetworkAdapter
 						) values
 						(
 							@ApiKeyOrToken,
@@ -227,7 +247,8 @@ namespace DnsTube.Core.Services
 							@SelectedDomains,
 							@SkipCheckForNewReleases,
 							@UpdateIntervalMinutes,
-							@ZoneIDs
+							@ZoneIDs,
+							@NetworkAdapter
 						)", parms);
 					txn.Commit();
 				}
