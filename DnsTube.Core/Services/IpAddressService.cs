@@ -106,9 +106,7 @@ namespace DnsTube.Core.Services
 		public List<NetworkAdapter> GetNetworkAdapters()
 		{
 			var adapters = new List<NetworkAdapter>();
-			var candidateAdapters = NetworkInterface.GetAllNetworkInterfaces()
-				.Where(ni => (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
-				&& ni.OperationalStatus == OperationalStatus.Up);
+			var candidateAdapters = NetworkInterface.GetAllNetworkInterfaces();
 
 			foreach (var adapter in candidateAdapters)
 			{
