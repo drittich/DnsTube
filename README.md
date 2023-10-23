@@ -36,11 +36,7 @@ DnsTube is a Windows service that helps you access your computer remotely even i
 
 ## UI
 
-<img src="https://user-images.githubusercontent.com/1222810/208830234-1f54db2c-9090-44cc-8743-b3f3bbc84e2b.png" width="800">
-
-## Settings
-
-<img src="https://user-images.githubusercontent.com/1222810/208830426-ac008974-1c28-47ab-94b4-acf6bbc433e3.png" width="800">
+<img src="https://github.com/drittich/DnsTube/assets/1222810/751b4b21-333f-4a5a-bdba-b937474fc2ba" width="800">
 
 ## Downloading 
 
