@@ -8,6 +8,7 @@
 	<a href="https://github.com/drittich/DnsTube">
 		<img src="https://img.shields.io/github/downloads/drittich/DnsTube/total" height="20"/>
 		<img src="https://img.shields.io/github/downloads/drittich/dnstube/v2.3.0/total" height="20"/>
+		<img src="https://img.shields.io/github/downloads/drittich/dnstube/v2.4.0-beta/total" height="20"/>
 		<img src="https://img.shields.io/github/issues-raw/drittich/dnstube" height="20"/>
 		<img src="https://img.shields.io/github/stars/drittich/dnstube?style=social" height="20"/>
 	</a>
@@ -21,11 +22,11 @@ DnsTube is a Windows service that helps you access your computer remotely even i
 
 ## Features
 
-* Runs as a Windows service, so login not required
+* Runs as a Windows service (no Windows login required)
 * Can update A (IPv4), AAAA (IPv6), SPF, and TXT records
-* Detects network changes (e.g., VPN) and updates DNS automatically
-* Supports both Cloudflare API keys and tokens
-* Supports API tokens scoped to specific zones
+* Detects network changes and updates DNS automatically
+* [Release DnsTube v2.4.0-beta2](https://github.com/drittich/DnsTube/releases/tag/v2.4.0-beta2) supports split VPN tunnelling and lets you choose which network adapter to use
+* Supports both Cloudflare API keys and tokens (can be scoped to specific zones)
 
 ## Requirements
 
@@ -35,11 +36,7 @@ DnsTube is a Windows service that helps you access your computer remotely even i
 
 ## UI
 
-<img src="https://user-images.githubusercontent.com/1222810/208830234-1f54db2c-9090-44cc-8743-b3f3bbc84e2b.png" width="800">
-
-## Settings
-
-<img src="https://user-images.githubusercontent.com/1222810/208830426-ac008974-1c28-47ab-94b4-acf6bbc433e3.png" width="800">
+<img src="https://github.com/drittich/DnsTube/assets/1222810/751b4b21-333f-4a5a-bdba-b937474fc2ba" width="800">
 
 ## Downloading 
 
