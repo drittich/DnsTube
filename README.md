@@ -24,7 +24,7 @@ DnsTube is a Windows service that helps you access your computer remotely even i
 * Runs as a Windows service (no Windows login required)
 * Can update A (IPv4), AAAA (IPv6), SPF, and TXT records
 * Detects network changes and updates DNS automatically
-* [Release DnsTube v2.4.0-beta2](https://github.com/drittich/DnsTube/releases/tag/v2.4.0-beta2) supports split VPN tunnelling and lets you choose which network adapter to use
+* Supports split VPN tunnelling and lets you choose which network adapter to use
 * Supports both Cloudflare API keys and tokens (can be scoped to specific zones)
 
 ## Requirements
