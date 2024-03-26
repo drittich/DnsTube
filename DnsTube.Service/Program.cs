@@ -68,47 +68,42 @@ static async Task ConfigureHttpClientsAsync(WebApplicationBuilder builder, ISett
 {
 	ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
 
-	var selectedAdapterName = (await settingsService.GetAsync()).NetworkAdapter;
+	var settings = await settingsService.GetAsync();
+	var selectedAdapterName = settings.NetworkAdapter;
 	bool needsCustomHandler = !string.IsNullOrWhiteSpace(selectedAdapterName) && selectedAdapterName != "_DEFAULT_";
 
-	IHttpClientBuilder httpClientBuilder;
-
-	httpClientBuilder = builder.Services.AddHttpClient(
-		HttpClientName.Cloudflare.ToString(),
-		client =>
+	var clientConfigurations = new Dictionary<string, Action<HttpClient>>
+	{
+		[HttpClientName.Cloudflare.ToString()] = client =>
 		{
 			client.BaseAddress = new Uri("https://api.cloudflare.com/client/v4/");
 			client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 			client.DefaultRequestHeaders.UserAgent.ParseAdd("DnsTube");
-		});
-	if (needsCustomHandler)
-	{
-		ConfigureHandler(httpClientBuilder, selectedAdapterName!);
-	}
-
-	httpClientBuilder = builder.Services.AddHttpClient(
-		HttpClientName.GitHub.ToString(),
-		client =>
+		},
+		[HttpClientName.GitHub.ToString()] = client =>
 		{
 			client.BaseAddress = new Uri("https://api.github.com/");
 			client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
 			client.DefaultRequestHeaders.UserAgent.ParseAdd("DnsTube");
 			client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
-		});
-	if (needsCustomHandler)
-	{
-		ConfigureHandler(httpClientBuilder, selectedAdapterName!);
-	}
-
-	httpClientBuilder = builder.Services.AddHttpClient(
-		HttpClientName.IpAddress.ToString(),
-		(client) =>
+		},
+		[HttpClientName.IpAddressV4.ToString()] = client =>
 		{
 			client.DefaultRequestHeaders.UserAgent.ParseAdd("DnsTube");
-		});
-	if (needsCustomHandler)
+		},
+		[HttpClientName.IpAddressV6.ToString()] = client =>
+		{
+			client.DefaultRequestHeaders.UserAgent.ParseAdd("DnsTube");
+		}
+	};
+
+	foreach (var config in clientConfigurations)
 	{
-		ConfigureHandler(httpClientBuilder, selectedAdapterName!);
+		var httpClientBuilder = builder.Services.AddHttpClient(config.Key, config.Value);
+		if (needsCustomHandler)
+		{
+			ConfigureHandler(httpClientBuilder, selectedAdapterName!);
+		}
 	}
 }
 
