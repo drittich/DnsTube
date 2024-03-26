@@ -10,6 +10,7 @@ namespace DnsTube.Core.Enums
 	{
 		Cloudflare,
 		GitHub,
-		IpAddress
+		IpAddress,
+		IpAddressV6
 	}
 }

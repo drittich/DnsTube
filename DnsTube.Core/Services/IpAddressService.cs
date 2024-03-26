@@ -31,7 +31,15 @@ namespace DnsTube.Core.Services
 			var settings = await _settingsService.GetAsync();
 			var url = protocol == IpSupport.IPv4 ? settings.IPv4_API : settings.IPv6_API;
 
-			var httpClient = _httpClientFactory.CreateClient(HttpClientName.IpAddress.ToString());
+			HttpClient httpClient;
+
+			if (protocol == IpSupport.IPv4){
+				httpClient = _httpClientFactory.CreateClient(HttpClientName.IpAddress.ToString());
+			}
+			else
+			{
+				httpClient = _httpClientFactory.CreateClient(HttpClientName.IpAddressV6.ToString());
+			}
 
 			for (var attempts = 0; attempts < maxAttempts; attempts++)
 			{
