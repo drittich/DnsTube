@@ -45,7 +45,7 @@ namespace DnsTube.Core.Services
 			{
 				var allRecordsByZone = await GetAllDnsRecordsByZoneAsync();
 
-				potentialEntriesToUpdate = allRecordsByZone.Where(d => settings.SelectedDomains.Any(s =>
+				potentialEntriesToUpdate = allRecordsByZone.Where(d => settings.SelectedDomains.Exists(s =>
 					s.ZoneName == d.zone_name
 					&& s.DnsName == d.name
 					&& s.Type == d.type)
@@ -183,7 +183,7 @@ namespace DnsTube.Core.Services
 			if (!response.IsSuccessStatusCode)
 			{
 				var cfError = JsonSerializer.Deserialize<CloudflareApiError>(result);
-				var cfMsg = cfError?.errors?.First().message;
+				var cfMsg = cfError?.errors?[0].message;
 				await _logService.WriteAsync($"Cloudflare API error: {cfMsg}", LogLevel.Error);
 				if (settings.IsUsingToken)
 				{
@@ -271,7 +271,7 @@ namespace DnsTube.Core.Services
 		{
 			var settings = await _settingsService.GetAsync();
 
-			if (!settings.SelectedDomains.Any(entry => entry.Type != null))
+			if (!settings.SelectedDomains.Exists(entry => entry.Type != null))
 			{
 				_logger.LogWarning("No domains selected. Please select the entries that you would like to update at http://localhost:5666");
 				await _logService.WriteAsync("No domains selected. Please select the entries that you would like to update.", LogLevel.Warning);

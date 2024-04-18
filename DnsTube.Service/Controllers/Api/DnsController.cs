@@ -40,7 +40,7 @@ namespace DnsTube.Service.Controllers.Api
 			//map zones to DnsEntryViewItem
 			var dnsEntries = zones.Select(d => new Core.Models.DnsEntry
 			{
-				UpdateCloudflare = settings.SelectedDomains.Any(s => s.ZoneName == d.zone_name && s.DnsName == d.name && s.Type == d.type),
+				UpdateCloudflare = settings.SelectedDomains.Exists(s => s.ZoneName == d.zone_name && s.DnsName == d.name && s.Type == d.type),
 				DnsName = d.name,
 				Type = d.type,
 				Address = d.content,
