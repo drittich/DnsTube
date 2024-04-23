@@ -93,7 +93,7 @@ namespace DnsTube.Core.Services
 				if (splitValues.Length != 4)
 					return false;
 
-				return splitValues.TrueForAll(r => byte.TryParse(r, out byte tempForParsing));
+				return splitValues.All(r => byte.TryParse(r, out byte tempForParsing));
 			}
 			else
 			{
