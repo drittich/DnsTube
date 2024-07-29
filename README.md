@@ -31,7 +31,7 @@ DnsTube is a Windows service that helps you access your computer remotely even i
 
 * You must set Cloudflare as the DNS authority for your domain
 * You must have Administrator permissions for the computer you are installing DnsTube on
-* You must have .NET 7 installed
+* You must have .NET 8 installed
 
 ## UI
 
@@ -43,7 +43,7 @@ Head over to the [Releases](https://github.com/drittich/DnsTube/releases/latest)
 
 ## Installing
 
-Note: This application is built using .NET 7. You may need to download and install it from here: https://dotnet.microsoft.com/en-us/download. Once you've installed .NET 7:
+Note: This application is built using .NET 8. You may need to download and install it from here: https://dotnet.microsoft.com/en-us/download. Once you've installed .NET 8:
 
 - Extract the DnsTube package to a folder of your choice
 - Open a command prompt as Administrator and install the service using  `install-service.bat`.
@@ -113,7 +113,7 @@ PS C:\Program Files\DnsTubeService>
 ## Notes
 
 1. DnsTube only updates existing Cloudflare records. It will not create or remove records.
-2. Configuration is stored in a separate folder than the application, so when you updated, your configuration is preserved. (An exception to this is if you have chnged the port the application is host with in `appsettings.json`.)
+2. Configuration is stored in a separate folder than the application, so when you updated, your configuration is preserved. (An exception to this is if you have changed the port the application is host with in `appsettings.json`.)
 3. The location of your configuration file is shown in UI on the Settings page.
 
 ## Development
