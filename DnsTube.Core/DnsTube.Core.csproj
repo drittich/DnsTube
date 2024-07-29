@@ -1,24 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DebugType>full</DebugType>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<DebugSymbols>False</DebugSymbols>
-		<DebugType>None</DebugType>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Dapper" Version="2.1.35" />
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.35" />
 		<PackageReference Include="Lib.AspNetCore.ServerSentEvents" Version="9.0.0" />
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.7" />
-	</ItemGroup>
-
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.7" />
+  </ItemGroup>
 </Project>
