@@ -11,11 +11,11 @@ namespace DnsTube.Service.Controllers.Api
 	[ApiController]
 	public class SettingsController : ControllerBase
 	{
-		ILogger<SettingsController> _logger;
-		ILogService _logService;
-		ISettingsService _settingsService;
-		IDbService _dbService;
-		IIpAddressService _ipAddressService;
+		private readonly ILogger<SettingsController> _logger;
+		private readonly ILogService _logService;
+		private readonly ISettingsService _settingsService;
+		private readonly IDbService _dbService;
+		private readonly IIpAddressService _ipAddressService;
 
 		public SettingsController(ILogger<SettingsController> logger, ILogService logService, ISettingsService settingsService, IDbService dbService, IIpAddressService ipAddressService)
 		{

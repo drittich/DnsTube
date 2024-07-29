@@ -58,7 +58,7 @@ namespace DnsTube.Service
 			var latestReleaseTag = await _githubService.GetLatestReleaseTagNameAsync();
 			if (!string.IsNullOrWhiteSpace(latestReleaseTag) && !Application.RELEASE_TAG.Contains("beta") && latestReleaseTag != Application.RELEASE_TAG)
 			{
-				var msg = $"There is a newer release available ({latestReleaseTag}). See https://github.com/drittich/DnsTube/releases/latest for more information.";
+				var msg = $"You are not running the latest stable release ({latestReleaseTag}). See https://github.com/drittich/DnsTube/releases/latest for more information.";
 				_logger.LogInformation(msg);
 				await _logService.WriteAsync(msg, LogLevel.Information);
 			}
@@ -119,10 +119,7 @@ namespace DnsTube.Service
 					if (ipAddressChanged || isManualUpdate)
 					{
 						if (isManualUpdate)
-						{
-							await _logService.WriteAsync("Manual update requested", LogLevel.Information);
 							isManualUpdate = false;
-						}
 
 						var selectedDomainsValid = await _cloudflareService.ValidateSelectedDomainsAsync();
 						if (selectedDomainsValid)

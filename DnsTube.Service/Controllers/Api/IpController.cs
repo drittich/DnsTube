@@ -14,22 +14,33 @@ namespace DnsTube.Service.Controllers.Api
 		private readonly ILogger<IpController> _logger;
 		private readonly ILogService _logService;
 		private readonly IIpAddressService _ipAddressService;
+		private readonly ISettingsService _settingsService;
 
 		public record Ip(string? Ipv4, string? Ipv6);
 
-		public IpController(ILogger<IpController> logger, ILogService logService, IIpAddressService ipAddressService)
+		public IpController(ILogger<IpController> logger, ILogService logService, IIpAddressService ipAddressService, ISettingsService settingsService)
 		{
 			_logger = logger;
 			_logService = logService;
 			_ipAddressService = ipAddressService;
+			_settingsService = settingsService;
 		}
 
 		// GET: api/<IpController>
 		[HttpGet]
 		public async Task<Ip> Get()
 		{
-			var ipv4 = await _ipAddressService.GetPublicIpAddressAsync(IpSupport.IPv4);
-			var ipv6 = await _ipAddressService.GetPublicIpAddressAsync(IpSupport.IPv6);
+			var settings = await _settingsService.GetAsync(true);
+
+			string? ipv4 = null;
+			string? ipv6 = null;
+
+			if (settings.ProtocolSupport != IpSupport.IPv6)
+				ipv4 = await _ipAddressService.GetPublicIpAddressAsync(IpSupport.IPv4);
+
+			if (settings.ProtocolSupport != IpSupport.IPv4)
+				ipv6 = await _ipAddressService.GetPublicIpAddressAsync(IpSupport.IPv6);
+
 			return new Ip(Ipv4: ipv4, Ipv6: ipv6);
 		}
 	}

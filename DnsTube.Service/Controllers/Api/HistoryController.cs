@@ -12,8 +12,8 @@ namespace DnsTube.Service.Controllers.Api
 	[ApiController]
 	public class HistoryController : ControllerBase
 	{
-		ILogger<HistoryController> _logger;
-		ILogService _logService;
+		private readonly ILogger<HistoryController> _logger;
+		private readonly ILogService _logService;
 
 		public HistoryController(ILogger<HistoryController> logger, ILogService logService)
 		{

@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using DnsTube.Core.Interfaces;
+﻿using DnsTube.Core.Interfaces;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,10 +10,10 @@ namespace DnsTube.Service.Controllers.Api
 	[ApiController]
 	public class DnsController : ControllerBase
 	{
-		ILogger<SettingsController> _logger;
-		ILogService _logService;
-		ISettingsService _settingsService;
-		ICloudflareService _cloudflareService;
+		private readonly ILogger<SettingsController> _logger;
+		private readonly ILogService _logService;
+		private readonly ISettingsService _settingsService;
+		private readonly ICloudflareService _cloudflareService;
 
 		public DnsController(ILogger<SettingsController> logger, ILogService logService, ISettingsService settingsService, ICloudflareService cloudflareService)
 		{
@@ -48,7 +46,7 @@ namespace DnsTube.Service.Controllers.Api
 				Proxied = d.proxied,
 				ZoneName = d.zone_name
 			});
-			
+
 			return dnsEntries;
 		}
 
