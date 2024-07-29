@@ -55,13 +55,13 @@ namespace DnsTube.Service
 			_logger.LogInformation($"UI hosted at {_configuration["Url"]}");
 
 			// log new release info
-			var latestReleaseTag = await _githubService.GetLatestReleaseTagNameAsync();
-			if (!string.IsNullOrWhiteSpace(latestReleaseTag) && !Application.RELEASE_TAG.Contains("beta") && latestReleaseTag != Application.RELEASE_TAG)
-			{
-				var msg = $"You are not running the latest stable release ({latestReleaseTag}). See https://github.com/drittich/DnsTube/releases/latest for more information.";
-				_logger.LogInformation(msg);
-				await _logService.WriteAsync(msg, LogLevel.Information);
-			}
+			string latestReleaseTag = await _githubService.GetLatestReleaseTagNameAsync();
+			string releaseMessage = latestReleaseTag != Application.RELEASE_TAG && !Application.RELEASE_TAG.Contains("beta")
+				? $"You are not running the latest stable release ({latestReleaseTag}). See https://github.com/drittich/DnsTube/releases/latest for more information."
+				: "You are running the latest stable release.";
+
+			_logger.LogInformation(releaseMessage);
+			await _logService.WriteAsync(releaseMessage, LogLevel.Information);
 
 			string? previousIpv4Address = null;
 			string? previousIpv6Address = null;
