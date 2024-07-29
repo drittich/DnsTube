@@ -116,8 +116,14 @@ namespace DnsTube.Service
 				}
 				else
 				{
-					if (ipAddressChanged)
+					if (ipAddressChanged || isManualUpdate)
 					{
+						if (isManualUpdate)
+						{
+							await _logService.WriteAsync("Manual update requested", LogLevel.Information);
+							isManualUpdate = false;
+						}
+
 						var selectedDomainsValid = await _cloudflareService.ValidateSelectedDomainsAsync();
 						if (selectedDomainsValid)
 							await DoUpdateAsync(currentPublicIpv4Address, currentPublicIpv6Address);
@@ -127,14 +133,6 @@ namespace DnsTube.Service
 							Type = "ip-address-changed",
 							Data = new List<string> { "N/A" }
 						});
-					}
-					else
-					{
-						if (isManualUpdate)
-						{
-							await _logService.WriteAsync("Public IP address has not changed", LogLevel.Information);
-							isManualUpdate = false;
-						}
 					}
 				}
 
