@@ -4,12 +4,12 @@ set SERVICE_NAME="DnsTube Service"
 rem abort if we're not running in an elevated command prompt
 net.exe session 1>NUL 2>NUL || goto :not_admin
 
-rem check that .NET 7 SDK is installed
-dotnet --list-sdks | findstr /C:7. /B
+rem check that .NET 8 SDK is installed
+dotnet --list-sdks | findstr /C:8. /B
 if %ErrorLevel% equ 0 (
-    echo Found .NET 7 SDK
+    echo Found .NET 8 SDK
 ) else (
-    echo .NET 7 SDK not installed, please download and install from https://dotnet.microsoft.com/en-us/download/dotnet/7.0
+    echo .NET 8 SDK not installed, please download and install from https://dotnet.microsoft.com/en-us/download/dotnet/8.0
 	echo Exiting
 	goto :eof
 )
