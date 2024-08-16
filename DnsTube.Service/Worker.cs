@@ -21,6 +21,7 @@ namespace DnsTube.Service
 		private readonly IConfiguration _configuration;
 		private readonly IServerSentEventsService _serverSentEventsService;
 		private static bool isManualUpdate = false;
+		private static bool lastUpdateSuccessful = false;
 
 		public static DateTimeOffset LastRun;
 		public static DateTimeOffset NextRun;
@@ -116,14 +117,14 @@ namespace DnsTube.Service
 				}
 				else
 				{
-					if (ipAddressChanged || isManualUpdate)
+					if (ipAddressChanged || isManualUpdate || !lastUpdateSuccessful)
 					{
 						if (isManualUpdate)
 							isManualUpdate = false;
 
 						var selectedDomainsValid = await _cloudflareService.ValidateSelectedDomainsAsync();
 						if (selectedDomainsValid)
-							await DoUpdateAsync(currentPublicIpv4Address, currentPublicIpv6Address);
+							lastUpdateSuccessful = await DoUpdateAsync(currentPublicIpv4Address, currentPublicIpv6Address);
 
 						await _serverSentEventsService.SendEventAsync(new ServerSentEvent
 						{
@@ -183,17 +184,20 @@ namespace DnsTube.Service
 			return currentPublicAddress;
 		}
 
-		private async Task DoUpdateAsync(string? publicIpv4Address, string? publicIpv6Address)
+		private async Task<bool> DoUpdateAsync(string? publicIpv4Address, string? publicIpv6Address)
 		{
 			var settings = await _settingsService.GetAsync();
+			var updateSuccessful = false;
 
 			// if IPv6-only support was not specified, do the IPv4 update
 			if (settings.ProtocolSupport != IpSupport.IPv6)
-				await _cloudflareService.UpdateDnsRecordsAsync(IpSupport.IPv4, publicIpv4Address);
+				updateSuccessful = await _cloudflareService.UpdateDnsRecordsAsync(IpSupport.IPv4, publicIpv4Address);
 
 			// if IPv4-only support was not specified, do the IPv6 update
 			if (settings.ProtocolSupport != IpSupport.IPv4)
-				await _cloudflareService.UpdateDnsRecordsAsync(IpSupport.IPv6, publicIpv6Address);
+				updateSuccessful = await _cloudflareService.UpdateDnsRecordsAsync(IpSupport.IPv6, publicIpv6Address);
+
+			return updateSuccessful;
 		}
 
 		public static async Task RequestManualUpdateAsync(ILogService logService)
