@@ -167,10 +167,7 @@ static void ConfigureIPv6Handler(IHttpClientBuilder httpClientBuilder, string se
 
 static string GetNetworkAdapterIPAddress(string? adapterName, AddressFamily addressFamily)
 {
-	if (adapterName is null)
-	{
-		throw new ArgumentNullException(nameof(adapterName));
-	}
+	ArgumentNullException.ThrowIfNull(adapterName);
 
 	var adapter = NetworkInterface.GetAllNetworkInterfaces()
 		.Where(a => a.Name == adapterName)
