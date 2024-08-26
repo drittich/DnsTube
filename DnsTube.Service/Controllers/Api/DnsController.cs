@@ -10,12 +10,12 @@ namespace DnsTube.Service.Controllers.Api
 	[ApiController]
 	public class DnsController : ControllerBase
 	{
-		private readonly ILogger<SettingsController> _logger;
+		private readonly ILogger<DnsController> _logger;
 		private readonly ILogService _logService;
 		private readonly ISettingsService _settingsService;
 		private readonly ICloudflareService _cloudflareService;
 
-		public DnsController(ILogger<SettingsController> logger, ILogService logService, ISettingsService settingsService, ICloudflareService cloudflareService)
+		public DnsController(ILogger<DnsController> logger, ILogService logService, ISettingsService settingsService, ICloudflareService cloudflareService)
 		{
 			_logger = logger;
 			_logService = logService;
