@@ -10,221 +10,242 @@ using Lib.AspNetCore.ServerSentEvents;
 
 namespace DnsTube.Service
 {
-	public class WorkerService : BackgroundService
-	{
-		private readonly ILogger<WorkerService> _logger;
-		private readonly ISettingsService _settingsService;
-		private readonly IGitHubService _githubService;
-		private readonly ICloudflareService _cloudflareService;
-		private readonly ILogService _logService;
-		private readonly IIpAddressService _ipAddressService;
-		private readonly IConfiguration _configuration;
-		private readonly IServerSentEventsService _serverSentEventsService;
-		private static bool isManualUpdate = false;
-		private static bool lastUpdateSuccessful = false;
+    public class WorkerService : BackgroundService
+    {
+        private readonly ILogger<WorkerService> _logger;
+        private readonly ISettingsService _settingsService;
+        private readonly IGitHubService _githubService;
+        private readonly ICloudflareService _cloudflareService;
+        private readonly ILogService _logService;
+        private readonly IIpAddressService _ipAddressService;
+        private readonly IConfiguration _configuration;
+        private readonly IServerSentEventsService _serverSentEventsService;
+        private static bool isManualUpdate = false;
+        private static bool lastUpdateSuccessful = false;
 
-		public static DateTimeOffset LastRun;
-		public static DateTimeOffset NextRun;
-		public static CancellationTokenSource? TimerCancellationTokenSource;
+        public static DateTimeOffset LastRun;
+        public static DateTimeOffset NextRun;
+        public static CancellationTokenSource? TimerCancellationTokenSource;
 
-		public WorkerService(ILogger<WorkerService> logger, ISettingsService settingsService, IGitHubService githubService, ICloudflareService cloudflareService, ILogService logService, IIpAddressService ipAddressService, IConfiguration configuration, IServerSentEventsService serverSentEventsService)
-		{
-			_logger = logger;
-			_settingsService = settingsService;
-			_githubService = githubService;
-			_cloudflareService = cloudflareService;
-			_logService = logService;
-			_ipAddressService = ipAddressService;
-			_configuration = configuration;
-			_serverSentEventsService = serverSentEventsService;
+        public WorkerService(ILogger<WorkerService> logger, ISettingsService settingsService, IGitHubService githubService, ICloudflareService cloudflareService, ILogService logService, IIpAddressService ipAddressService, IConfiguration configuration, IServerSentEventsService serverSentEventsService)
+        {
+            _logger = logger;
+            _settingsService = settingsService;
+            _githubService = githubService;
+            _cloudflareService = cloudflareService;
+            _logService = logService;
+            _ipAddressService = ipAddressService;
+            _configuration = configuration;
+            _serverSentEventsService = serverSentEventsService;
 
-			NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
-		}
+            NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
+        }
 
-		private async void NetworkChange_NetworkAddressChanged(object? sender, EventArgs e)
-		{
-			await NetworkChangeUpdateAsync(_logService);
-		}
+        private async void NetworkChange_NetworkAddressChanged(object? sender, EventArgs e)
+        {
+            await NetworkChangeUpdateAsync(_logService);
+        }
 
-		protected override async Task ExecuteAsync(CancellationToken serviceStoppingToken)
-		{
-			// log DnsTube version
-			var version = $"Running DnsTube {Application.RELEASE_TAG}";
-			_logger.LogInformation(version);
-			await _logService.WriteAsync(version, LogLevel.Information);
+        protected override async Task ExecuteAsync(CancellationToken serviceStoppingToken)
+        {
+            try
+            {
+                while (!serviceStoppingToken.IsCancellationRequested)
+                {
+                    _logger.LogTrace("Worker running at: {time}", DateTimeOffset.Now);
 
-			_logger.LogInformation($"UI hosted at {_configuration["Url"]}");
+                    // log DnsTube version
+                    var version = $"Running DnsTube {Application.RELEASE_TAG}";
+                    _logger.LogInformation(version);
+                    await _logService.WriteAsync(version, LogLevel.Information);
 
-			// log new release info
-			string latestReleaseTag = await _githubService.GetLatestReleaseTagNameAsync();
-			string releaseMessage = latestReleaseTag != Application.RELEASE_TAG && !Application.RELEASE_TAG.Contains("beta")
-				? $"You are not running the latest stable release ({latestReleaseTag}). See https://github.com/drittich/DnsTube/releases/latest for more information."
-				: "You are running the latest stable release.";
+                    _logger.LogInformation($"UI hosted at {_configuration["Url"]}");
 
-			_logger.LogInformation(releaseMessage);
-			await _logService.WriteAsync(releaseMessage, LogLevel.Information);
+                    // log new release info
+                    string latestReleaseTag = await _githubService.GetLatestReleaseTagNameAsync();
+                    string releaseMessage = latestReleaseTag != Application.RELEASE_TAG && !Application.RELEASE_TAG.Contains("beta")
+                        ? $"You are not running the latest stable release ({latestReleaseTag}). See https://github.com/drittich/DnsTube/releases/latest for more information."
+                        : "You are running the latest stable release.";
 
-			string? previousIpv4Address = null;
-			string? previousIpv6Address = null;
+                    _logger.LogInformation(releaseMessage);
+                    await _logService.WriteAsync(releaseMessage, LogLevel.Information);
 
-			while (!serviceStoppingToken.IsCancellationRequested)
-			{
-				var msg = $"Worker running at: {DateTimeOffset.Now}";
-				_logger.LogTrace(msg);
+                    string? previousIpv4Address = null;
+                    string? previousIpv6Address = null;
 
-				var settings = await _settingsService.GetAsync(true);
+                    while (!serviceStoppingToken.IsCancellationRequested)
+                    {
+                        var msg = $"Worker running at: {DateTimeOffset.Now}";
+                        _logger.LogTrace(msg);
 
-				string? currentPublicIpv4Address = await GetIpAddressAsync(IpSupport.IPv4, previousIpv4Address, settings);
-				string? currentPublicIpv6Address = await GetIpAddressAsync(IpSupport.IPv6, previousIpv6Address, settings);
+                        var settings = await _settingsService.GetAsync(true);
 
-				bool ipAddressChanged = false;
-				if (previousIpv4Address != currentPublicIpv4Address || previousIpv6Address != currentPublicIpv6Address)
-				{
-					ipAddressChanged = true;
-				}
+                        string? currentPublicIpv4Address = await GetIpAddressAsync(IpSupport.IPv4, previousIpv4Address, settings);
+                        string? currentPublicIpv6Address = await GetIpAddressAsync(IpSupport.IPv6, previousIpv6Address, settings);
 
-				previousIpv4Address = currentPublicIpv4Address;
-				previousIpv6Address = currentPublicIpv6Address;
+                        bool ipAddressChanged = false;
+                        if (previousIpv4Address != currentPublicIpv4Address || previousIpv6Address != currentPublicIpv6Address)
+                        {
+                            ipAddressChanged = true;
+                        }
 
-				if (currentPublicIpv4Address != null)
-					await _serverSentEventsService.SendEventAsync(new ServerSentEvent
-					{
-						Type = "ipv4-address",
-						Data = new List<string> { currentPublicIpv4Address }
-					});
+                        previousIpv4Address = currentPublicIpv4Address;
+                        previousIpv6Address = currentPublicIpv6Address;
 
-				if (currentPublicIpv6Address != null)
-					await _serverSentEventsService.SendEventAsync(new ServerSentEvent
-					{
-						Type = "ipv6-address",
-						Data = new List<string> { currentPublicIpv6Address }
-					});
+                        if (currentPublicIpv4Address != null)
+                            await _serverSentEventsService.SendEventAsync(new ServerSentEvent
+                            {
+                                Type = "ipv4-address",
+                                Data = new List<string> { currentPublicIpv4Address }
+                            });
 
-				var validationErrorMessage = _settingsService.ValidateSettings(settings);
+                        if (currentPublicIpv6Address != null)
+                            await _serverSentEventsService.SendEventAsync(new ServerSentEvent
+                            {
+                                Type = "ipv6-address",
+                                Data = new List<string> { currentPublicIpv6Address }
+                            });
 
-				if (validationErrorMessage is not null)
-				{
-					if (validationErrorMessage == "No selected domains")
-					{
-						_logger.LogWarning($"{validationErrorMessage}, go to {_configuration["Url"]} to update");
-						await _logService.WriteAsync($"{validationErrorMessage}, select the DNS entries you want to update above", LogLevel.Warning);
-					}
-					else
-					{
-						_logger.LogWarning($"{validationErrorMessage}, go to {_configuration["Url"]}/settings.html to update");
-						await _logService.WriteAsync($"{validationErrorMessage}, go to the <a href=\"{_configuration["Url"]}/settings.html\">Settings</a> tab to update", LogLevel.Warning);
-					}
-				}
-				else
-				{
-					if (ipAddressChanged || isManualUpdate || !lastUpdateSuccessful)
-					{
-						if (isManualUpdate)
-							isManualUpdate = false;
+                        var validationErrorMessage = _settingsService.ValidateSettings(settings);
 
-						var selectedDomainsValid = await _cloudflareService.ValidateSelectedDomainsAsync();
-						if (selectedDomainsValid)
-							lastUpdateSuccessful = await DoUpdateAsync(currentPublicIpv4Address, currentPublicIpv6Address);
+                        if (validationErrorMessage is not null)
+                        {
+                            if (validationErrorMessage == "No selected domains")
+                            {
+                                _logger.LogWarning($"{validationErrorMessage}, go to {_configuration["Url"]} to update");
+                                await _logService.WriteAsync($"{validationErrorMessage}, select the DNS entries you want to update above", LogLevel.Warning);
+                            }
+                            else
+                            {
+                                _logger.LogWarning($"{validationErrorMessage}, go to {_configuration["Url"]}/settings.html to update");
+                                await _logService.WriteAsync($"{validationErrorMessage}, go to the <a href=\"{_configuration["Url"]}/settings.html\">Settings</a> tab to update", LogLevel.Warning);
+                            }
+                        }
+                        else
+                        {
+                            if (ipAddressChanged || isManualUpdate || !lastUpdateSuccessful)
+                            {
+                                if (isManualUpdate)
+                                    isManualUpdate = false;
 
-						await _serverSentEventsService.SendEventAsync(new ServerSentEvent
-						{
-							Type = "ip-address-changed",
-							Data = new List<string> { "N/A" }
-						});
-					}
-				}
+                                var selectedDomainsValid = await _cloudflareService.ValidateSelectedDomainsAsync();
+                                if (selectedDomainsValid)
+                                    lastUpdateSuccessful = await DoUpdateAsync(currentPublicIpv4Address, currentPublicIpv6Address);
 
-				LastRun = DateTime.Now;
-				var intervalMs = settings.UpdateIntervalMinutes * 60 * 1000;
-				NextRun = DateTime.Now.AddMilliseconds(intervalMs);
+                                await _serverSentEventsService.SendEventAsync(new ServerSentEvent
+                                {
+                                    Type = "ip-address-changed",
+                                    Data = new List<string> { "N/A" }
+                                });
+                            }
+                        }
 
-				await _serverSentEventsService.SendEventAsync(new ServerSentEvent
-				{
-					Type = "last-run",
-					Data = new List<string> { $"{LastRun:yyyy-MM-ddTHH:mm:ss}" }
-				});
-				await _serverSentEventsService.SendEventAsync(new ServerSentEvent
-				{
-					Type = "next-run",
-					Data = new List<string> { $"{NextRun:yyyy-MM-ddTHH:mm:ss}" }
-				});
+                        LastRun = DateTime.Now;
+                        var intervalMs = settings.UpdateIntervalMinutes * 60 * 1000;
+                        NextRun = DateTime.Now.AddMilliseconds(intervalMs);
 
-				TimerCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(serviceStoppingToken);
-				try
-				{
-					await Task.Delay(intervalMs, TimerCancellationTokenSource.Token);
-				}
-				catch (TaskCanceledException) when (TimerCancellationTokenSource.IsCancellationRequested)
-				{
-				}
-			}
-		}
+                        await _serverSentEventsService.SendEventAsync(new ServerSentEvent
+                        {
+                            Type = "last-run",
+                            Data = new List<string> { $"{LastRun:yyyy-MM-ddTHH:mm:ss}" }
+                        });
+                        await _serverSentEventsService.SendEventAsync(new ServerSentEvent
+                        {
+                            Type = "next-run",
+                            Data = new List<string> { $"{NextRun:yyyy-MM-ddTHH:mm:ss}" }
+                        });
 
-		private async Task<string> GetIpAddressAsync(IpSupport ipSupport, string? previousPublicAddress, ISettings settings)
-		{
-			var exclusionValue = ipSupport == IpSupport.IPv4 ? IpSupport.IPv6 : IpSupport.IPv4;
-			string? currentPublicAddress = null;
+                        TimerCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(serviceStoppingToken);
+                        try
+                        {
+                            await Task.Delay(intervalMs, TimerCancellationTokenSource.Token);
+                        }
+                        catch (TaskCanceledException) when (TimerCancellationTokenSource.IsCancellationRequested)
+                        {
+                        }
+                    }
+                    _logger.LogTrace("Worker completed iteration at: {time}", DateTimeOffset.Now);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in the WorkerService.");
+                throw;
+            }
+        }
 
-			if (settings.ProtocolSupport != exclusionValue)
-			{
-				currentPublicAddress = await _ipAddressService.GetPublicIpAddressAsync(ipSupport);
-				if (currentPublicAddress != previousPublicAddress)
-				{
-					string msg;
-					if (previousPublicAddress is null)
-						msg = $"Current public {ipSupport} address: {currentPublicAddress}";
-					else
-						msg = $"Public {ipSupport} address changed from {previousPublicAddress} to {currentPublicAddress}";
+        private async Task<string> GetIpAddressAsync(IpSupport ipSupport, string? previousPublicAddress, ISettings settings)
+        {
+            var exclusionValue = ipSupport == IpSupport.IPv4 ? IpSupport.IPv6 : IpSupport.IPv4;
+            string? currentPublicAddress = null;
 
-					_logger.LogInformation(msg);
-					await _logService.WriteAsync(msg, LogLevel.Information);
-				}
-			}
+            if (settings.ProtocolSupport != exclusionValue)
+            {
+                currentPublicAddress = await _ipAddressService.GetPublicIpAddressAsync(ipSupport);
+                if (currentPublicAddress != previousPublicAddress)
+                {
+                    string msg;
+                    if (previousPublicAddress is null)
+                        msg = $"Current public {ipSupport} address: {currentPublicAddress}";
+                    else
+                        msg = $"Public {ipSupport} address changed from {previousPublicAddress} to {currentPublicAddress}";
 
-			return currentPublicAddress;
-		}
+                    _logger.LogInformation(msg);
+                    await _logService.WriteAsync(msg, LogLevel.Information);
+                }
+            }
 
-		private async Task<bool> DoUpdateAsync(string? publicIpv4Address, string? publicIpv6Address)
-		{
-			var settings = await _settingsService.GetAsync();
-			var updateSuccessful = false;
+            return currentPublicAddress;
+        }
 
-			// if IPv6-only support was not specified, do the IPv4 update
-			if (settings.ProtocolSupport != IpSupport.IPv6)
-				updateSuccessful = await _cloudflareService.UpdateDnsRecordsAsync(IpSupport.IPv4, publicIpv4Address);
+        private async Task<bool> DoUpdateAsync(string? publicIpv4Address, string? publicIpv6Address)
+        {
+            var settings = await _settingsService.GetAsync();
+            var updateSuccessful = false;
 
-			// if IPv4-only support was not specified, do the IPv6 update
-			if (settings.ProtocolSupport != IpSupport.IPv4)
-				updateSuccessful = await _cloudflareService.UpdateDnsRecordsAsync(IpSupport.IPv6, publicIpv6Address);
+            // if IPv6-only support was not specified, do the IPv4 update
+            if (settings.ProtocolSupport != IpSupport.IPv6)
+                updateSuccessful = await _cloudflareService.UpdateDnsRecordsAsync(IpSupport.IPv4, publicIpv4Address);
 
-			return updateSuccessful;
-		}
+            // if IPv4-only support was not specified, do the IPv6 update
+            if (settings.ProtocolSupport != IpSupport.IPv4)
+                updateSuccessful = await _cloudflareService.UpdateDnsRecordsAsync(IpSupport.IPv6, publicIpv6Address);
 
-		public static async Task RequestManualUpdateAsync(ILogService logService)
-		{
-			isManualUpdate = true;
-			await logService.WriteAsync("Manual update requested", LogLevel.Information);
-			WorkerService.TimerCancellationTokenSource!.Cancel();
-		}
+            return updateSuccessful;
+        }
 
-		private static DateTime lastNetworkChangeUpdate = DateTime.MinValue;
-		public static async Task NetworkChangeUpdateAsync(ILogService logService)
-		{
-			// This gets invoked for both ipv4 and ipv6 changes, so we need to debounce it
-			if (DateTime.Now - lastNetworkChangeUpdate < TimeSpan.FromSeconds(1))
-			{
-				return;
-			}
+        public static async Task RequestManualUpdateAsync(ILogService logService)
+        {
+            isManualUpdate = true;
+            await logService.WriteAsync("Manual update requested", LogLevel.Information);
+            WorkerService.TimerCancellationTokenSource!.Cancel();
+        }
 
-			lastNetworkChangeUpdate = DateTime.Now;
-			isManualUpdate = true;
+        private static DateTime lastNetworkChangeUpdate = DateTime.MinValue;
+        public static async Task NetworkChangeUpdateAsync(ILogService logService)
+        {
+            // This gets invoked for both ipv4 and ipv6 changes, so we need to debounce it
+            if (DateTime.Now - lastNetworkChangeUpdate < TimeSpan.FromSeconds(1))
+            {
+                return;
+            }
 
-			// wait 5 seconds before updating to let the network settle
-			int networkChangeDelaySeconds = 5;
-			await logService.WriteAsync($"Network change detected, updating in {networkChangeDelaySeconds} seconds", LogLevel.Information);
-			await Task.Delay(networkChangeDelaySeconds * 1000);
+            lastNetworkChangeUpdate = DateTime.Now;
+            isManualUpdate = true;
 
-			TimerCancellationTokenSource!.Cancel();
-		}
-	}
+            // wait 5 seconds before updating to let the network settle
+            int networkChangeDelaySeconds = 5;
+            await logService.WriteAsync($"Network change detected, updating in {networkChangeDelaySeconds} seconds", LogLevel.Information);
+            await Task.Delay(networkChangeDelaySeconds * 1000);
+
+            TimerCancellationTokenSource!.Cancel();
+        }
+
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            NetworkChange.NetworkAddressChanged -= NetworkChange_NetworkAddressChanged;
+            return base.StopAsync(cancellationToken);
+        }
+
+    }
 }
