@@ -6,6 +6,7 @@ using DnsTube.Core.Enums;
 using DnsTube.Core.Interfaces;
 using DnsTube.Core.Models;
 using DnsTube.Core.Models.Dns;
+using DnsTube.Core.Models.Zone;
 
 using Microsoft.Extensions.Logging;
 
@@ -143,8 +144,38 @@ namespace DnsTube.Core.Services
 			return ret;
 		}
 
+		public async Task<List<Zone>> ListZoneesAsync()
+		{
+			List<Zone> ret = new();
+			int pageSize = 50;
+			int pageNumber = 1;
+			int totalPages;
+
+			var httpClient = _httpClientFactory.CreateClient(HttpClientName.Cloudflare.ToString());
+			do
+			{
+				var req = await GetRequestMessageAsync(HttpMethod.Get, $"zones?status=active&page={pageNumber}&per_page={pageSize}&order=name&direction=asc&match=all");
+
+				var response = await httpClient.SendAsync(req);
+				var result = await response.Content.ReadAsStringAsync();
+
+				await ValidateCloudflareResultAsync(response, result, "list zones");
+
+				var zoneListResponse = JsonSerializer.Deserialize<ListZonesResponse>(result);
+
+				int totalRecords = zoneListResponse.result_info.total_count;
+				totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+				ret.AddRange(zoneListResponse.result);
+
+				pageNumber++;
+			} while (pageNumber <= totalPages);
+
+			return ret;
+		}
+
 		// Ref: https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records
-		private async Task<List<Result>> GetRecordsByTypeAsync(string zoneIdentifier, string recordType)
+		private async Task<List<Result>> GetRecordsByTypeAsync(string zoneIdentifier, string zoneName, string recordType)
 		{
 			int pageSize = 100;
 			int pageNumber = 1;
@@ -173,6 +204,12 @@ namespace DnsTube.Core.Services
 
 				pageNumber++;
 			} while (pageNumber <= totalPages);
+
+			foreach (var record in ret)
+			{
+				record.zone_id = zoneIdentifier;
+				record.zone_name = zoneName;
+			}
 
 			return ret;
 		}
@@ -224,26 +261,32 @@ namespace DnsTube.Core.Services
 			if (zoneIDs is null || !zoneIDs.Any())
 				zoneIDs = await ListZoneIDsAsync();
 
+			// The Cloudflare API we call in GetRecordsByTypeAsync does not always return zone info properly,
+			// so we need to get the zone info here and add it to the results
+			var cloudflareZones = await ListZoneesAsync();
+
 			var allDnsEntries = new List<Result>();
 
 			foreach (var zoneID in zoneIDs)
 			{
+				var zoneName = cloudflareZones.First(z => z.id == zoneID).name;
+
 				if (settings.ProtocolSupport != IpSupport.IPv6)
 				{
-					var aRecords = await GetRecordsByTypeAsync(zoneID, "A");
+					var aRecords = await GetRecordsByTypeAsync(zoneID, zoneName, "A");
 					allDnsEntries.AddRange(aRecords);
 				}
 
 				if (settings.ProtocolSupport != IpSupport.IPv4)
 				{
-					var aaaaRecords = await GetRecordsByTypeAsync(zoneID, "AAAA");
+					var aaaaRecords = await GetRecordsByTypeAsync(zoneID, zoneName, "AAAA");
 					allDnsEntries.AddRange(aaaaRecords);
 				}
 
-				var txtRecords = await GetRecordsByTypeAsync(zoneID, "TXT");
+				var txtRecords = await GetRecordsByTypeAsync(zoneID, zoneName, "TXT");
 				allDnsEntries.AddRange(txtRecords);
 
-				var spfRecords = await GetRecordsByTypeAsync(zoneID, "SPF");
+				var spfRecords = await GetRecordsByTypeAsync(zoneID, zoneName, "SPF");
 				allDnsEntries.AddRange(spfRecords);
 			}
 
