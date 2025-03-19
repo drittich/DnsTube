@@ -4,16 +4,32 @@ set SERVICE_NAME="DnsTube Service"
 rem abort if we're not running in an elevated command prompt
 net.exe session 1>NUL 2>NUL || goto :not_admin
 
+rem check that .NET 8 Desktop Runtime is installed
+dotnet --list-runtimes | findstr /B /C:"Microsoft.WindowsDesktop.App 8."
+if %ErrorLevel% equ 0 (
+    echo Found .NET 8 Desktop Runtime
+	goto :create_service
+)
+
+rem check that .NET 8 Desktop Runtime is installed
+dotnet --list-runtimes | findstr /B /C:"Microsoft.NETCore.App 8."
+if %ErrorLevel% equ 0 (
+    echo Found .NET 8 Core Runtime
+	goto :create_service
+)
+
 rem check that .NET 8 SDK is installed
 dotnet --list-sdks | findstr /C:8. /B
 if %ErrorLevel% equ 0 (
     echo Found .NET 8 SDK
-) else (
-    echo .NET 8 SDK not installed, please download and install from https://dotnet.microsoft.com/en-us/download/dotnet/8.0
-	echo Exiting
-	goto :eof
+	goto :create_service
 )
 
+echo .NET 8 Runtime/SDK not installed, please download and install from https://dotnet.microsoft.com/en-us/download/dotnet/8.0 or using Microsoft's App-Installer (aka. WinGet-CLI, see https://apps.microsoft.com/detail/9nblggh4nns1): "winget install Microsoft.DotNet.DesktopRuntime.8"
+echo Exiting
+goto :eof
+
+:create_service
 echo Creating service...
 sc create %SERVICE_NAME% binPath= "%~dp0DnsTube.Service.exe" start= auto
 sc description %SERVICE_NAME% "Updates Cloudflare DNS entries with the public IP address of this computer"
