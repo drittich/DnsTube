@@ -76,14 +76,24 @@ Once the service has started you can view the UI at the URL http://localhost:566
 
 By default the service hosts the web application on your local machine at port 5666. If you wish to change this, edit `appsettings.json` accordingly. Once the service is running you can launch the interface at http://localhost:5666/ (or whatever port you have chosen).
 
-After that, you'll need to generate an API Token (preferred) or Key in order to access the API via DnsTube. The details for doing that can be found at [Creating API tokens](https://developers.cloudflare.com/api/tokens/create).
+After that, you'll need to generate an API Token (preferred) or Key in order to access the API via DnsTube. The details for doing that can be found at [Creating API tokens](https://developers.cloudflare.com/api/tokens/create). See the **Getting a Cloudflare API token** section below for a quick walk-through.
 
-Then, go the DsnTube settings page and enter your email address, API key/token, etc. Go back to the main tab (refresh if necessary) and you should see a table listing your Cloudflare DNS entries. Check off the ones you want to dynamically update and the service should take it from there.
+Then, go to the DnsTube settings page and enter your email address and API key or token. Go back to the main tab (refresh if necessary) and you should see a table listing your Cloudflare DNS entries. Check off the ones you want to dynamically update and the service should take it from there.
 
 You can use [nslookup](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup) to make sure DNS resolution is working correctly, e.g., 
 ```
 nslookup mydomain.com
 ```
+
+### Getting a Cloudflare API token
+
+1. Log in to your Cloudflare dashboard and navigate to **My Profile**.
+2. Choose **API Tokens** and click **Create Token**.
+3. Start with the **Edit DNS** template. This grants the `Zone:Read` and `DNS:Edit` permissions.
+4. If you want the token to be limited to specific zones, add them under **Zone Resources**.
+5. Click **Continue to summary**, then **Create Token**.
+
+When using a zone‑specific token, add the corresponding Zone IDs (comma separated) on the DnsTube settings page. Tokens with access to all zones do not require this field.
 
 ## Updating
 
@@ -113,7 +123,7 @@ PS C:\Program Files\DnsTubeService>
 ## Notes
 
 1. DnsTube only updates existing Cloudflare records. It will not create or remove records.
-2. Configuration is stored in a separate folder than the application, so when you updated, your configuration is preserved. (An exception to this is if you have changed the port the application is host with in `appsettings.json`.)
+2. Configuration is stored in a separate folder than the application, so when you update, your configuration is preserved. (An exception to this is if you have changed the port the application is hosted on in `appsettings.json`.)
 3. The location of your configuration file is shown in UI on the Settings page.
 
 ## Development
