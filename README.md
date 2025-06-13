@@ -72,11 +72,11 @@ Once the service has started you can view the UI at the URL http://localhost:566
 
 ## Configuration
 
->If you haven't already done so, you will need to create an account with Cloudflare and make it the DNS authority for your domain. You then need to configure your DNS entries as appropriate. See [Managing DNS records in Cloudflare](https://support.cloudflare.com/hc/en-us/articles/360019093151-Managing-DNS-records-in-Cloudflare) for more info.
+>If you haven't already done so, you will need to create an account with Cloudflare and make it the DNS authority for your domain. You then need to configure your DNS entries as appropriate. See [Cloudflare - Manage DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) for more info.
 
 By default the service hosts the web application on your local machine at port 5666. If you wish to change this, edit `appsettings.json` accordingly. Once the service is running you can launch the interface at http://localhost:5666/ (or whatever port you have chosen).
 
-After that, you'll need to generate an API Token (preferred) or Key in order to access the API via DnsTube. The details for doing that can be found at [Creating API tokens](https://developers.cloudflare.com/api/tokens/create). See the **Getting a Cloudflare API token** section below for a quick walk-through.
+After that, you'll need to generate an API Token (preferred) or Key in order to access the API via DnsTube. The details for doing that can be found at [Clouflare - Create API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/). See the **Getting a Cloudflare API token** section below for a quick walk-through.
 
 Then, go to the DnsTube settings page and enter your email address and API key or token. Go back to the main tab (refresh if necessary) and you should see a table listing your Cloudflare DNS entries. Check off the ones you want to dynamically update and the service should take it from there.
 
@@ -89,9 +89,13 @@ nslookup mydomain.com
 
 1. Log in to your Cloudflare dashboard and navigate to **My Profile**.
 2. Choose **API Tokens** and click **Create Token**.
-3. Start with the **Edit DNS** template. This grants the `Zone:Read` and `DNS:Edit` permissions.
-4. If you want the token to be limited to specific zones, add them under **Zone Resources**.
-5. Click **Continue to summary**, then **Create Token**.
+3. Start with the **Edit Zone DNS** template. By default this grants the `Zone:DNS:Edit` permission. 
+4. Change the token name from `Edit zone DNS` to `DnsTube`
+5. Click **Add More** under Permissions and add a permission for `Zone:Zone:Read`.
+6. Under **Zone Resources** select which zones you want DnsTube to manage.
+7. If you want the token to be limited to specific zones, add them under **Zone Resources**.
+8. Click **Continue to summary**, then **Create Token**.
+9. Copy the API token for entering within DnsTube, as you will not be able to see it again once you navigate away.
 
 When using a zone‑specific token, add the corresponding Zone IDs (comma separated) on the DnsTube settings page. Tokens with access to all zones do not require this field.
 
