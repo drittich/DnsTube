@@ -15,16 +15,50 @@
 
 A Dynamic DNS (DDNS) Windows service for Cloudflare.
 
+---
+
+## Table of Contents
+
+- [Table of Contents](#table-of-contents)
+- [What is this?](#what-is-this)
+- [Quick Start](#quick-start)
+- [Features](#features)
+- [Requirements](#requirements)
+- [UI](#ui)
+- [Downloading](#downloading)
+- [Installing](#installing)
+- [Configuration](#configuration)
+	- [Getting a Cloudflare API token](#getting-a-cloudflare-api-token)
+- [Updating](#updating)
+- [Uninstalling](#uninstalling)
+- [Notes](#notes)
+- [Development](#development)
+- [The Name](#the-name)
+- [Contributing](#contributing)
+- [Authors](#authors)
+- [License](#license)
+
+---
+
 ## What is this?
 
-DnsTube is a Windows service that helps you access your computer remotely even if its IP address changes. It does this by using Cloudflare’s free DNS hosting and API to update the DNS entries for your domain name. This way, you can always access your computer using its domain name instead of having to remember its IP address.
+DnsTube is a Windows service that helps you access your computer remotely even if its IP address changes. It does this by using Cloudflare’s free DNS hosting and API to update the DNS entries for your domain name. This way you can always access your computer using its domain name instead of having to remember its IP address.
+
+## Quick Start
+
+1. [Download the latest release](https://github.com/drittich/DnsTube/releases/latest).
+2. Install [.NET 8](https://dotnet.microsoft.com/en-us/download) if needed.
+3. Extract the package, open a command prompt as Administrator, and run `install-service.bat`.
+4. Open [http://localhost:5666](http://localhost:5666) to complete setup.
+
+---
 
 ## Features
 
 * Runs as a Windows service (no Windows login required)
 * Can update A (IPv4), AAAA (IPv6), SPF, and TXT records
 * Detects network changes and updates DNS automatically
-* Supports split VPN tunnelling and lets you choose which network adapter to use
+* Supports split VPN tunneling and lets you choose which network adapter to use
 * Supports both Cloudflare API keys and tokens (can be scoped to specific zones)
 
 ## Requirements
@@ -72,24 +106,38 @@ Once the service has started you can view the UI at the URL http://localhost:566
 
 ## Configuration
 
->If you haven't already done so, you will need to create an account with Cloudflare and make it the DNS authority for your domain. You then need to configure your DNS entries as appropriate. See [Managing DNS records in Cloudflare](https://support.cloudflare.com/hc/en-us/articles/360019093151-Managing-DNS-records-in-Cloudflare) for more info.
+>If you haven't already done so, you will need to create an account with Cloudflare and make it the DNS authority for your domain. You then need to configure your DNS entries as appropriate. See [Cloudflare - Manage DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) for more info.
 
 By default the service hosts the web application on your local machine at port 5666. If you wish to change this, edit `appsettings.json` accordingly. Once the service is running you can launch the interface at http://localhost:5666/ (or whatever port you have chosen).
 
-After that, you'll need to generate an API Token (preferred) or Key in order to access the API via DnsTube. The details for doing that can be found at [Creating API tokens](https://developers.cloudflare.com/api/tokens/create).
+After that, you'll need to generate an API Token (preferred) or Key in order to access the API via DnsTube. The details for doing that can be found at [Cloudflare - Create API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/). See the **Getting a Cloudflare API token** section below for a quick walk-through.
 
-Then, go the DsnTube settings page and enter your email address, API key/token, etc. Go back to the main tab (refresh if necessary) and you should see a table listing your Cloudflare DNS entries. Check off the ones you want to dynamically update and the service should take it from there.
+Then, go to the DnsTube settings page and enter your email address and API key or token. Return to the main tab (refresh if necessary); you should now see a table listing your Cloudflare DNS entries. Check off the ones you want to dynamically update and the service should take it from there.
 
 You can use [nslookup](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup) to make sure DNS resolution is working correctly, e.g., 
 ```
 nslookup mydomain.com
 ```
 
+### Getting a Cloudflare API token
+
+1. Log in to your Cloudflare dashboard and navigate to **My Profile**.
+2. Choose **API Tokens** and click **Create Token**.
+3. Start with the **Edit Zone DNS** template. By default this grants the `Zone:DNS:Edit` permission. 
+4. Change the token name from `Edit zone DNS` to `DnsTube`
+5. Click **Add More** under Permissions and add a permission for `Zone:Zone:Read`.
+6. Under **Zone Resources** select which zones you want DnsTube to manage.
+7. If you want the token to be limited to specific zones, add them under **Zone Resources**.
+8. Click **Continue to summary**, then **Create Token**.
+9. Copy the API token for entering within DnsTube, as you will not be able to see it again once you navigate away.
+
+When using a zone‑specific token, add the corresponding Zone IDs (comma-separated) on the DnsTube settings page. Tokens with access to all zones do not require this field.
+
 ## Updating
 
-- Download the latest release from https://github.com/drittich/DnsTube/releases/latest and uncompress
+- Download the latest release from https://github.com/drittich/DnsTube/releases/latest and decompress
 - Open a command prompt as Administrator and stop the existing service by running `stop-service.bat`. Note, the service will stop more quickly if you close the web UI.
-- Copy the new uncompressed files over the existing ones. The configuration is stored elsewhere so will be preserved.
+- Copy the new decompressed files over the existing ones. The configuration is stored elsewhere so will be preserved.
 - Start the service again by running `start-service.bat` 
 
 ## Uninstalling
@@ -113,8 +161,8 @@ PS C:\Program Files\DnsTubeService>
 ## Notes
 
 1. DnsTube only updates existing Cloudflare records. It will not create or remove records.
-2. Configuration is stored in a separate folder than the application, so when you updated, your configuration is preserved. (An exception to this is if you have changed the port the application is host with in `appsettings.json`.)
-3. The location of your configuration file is shown in UI on the Settings page.
+2. Configuration is stored in a separate folder from the application so when you update, your configuration is preserved. (An exception to this is if you have changed the port the application is hosted on in `appsettings.json`.)
+3. The location of the configuration file can be found at the bottom ot the [Settings](http://localhost:5666/settings.html) page.
 
 ## Development
 
