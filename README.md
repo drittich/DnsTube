@@ -13,7 +13,7 @@
 	</a>
 </p>
 
-A Dynamic DNS (DDNS) Windows service for Cloudflare.
+A Dynamic DNS (DDNS) Windows service for Cloudflare-managed domains.
 
 ---
 
