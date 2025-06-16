@@ -47,7 +47,21 @@ app.UseRouting();
 app.MapControllers();
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapServerSentEvents("/sse");
-app.MapGet("/", () => Results.Redirect("/index.html"));
+app.MapGet("/", async context =>
+{
+        context.Response.Headers[HeaderNames.CacheControl] = "no-cache";
+        await context.Response.SendFileAsync(Path.Combine(app.Environment.WebRootPath, "index.html"));
+});
+app.MapGet("/index", async context =>
+{
+        context.Response.Headers[HeaderNames.CacheControl] = "no-cache";
+        await context.Response.SendFileAsync(Path.Combine(app.Environment.WebRootPath, "index.html"));
+});
+app.MapGet("/settings", async context =>
+{
+        context.Response.Headers[HeaderNames.CacheControl] = "no-cache";
+        await context.Response.SendFileAsync(Path.Combine(app.Environment.WebRootPath, "settings.html"));
+});
 app.UseStaticFiles(new StaticFileOptions
 {
 	OnPrepareResponse = ctx =>

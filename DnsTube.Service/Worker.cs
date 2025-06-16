@@ -117,8 +117,8 @@ namespace DnsTube.Service
                             }
                             else
                             {
-                                _logger.LogWarning($"{validationErrorMessage}, go to {_configuration["Url"]}/settings.html to update");
-                                await _logService.WriteAsync($"{validationErrorMessage}, go to the <a href=\"{_configuration["Url"]}/settings.html\">Settings</a> tab to update", LogLevel.Warning);
+                                _logger.LogWarning($"{validationErrorMessage}, go to {_configuration["Url"]}/settings to update");
+                                await _logService.WriteAsync($"{validationErrorMessage}, go to the <a href=\"{_configuration["Url"]}/settings\">Settings</a> tab to update", LogLevel.Warning);
                             }
                         }
                         else

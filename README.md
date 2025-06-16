@@ -102,7 +102,7 @@ SERVICE_NAME: DnsTube Service
 PS C:\Program Files\DnsTubeService>
 ```
 
-Once the service has started you can view the UI at the URL http://localhost:5666/index.html. See the **Configuration** section for additional config, or if you need to host the UI on a different port.
+Once the service has started you can view the UI at the URL http://localhost:5666/. See the **Configuration** section for additional config, or if you need to host the UI on a different port.
 
 ## Configuration
 
@@ -162,7 +162,7 @@ PS C:\Program Files\DnsTubeService>
 
 1. DnsTube only updates existing Cloudflare records. It will not create or remove records.
 2. Configuration is stored in a separate folder from the application so when you update, your configuration is preserved. (An exception to this is if you have changed the port the application is hosted on in `appsettings.json`.)
-3. The location of the configuration file can be found at the bottom ot the [Settings](http://localhost:5666/settings.html) page.
+3. The location of the configuration file can be found at the bottom ot the [Settings](http://localhost:5666/settings) page.
 
 ## Development
 
