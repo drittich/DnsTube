@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 
 using DnsTube.Core.Enums;
+using DnsTube.Core.Interfaces;
 
 namespace DnsTube.Core.Models
 {

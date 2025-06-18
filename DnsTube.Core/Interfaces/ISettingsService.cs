@@ -1,5 +1,6 @@
 using DnsTube.Core.Models;
-﻿namespace DnsTube.Core.Interfaces
+
+namespace DnsTube.Core.Interfaces
 {
 	public interface ISettingsService
 	{

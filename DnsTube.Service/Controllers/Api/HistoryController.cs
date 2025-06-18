@@ -1,4 +1,5 @@
 ﻿using DnsTube.Core.Interfaces;
+using DnsTube.Core.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
