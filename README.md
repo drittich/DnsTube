@@ -181,13 +181,15 @@ At this point you can load the solution in Visual Studio 2022 and run the applic
 
 We all know the internet is a [series of tubes](https://en.wikipedia.org/wiki/Series_of_tubes). This application uses those very same tubes to update your DNS.
 
-## Contributing
+## Contributors
 
-Contributions are welcome!
+<a href="https://github.com/drittich/DnsTube/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=drittich/DnsTube" alt="DnsTube project contributors" />
+</a>
 
-## Authors
+## Star History
 
-* **D'Arcy Rittich**
+[![Star History Chart](https://api.star-history.com/svg?repos=drittich/DnsTube&type=Timeline)](https://www.star-history.com/#drittich/DnsTube&Timeline)
 
 ## License
 
