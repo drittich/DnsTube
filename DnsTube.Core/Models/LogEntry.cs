@@ -2,7 +2,7 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace DnsTube.Core.Interfaces
+namespace DnsTube.Core.Models
 {
 	public class LogEntry
 	{

@@ -1,3 +1,4 @@
+using DnsTube.Core.Models;
 ﻿using DnsTube.Core.Enums;
 
 namespace DnsTube.Core.Interfaces

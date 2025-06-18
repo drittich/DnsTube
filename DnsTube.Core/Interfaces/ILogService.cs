@@ -1,3 +1,4 @@
+using DnsTube.Core.Models;
 ﻿using Microsoft.Extensions.Logging;
 
 namespace DnsTube.Core.Interfaces

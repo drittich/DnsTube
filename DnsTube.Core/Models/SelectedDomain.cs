@@ -1,4 +1,4 @@
-﻿namespace DnsTube.Core.Interfaces
+﻿namespace DnsTube.Core.Models
 {
 	public class SelectedDomain
 	{

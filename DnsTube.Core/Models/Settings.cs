@@ -2,7 +2,7 @@
 
 using DnsTube.Core.Enums;
 
-namespace DnsTube.Core.Interfaces
+namespace DnsTube.Core.Models
 {
 	public class Settings : ISettings
 	{
