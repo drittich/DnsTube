@@ -32,19 +32,26 @@ namespace DnsTube.Service.Controllers.Api
 		{
 			var zones = await _cloudflareService.GetAllDnsRecordsByZoneAsync();
 			var settings = await _settingsService.GetAsync();
-
+	
 			//map zones to DnsEntryViewItem
-			var dnsEntries = zones.Select(d => new Core.Models.DnsEntry
+			var dnsEntries = zones.Select(d =>
 			{
-				UpdateCloudflare = settings.SelectedDomains.Any(s => s.ZoneName == d.zone_name && s.DnsName == d.name && s.Type == d.type),
-				DnsName = d.name,
-				Type = d.type,
-				Address = d.content,
-				TTL = d.ttl,
-				Proxied = d.proxied,
-				ZoneName = d.zone_name
+				var selectedDomain = settings.SelectedDomains.FirstOrDefault(s =>
+					s.ZoneName == d.zone_name && s.DnsName == d.name && s.Type == d.type);
+	
+				return new Core.Models.DnsEntry
+				{
+					UpdateCloudflare = selectedDomain != null,
+					DnsName = d.name,
+					Type = d.type,
+					Address = d.content,
+					TTL = d.ttl,
+					Proxied = d.proxied,
+					ZoneName = d.zone_name,
+					NetworkAdapterName = selectedDomain?.NetworkAdapterName
+				};
 			});
-
+	
 			return dnsEntries;
 		}
 

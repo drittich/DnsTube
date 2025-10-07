@@ -107,13 +107,13 @@ namespace DnsTube.Core.Services
 		{
 			var adapters = new List<NetworkAdapter>();
 			var candidateAdapters = NetworkInterface.GetAllNetworkInterfaces();
-
+	
 			foreach (var adapter in candidateAdapters)
 			{
 				var interNetworkAddresses = adapter
 					.GetIPProperties().UnicastAddresses
 					.Where(a => a.Address.AddressFamily == AddressFamily.InterNetwork);
-
+	
 				if (interNetworkAddresses.Any())
 				{
 					adapters.Add(new NetworkAdapter()
@@ -123,8 +123,55 @@ namespace DnsTube.Core.Services
 					});
 				}
 			}
-
+	
 			return adapters;
+		}
+	
+		public string? GetIpAddressFromAdapter(string? adapterName, IpSupport protocol)
+		{
+			if (string.IsNullOrWhiteSpace(adapterName) || adapterName == "_PUBLIC_")
+				return null; // Signal to use public IP
+	
+			var addressFamily = protocol == IpSupport.IPv4
+				? AddressFamily.InterNetwork
+				: AddressFamily.InterNetworkV6;
+	
+			var adapter = NetworkInterface.GetAllNetworkInterfaces()
+				.FirstOrDefault(a => a.Name == adapterName);
+	
+			if (adapter == null)
+			{
+				_logService.WriteAsync($"Network adapter '{adapterName}' not found", LogLevel.Warning).Wait();
+				return null;
+			}
+	
+			var address = adapter.GetIPProperties().UnicastAddresses
+				.FirstOrDefault(a => a.Address.AddressFamily == addressFamily);
+	
+			return address?.Address.ToString();
+		}
+	
+		public async Task<string?> GetIpAddressForRecord(SelectedDomain domain, IpSupport protocol, string? publicIpAddress)
+		{
+			// If no adapter specified or "_PUBLIC_", use public IP
+			if (string.IsNullOrWhiteSpace(domain.NetworkAdapterName) ||
+				domain.NetworkAdapterName == "_PUBLIC_")
+			{
+				return publicIpAddress;
+			}
+	
+			// Get IP from specified adapter
+			var adapterIp = GetIpAddressFromAdapter(domain.NetworkAdapterName, protocol);
+	
+			if (adapterIp == null)
+			{
+				await _logService.WriteAsync(
+					$"Failed to get IP from adapter '{domain.NetworkAdapterName}', falling back to public IP",
+					LogLevel.Warning);
+				return publicIpAddress;
+			}
+	
+			return adapterIp;
 		}
 	}
 }

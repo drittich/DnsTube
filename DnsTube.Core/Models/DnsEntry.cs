@@ -9,5 +9,6 @@
 		public int? TTL { get; set; }
 		public bool? Proxied { get; set; }
 		public string? ZoneName { get; set; }
+		public string? NetworkAdapterName { get; set; }
 	}
 }

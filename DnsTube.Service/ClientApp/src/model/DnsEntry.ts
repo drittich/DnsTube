@@ -6,4 +6,5 @@ export class DnsEntry {
 	public ttl: number | undefined;
 	public proxied: boolean | undefined;
 	public zoneName: string | undefined;
+	public networkAdapterName?: string | null;
 }

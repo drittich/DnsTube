@@ -32,20 +32,20 @@ namespace DnsTube.Core.Services
 		public async Task<bool> UpdateDnsRecordsAsync(IpSupport protocol, string publicIpAddress)
 		{
 			bool updateWasDone = false;
-
+	
 			var typesToUpdateForThisProtocol = new List<string> {
 					"SPF",
 					"TXT",
 					protocol == IpSupport.IPv4 ? "A" : "AAAA"
 				};
-
+	
 			// Get requested entries to update
 			List<Result>? potentialEntriesToUpdate = null;
 			var settings = await _settingsService.GetAsync();
 			try
 			{
 				var allRecordsByZone = await GetAllDnsRecordsByZoneAsync();
-
+	
 				potentialEntriesToUpdate = allRecordsByZone.Where(d => settings.SelectedDomains.Any(s =>
 					s.ZoneName == d.zone_name
 					&& s.DnsName == d.name
@@ -61,27 +61,53 @@ namespace DnsTube.Core.Services
 					await _logService.WriteAsync(ex.InnerException.Message, LogLevel.Error);
 				}
 			}
-
+	
 			// TODO:determine which specific ones need updating
 			if (potentialEntriesToUpdate == null || !potentialEntriesToUpdate.Any())
 				return false;
-
+	
 			foreach (var entry in potentialEntriesToUpdate)
 			{
+				// Find matching domain configuration
+				var domainConfig = settings.SelectedDomains.FirstOrDefault(s =>
+					s.ZoneName == entry.zone_name &&
+					s.DnsName == entry.name &&
+					s.Type == entry.type);
+	
+				if (domainConfig == null)
+					continue;
+	
+				// Resolve IP per-record based on configuration
+				string? ipAddress = await _ipAddressService.GetIpAddressForRecord(domainConfig, protocol, publicIpAddress);
+	
+				if (ipAddress == null)
+				{
+					await _logService.WriteAsync(
+						$"Skipping {entry.type} record [{entry.name}] - no IP available",
+						LogLevel.Warning);
+					continue;
+				}
+	
 				string content;
 				if (entry.type == "SPF" || entry.type == "TXT")
-					content = UpdateDnsRecordContent(protocol, entry.content, publicIpAddress);
+					content = UpdateDnsRecordContent(protocol, entry.content, ipAddress);
 				else
-					content = publicIpAddress;
-
+					content = ipAddress;
+	
 				if (entry.content == content)
 					continue;
-
+	
 				try
 				{
 					await UpdateDnsAsync(protocol, entry.zone_id, entry.id, entry.type, entry.name, content, entry.ttl, entry.proxied);
 					updateWasDone = true;
-					await _logService.WriteAsync($"Updated {entry.type} record [{entry.name}] in zone [{entry.zone_name}] to {content}", LogLevel.Information);
+	
+					var source = string.IsNullOrWhiteSpace(domainConfig.NetworkAdapterName) ||
+								domainConfig.NetworkAdapterName == "_PUBLIC_"
+								? "public IP"
+								: $"adapter '{domainConfig.NetworkAdapterName}'";
+	
+					await _logService.WriteAsync($"Updated {entry.type} record [{entry.name}] in zone [{entry.zone_name}] to {content} from {source}", LogLevel.Information);
 				}
 				catch (Exception ex)
 				{
@@ -89,7 +115,7 @@ namespace DnsTube.Core.Services
 					await _logService.WriteAsync(ex.Message, LogLevel.Error);
 				}
 			}
-
+	
 			return updateWasDone;
 		}
 

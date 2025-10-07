@@ -8,5 +8,7 @@ namespace DnsTube.Core.Interfaces
 		Task<string?> GetPublicIpAddressAsync(IpSupport protocol);
 		bool IsValidIpAddress(IpSupport protocol, string ipString);
 		List<NetworkAdapter> GetNetworkAdapters();
+		string? GetIpAddressFromAdapter(string? adapterName, IpSupport protocol);
+		Task<string?> GetIpAddressForRecord(SelectedDomain domain, IpSupport protocol, string? publicIpAddress);
 	}
 }

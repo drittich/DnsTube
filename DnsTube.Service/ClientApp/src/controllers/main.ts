@@ -6,11 +6,12 @@ import { format, parseISO, isValid, intlFormatDistance } from 'date-fns'
 import linkifyHtml from "linkify-html";
 import "linkify-plugin-ip";
 import { deleteLogAsync, getLogAsync } from '../services/log';
-import { getRunInfoAsync, getSettingsAsync, saveDomainsAsync } from '../services/settings';
+import { getRunInfoAsync, getSettingsAsync, saveDomainsAsync, getNetworkAdapters } from '../services/settings';
 import { getIp } from '../services/ip';
 import { getDnsEntriesAsync, updateDnsAsync } from '../services/dns';
 import { Settings } from '../model/Settings';
 import { SelectedDomain } from '../model/SelectedDomain';
+// import { NetworkAdapter } from '../model/NetworkAdapter';
 
 let _settings: Settings | null = null;
 
@@ -173,6 +174,7 @@ async function getSelectedDnsEntries() {
 
 	//TODO: if dnsEntries is null, show error message
 	let dnsEntries = await getDnsEntriesAsync();
+	let adapters = await getNetworkAdapters();
 	let customTtl: boolean = false;
 	dnsEntries!.forEach((entry, i) => {
 		let row = document.createElement('tr');
@@ -198,6 +200,40 @@ async function getSelectedDnsEntries() {
 		row.insertCell().innerHTML = entry.type!;
 		row.insertCell().innerHTML = linkifyHtml(entry.dnsName!);
 		row.insertCell().innerHTML = `<span class="word-break">${linkifyHtml(entry.address!)}</span>`;
+		
+		// NEW: IP Source dropdown cell
+		let adapterSelect = document.createElement('select');
+		adapterSelect.name = `dns-entry-adapter${i}`;
+		adapterSelect.id = `dns-entry-adapter${i}`;
+		adapterSelect.classList.add("dns-entry-adapter");
+		adapterSelect.setAttribute("data-zone-name", entry.zoneName!);
+		adapterSelect.setAttribute("data-dns-name", entry.dnsName!);
+		adapterSelect.setAttribute("data-dns-type", entry.type!);
+		
+		// Add "Public IP" default option
+		let publicOption = document.createElement('option');
+		publicOption.value = '_PUBLIC_';
+		publicOption.text = 'Public IP';
+		adapterSelect.appendChild(publicOption);
+		
+		// Add network adapters
+		adapters?.forEach(adapter => {
+			let option = document.createElement('option');
+			option.value = adapter.name;
+			option.text = `${adapter.name} (${adapter.ipAddress})`;
+			adapterSelect.appendChild(option);
+		});
+		
+		// Set current selection
+		if (entry.networkAdapterName && entry.networkAdapterName !== '_PUBLIC_') {
+			adapterSelect.value = entry.networkAdapterName;
+		} else {
+			adapterSelect.value = '_PUBLIC_';
+		}
+		
+		adapterSelect.addEventListener('change', saveDnsUpdatable);
+		row.insertCell().appendChild(adapterSelect);
+		
 		let ttlDisplay = entry.ttl! == 1 ? 'Auto' : (entry.ttl! / 60).toString();
 		if (ttlDisplay != 'Auto')
 			customTtl = true;
@@ -220,10 +256,15 @@ async function saveDnsUpdatable() {
 	let selectedDomainEls = document.querySelectorAll(".dns-entry-update:checked") as NodeListOf<HTMLInputElement>;
 	let data: SelectedDomain[] = [];
 	selectedDomainEls.forEach((el) => {
+		// Get corresponding adapter dropdown
+		let index = el.name.replace('dns-entry-update', '');
+		let adapterSelect = document.getElementById(`dns-entry-adapter${index}`) as HTMLSelectElement;
+		
 		let sd = new SelectedDomain();
 		sd.zoneName = el.getAttribute("data-zone-name")!;
 		sd.dnsName = el.getAttribute("data-dns-name")!;
 		sd.type = el.getAttribute("data-dns-type")!;
+		sd.networkAdapterName = adapterSelect?.value === '_PUBLIC_' ? null : adapterSelect?.value;
 		data.push(sd);
 	});
 
