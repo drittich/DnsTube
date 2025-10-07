@@ -61,6 +61,12 @@ input:not([type=checkbox], [type=radio]), select, textarea {
 	padding: 10px 8px 10px 8px;
 }
 
+.dns-entry-adapter:disabled {
+	opacity: 0.6;
+	cursor: not-allowed !important;
+	background-color: var(--form-element-disabled-background-color);
+}
+
 @media only screen and (min-width: 992px) {
 	input:not([type=checkbox], [type=radio]), select, textarea {
 		width: 70%;

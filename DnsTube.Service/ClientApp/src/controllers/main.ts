@@ -15,6 +15,48 @@ import { SelectedDomain } from '../model/SelectedDomain';
 
 let _settings: Settings | null = null;
 
+/**
+ * Checks if an IPv4 address is private/internal
+ * Private ranges: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8
+ */
+function isPrivateIPv4(ip: string): boolean {
+	const parts = ip.split('.').map(Number);
+	if (parts.length !== 4 || parts.some(isNaN)) return false;
+	
+	// 10.0.0.0/8
+	if (parts[0] === 10) return true;
+	
+	// 172.16.0.0/12
+	if (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) return true;
+	
+	// 192.168.0.0/16
+	if (parts[0] === 192 && parts[1] === 168) return true;
+	
+	// 127.0.0.0/8 (loopback)
+	if (parts[0] === 127) return true;
+	
+	return false;
+}
+
+/**
+ * Checks if an IPv6 address is private/internal
+ * Private ranges: fc00::/7 (ULA), fe80::/10 (link-local), ::1/128 (loopback)
+ */
+function isPrivateIPv6(ip: string): boolean {
+	const lower = ip.toLowerCase();
+	
+	// ::1 (loopback)
+	if (lower === '::1') return true;
+	
+	// fc00::/7 (ULA - Unique Local Addresses)
+	if (lower.startsWith('fc') || lower.startsWith('fd')) return true;
+	
+	// fe80::/10 (link-local)
+	if (lower.startsWith('fe80:')) return true;
+	
+	return false;
+}
+
 init();
 
 async function init() {
@@ -210,25 +252,71 @@ async function getSelectedDnsEntries() {
 		adapterSelect.setAttribute("data-dns-name", entry.dnsName!);
 		adapterSelect.setAttribute("data-dns-type", entry.type!);
 		
+		// Improved logic:
+		// 1. Enable dropdown for A/AAAA records (to allow selecting from multiple public interfaces)
+		// 2. For proxied records: exclude private IP adapters from dropdown (Cloudflare limitation)
+		// 3. For non-proxied records: include all adapters
+		// 4. Disable dropdown for non A/AAAA types (MX, NS, etc.)
+		const normalizedType = (entry.type || '').toString().trim().toUpperCase();
+		const isAorAAAA = normalizedType === 'A' || normalizedType === 'AAAA';
+		const isProxied = entry.proxied === true;
+
+		// Attach attributes for validation
+		adapterSelect.setAttribute('data-type', entry.type || '');
+		adapterSelect.setAttribute('data-proxied', isProxied.toString());
+
 		// Add "Public IP" default option
 		let publicOption = document.createElement('option');
 		publicOption.value = '_PUBLIC_';
 		publicOption.text = 'Public IP';
 		adapterSelect.appendChild(publicOption);
-		
-		// Add network adapters
-		adapters?.forEach(adapter => {
-			let option = document.createElement('option');
-			option.value = adapter.name;
-			option.text = `${adapter.name} (${adapter.ipAddress})`;
-			adapterSelect.appendChild(option);
-		});
-		
+
+		// Add adapters for A/AAAA records
+		if (isAorAAAA) {
+			adapters?.forEach(adapter => {
+				// Detect if adapter has private IP
+				const isPrivate = adapter.ipAddress.includes(':')
+					? isPrivateIPv6(adapter.ipAddress)
+					: isPrivateIPv4(adapter.ipAddress);
+				
+				// Skip private adapters if the record is proxied (Cloudflare requires public IPs)
+				if (isProxied && isPrivate) {
+					return; // Don't add this adapter to the dropdown
+				}
+
+				let option = document.createElement('option');
+				option.value = adapter.name;
+				const ipLabel = isPrivate ? '🏠 Private' : '🌐 Public';
+				option.text = `${adapter.name} (${adapter.ipAddress}) ${ipLabel}`;
+				option.setAttribute('data-private', isPrivate.toString());
+				adapterSelect.appendChild(option);
+			});
+		}
+
 		// Set current selection
-		if (entry.networkAdapterName && entry.networkAdapterName !== '_PUBLIC_') {
-			adapterSelect.value = entry.networkAdapterName;
+		// If previously selected adapter was private and record is now proxied, reset to Public IP
+		let selectedAdapter = entry.networkAdapterName;
+		if (isAorAAAA && selectedAdapter && selectedAdapter !== '_PUBLIC_') {
+			// Check if the selected adapter is still in the dropdown
+			const optionExists = Array.from(adapterSelect.options).some(opt => opt.value === selectedAdapter);
+			if (optionExists) {
+				adapterSelect.value = selectedAdapter;
+			} else {
+				// Adapter was filtered out (likely private IP on proxied record), reset to Public IP
+				adapterSelect.value = '_PUBLIC_';
+				console.warn(`Adapter "${selectedAdapter}" for "${entry.dnsName}" was reset to Public IP (likely private IP on proxied record)`);
+			}
 		} else {
 			adapterSelect.value = '_PUBLIC_';
+		}
+
+		// Disable dropdown only for non A/AAAA types
+		if (!isAorAAAA) {
+			adapterSelect.disabled = true;
+			adapterSelect.title = `${normalizedType} records must use a public IP address`;
+			adapterSelect.style.cursor = 'not-allowed';
+		} else if (isProxied) {
+			adapterSelect.title = 'Proxied by Cloudflare - only public IP addresses shown';
 		}
 		
 		adapterSelect.addEventListener('change', saveDnsUpdatable);
@@ -238,7 +326,8 @@ async function getSelectedDnsEntries() {
 		if (ttlDisplay != 'Auto')
 			customTtl = true;
 		row.insertCell().innerHTML = ttlDisplay;
-		row.insertCell().innerHTML = entry.proxied!.toString();
+		// Safely display proxied status (treat only true as proxied)
+		row.insertCell().innerHTML = (entry.proxied === true).toString();
 		tableBodyEl.appendChild(row);
 	});
 
@@ -255,6 +344,8 @@ async function getSelectedDnsEntries() {
 async function saveDnsUpdatable() {
 	let selectedDomainEls = document.querySelectorAll(".dns-entry-update:checked") as NodeListOf<HTMLInputElement>;
 	let data: SelectedDomain[] = [];
+	let validationErrors: string[] = [];
+	
 	selectedDomainEls.forEach((el) => {
 		// Get corresponding adapter dropdown
 		let index = el.name.replace('dns-entry-update', '');
@@ -265,8 +356,31 @@ async function saveDnsUpdatable() {
 		sd.dnsName = el.getAttribute("data-dns-name")!;
 		sd.type = el.getAttribute("data-dns-type")!;
 		sd.networkAdapterName = adapterSelect?.value === '_PUBLIC_' ? null : adapterSelect?.value;
+		
+		// Validate: non-A/AAAA records must use public IP
+		if (sd.type !== 'A' && sd.type !== 'AAAA' && sd.networkAdapterName) {
+			validationErrors.push(`${sd.dnsName} (${sd.type}): This record type requires a public IP address`);
+		}
+		
+		// Validate: proxied records with private adapters (shouldn't happen with current UI)
+		const isProxied = adapterSelect?.getAttribute('data-proxied') === 'true';
+		if (isProxied && sd.networkAdapterName) {
+			// Check if selected adapter is private by looking at the selected option
+			const selectedOption = adapterSelect.querySelector(`option[value="${sd.networkAdapterName}"]`);
+			const isPrivate = selectedOption?.getAttribute('data-private') === 'true';
+			if (isPrivate) {
+				validationErrors.push(`${sd.dnsName}: Proxied records cannot use private IP addresses (Cloudflare limitation)`);
+			}
+		}
+		
 		data.push(sd);
 	});
+	
+	// Show validation errors if any
+	if (validationErrors.length > 0) {
+		alert('Validation errors:\n\n' + validationErrors.join('\n'));
+		return;
+	}
 
 	await saveDomainsAsync(data);
 }
