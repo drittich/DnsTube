@@ -59,6 +59,7 @@ DnsTube is a Windows service that helps you access your computer remotely even i
 * Can update A (IPv4), AAAA (IPv6), SPF, and TXT records
 * Detects network changes and updates DNS automatically
 * Supports split VPN tunneling and lets you choose which network adapter to use
+* **Per-entry adapter selection** - Choose a specific network adapter for each DNS entry individually
 * Supports both Cloudflare API keys and tokens (can be scoped to specific zones)
 
 ## Requirements
@@ -114,7 +115,20 @@ After that, you'll need to generate an API Token (preferred) or Key in order to 
 
 Then, go to the DnsTube settings page and enter your email address and API key or token. Return to the main tab (refresh if necessary); you should now see a table listing your Cloudflare DNS entries. Check off the ones you want to dynamically update and the service should take it from there.
 
-You can use [nslookup](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup) to make sure DNS resolution is working correctly, e.g., 
+**Network Adapter Selection**: For each DNS entry you enable, you can choose which network adapter to use for determining the IP address. This is particularly useful if you:
+- Have multiple network connections (e.g., Ethernet and Wi-Fi)
+- Use a VPN and want certain domains to use your VPN IP while others use your direct connection
+- Want different DNS entries to reflect different network interfaces
+
+To select an adapter for a specific DNS entry:
+1. On the main page, locate the DNS entry you want to configure
+2. Click the adapter dropdown next to the entry
+3. Select the desired network adapter from the list
+4. The service will use the IP address from that adapter when updating this DNS entry
+
+If no specific adapter is selected, the service will use the default adapter (typically the one with internet connectivity).
+
+You can use [nslookup](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/nslookup) to make sure DNS resolution is working correctly, e.g.,
 ```
 nslookup mydomain.com
 ```
