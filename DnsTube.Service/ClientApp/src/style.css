@@ -51,6 +51,14 @@ h4 {
 
 input:not([type=checkbox], [type=radio]), select, textarea {
 	width: 95%;
+	padding: 10px 8px 10px 8px;
+}
+.dns-entry-adapter {
+	width: 100%;
+	margin-bottom: 0px;
+	line-height: 18px;
+	font-size: 17.5px;
+	padding: 10px 8px 10px 8px;
 }
 
 @media only screen and (min-width: 992px) {
@@ -83,4 +91,22 @@ label {
 }
 article {
 	padding: 28px;
+}
+/* Make container wider on larger screens */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1400px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .container {
+    max-width: 1600px;
+  }
 }
