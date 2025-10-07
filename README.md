@@ -46,7 +46,7 @@ DnsTube is a Windows service that helps you access your computer remotely even i
 
 ## Quick Start
 
-1. [Download the latest release](https://github.com/drittich/DnsTube/releases/latest).
+1. [Download the latest release](https://github.com/drittich/DnsTube/releases).
 2. Install [.NET 8](https://dotnet.microsoft.com/en-us/download) if needed.
 3. Extract the package, open a command prompt as Administrator, and run `install-service.bat`.
 4. Open [http://localhost:5666](http://localhost:5666) to complete setup.
@@ -74,7 +74,7 @@ DnsTube is a Windows service that helps you access your computer remotely even i
 
 ## Downloading 
 
-Head over to the [Releases](https://github.com/drittich/DnsTube/releases/latest) page to download the latest binary.
+Head over to the [Releases](https://github.com/drittich/DnsTube/releases) page to download the latest binary.
 
 ## Installing
 
