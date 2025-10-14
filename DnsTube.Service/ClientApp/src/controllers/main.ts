@@ -241,9 +241,49 @@ async function getSelectedDnsEntries() {
 		row.insertCell().appendChild(checkbox);
 		row.insertCell().innerHTML = entry.type!;
 		row.insertCell().innerHTML = linkifyHtml(entry.dnsName!);
-		row.insertCell().innerHTML = `<span class="word-break">${linkifyHtml(entry.address!)}</span>`;
 		
-		// NEW: IP Source dropdown cell
+		// Address column with truncation and More/Less toggle
+		const addressCell = row.insertCell();
+		const maxLength = 75;
+		const fullAddress = entry.address!;
+		const linkedAddress = linkifyHtml(fullAddress);
+
+		if (fullAddress.length > maxLength) {
+			const truncated = fullAddress.substring(0, maxLength);
+			
+			addressCell.innerHTML = `
+				<span class="address-content">
+					<span class="address-truncated">${linkifyHtml(truncated)}...</span>
+					<span class="address-full">${linkedAddress}</span>
+					<a class="address-more-link" data-expanded="false">More</a>
+				</span>
+			`;
+			
+			// Add click handler for More/Less toggle
+			const moreLink = addressCell.querySelector('.address-more-link') as HTMLAnchorElement;
+			moreLink.addEventListener('click', (e) => {
+				e.preventDefault();
+				const isExpanded = moreLink.getAttribute('data-expanded') === 'true';
+				const truncatedSpan = addressCell.querySelector('.address-truncated') as HTMLSpanElement;
+				const fullSpan = addressCell.querySelector('.address-full') as HTMLSpanElement;
+				
+				if (isExpanded) {
+					truncatedSpan.classList.remove('hide');
+					fullSpan.classList.remove('show');
+					moreLink.textContent = 'More';
+					moreLink.setAttribute('data-expanded', 'false');
+				} else {
+					truncatedSpan.classList.add('hide');
+					fullSpan.classList.add('show');
+					moreLink.textContent = 'Less';
+					moreLink.setAttribute('data-expanded', 'true');
+				}
+			});
+		} else {
+			addressCell.innerHTML = `<span class="word-break">${linkedAddress}</span>`;
+		}
+		
+		// IP Source dropdown cell
 		let adapterSelect = document.createElement('select');
 		adapterSelect.name = `dns-entry-adapter${i}`;
 		adapterSelect.id = `dns-entry-adapter${i}`;

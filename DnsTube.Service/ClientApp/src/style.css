@@ -116,3 +116,52 @@ article {
     max-width: 1600px;
   }
 }
+
+/* DNS Entries Table Styling */
+#dnsEntriesBody td:nth-child(3) {  /* Name column */
+  word-break: break-word;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  max-width: 200px;
+  min-width: 150px;
+}
+
+#dnsEntriesBody td:nth-child(4) {  /* Address column */
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  max-width: 250px;
+  min-width: 150px;
+}
+
+#dnsEntriesBody td:nth-child(5) {  /* IP Source column */
+  min-width: 200px;
+  max-width: 250px;
+}
+
+.address-content {
+  display: inline;
+}
+
+.address-more-link {
+  color: var(--primary);
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 4px;
+  font-size: 0.9em;
+}
+
+.address-more-link:hover {
+  opacity: 0.8;
+}
+
+.address-full {
+  display: none;
+}
+
+.address-full.show {
+  display: inline;
+}
+
+.address-truncated.hide {
+  display: none;
+}
