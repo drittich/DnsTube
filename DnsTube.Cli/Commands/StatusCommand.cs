@@ -12,7 +12,8 @@ namespace DnsTube.Cli.Commands
 	/// </summary>
 	public static class StatusCommand
 	{
-		public static Command Create()
+		public static Command Create(Option<string?> configFileOption, Option<string?> configFileOnlyOption,
+			Option<bool> jsonOption, Option<bool> verboseOption, Option<bool> noColorOption)
 		{
 			var command = new Command("status", "Display current status and configuration");
 
@@ -41,9 +42,8 @@ namespace DnsTube.Cli.Commands
 
 				await ExecuteAsync(options, checkIp, checkService);
 			},
-			checkIpOption, checkServiceOption,
-			new Argument<string?>("configFile"), new Argument<string?>("configFileOnly"),
-			new Argument<bool>("json"), new Argument<bool>("verbose"), new Argument<bool>("noColor"));
+			checkIpOption, checkServiceOption, configFileOption, configFileOnlyOption,
+			jsonOption, verboseOption, noColorOption);
 
 			return command;
 		}

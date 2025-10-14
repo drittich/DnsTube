@@ -50,12 +50,18 @@ namespace DnsTube.Cli
 			rootCommand.AddGlobalOption(noColorOption);
 
 			// Create commands
-			var updateCommand = UpdateCommand.Create();
-			var configCommand = ConfigCommand.Create();
-			var domainsCommand = DomainsCommand.Create();
-			var statusCommand = StatusCommand.Create();
-			var listCommand = ListCommand.Create();
-			var testCommand = TestCommand.Create();
+			var updateCommand = UpdateCommand.Create(configFileOption, configFileOnlyOption,
+				jsonOption, verboseOption, noColorOption);
+			var configCommand = ConfigCommand.Create(configFileOption, configFileOnlyOption,
+				jsonOption, verboseOption, noColorOption);
+			var domainsCommand = DomainsCommand.Create(configFileOption, configFileOnlyOption,
+				jsonOption, verboseOption, noColorOption);
+			var statusCommand = StatusCommand.Create(configFileOption, configFileOnlyOption,
+				jsonOption, verboseOption, noColorOption);
+			var listCommand = ListCommand.Create(configFileOption, configFileOnlyOption,
+				jsonOption, verboseOption, noColorOption);
+			var testCommand = TestCommand.Create(configFileOption, configFileOnlyOption,
+				jsonOption, verboseOption, noColorOption);
 
 			// Add commands to root
 			rootCommand.AddCommand(updateCommand);

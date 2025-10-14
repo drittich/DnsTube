@@ -156,7 +156,7 @@ Examples:
 
 *(Implementation in progress)*
 
-#### `test` - Test Configuration
+#### `test` - Test Configuration and Connectivity
 
 ```bash
 dnstube test <subcommand> [options]
@@ -167,19 +167,35 @@ Subcommands:
   ip          Test IP address retrieval
 
 Options for 'connection':
-  --ipv4                  Test IPv4 connectivity
-  --ipv6                  Test IPv6 connectivity
+  --ipv4                  Test IPv4 connectivity only
+  --ipv6                  Test IPv6 connectivity only
 
 Options for 'ip':
-  --adapter <name>        Test specific adapter
+  --adapter <name>        Test specific network adapter
 
 Examples:
+  # Test API authentication
   dnstube test api
+  dnstube test api --verbose
+  
+  # Test network connectivity
+  dnstube test connection
   dnstube test connection --ipv4
+  dnstube test connection --ipv6
+  
+  # Test IP retrieval
+  dnstube test ip
   dnstube test ip --adapter Ethernet
+  dnstube test ip --verbose
+  
+  # JSON output for scripting
+  dnstube test api --json | jq .results.accessibleZones
 ```
 
-*(Implementation in progress)*
+The test command helps diagnose connectivity and configuration issues:
+- **connection**: Tests network connectivity to IP detection APIs, reports latency
+- **api**: Validates Cloudflare API credentials and lists accessible zones
+- **ip**: Tests IP address retrieval from configured APIs and network adapters
 
 ## Configuration Modes
 
