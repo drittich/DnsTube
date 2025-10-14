@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <CopyRazorGenerateFilesToPublishDirectory>true</CopyRazorGenerateFilesToPublishDirectory>
     <OutputType>Exe</OutputType>
-		<AssemblyVersion>3.0.0.0</AssemblyVersion>
+		<AssemblyVersion>3.0.1.0</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>full</DebugType>
