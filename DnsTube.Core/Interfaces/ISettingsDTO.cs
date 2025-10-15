@@ -7,6 +7,7 @@
 		string IPv4_API { get; set; }
 		string IPv6_API { get; set; }
 		bool IsUsingToken { get; set; }
+		[Obsolete("No longer used. Per-domain NetworkAdapterName should be used instead.")]
 		string NetworkAdapter { get; set; }
 		int ProtocolSupport { get; set; }
 		string PublicIpv4Address { get; set; }

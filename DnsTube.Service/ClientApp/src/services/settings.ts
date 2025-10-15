@@ -71,7 +71,7 @@ export async function getRunInfoAsync(): Promise<RunInfo | null> {
 export async function getNetworkAdapters(): Promise<NetworkAdapter[] | null> {
 	let response = await fetch("/api/settings/adapters");
 	if (response.ok) {
-		return await response.json();
+		return await response.json() as NetworkAdapter[];
 	}
 	else {
 		console.log(response.statusText);

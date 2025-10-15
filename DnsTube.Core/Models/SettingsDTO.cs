@@ -16,6 +16,7 @@ namespace DnsTube.Core.Models
 		public bool SkipCheckForNewReleases { get; set; }
 		public int UpdateIntervalMinutes { get; set; }
 		public required string ZoneIDs { get; set; }
+		[Obsolete("No longer used. Per-domain NetworkAdapterName should be used instead.")]
 		public required string NetworkAdapter { get; set; }
 	}
 }

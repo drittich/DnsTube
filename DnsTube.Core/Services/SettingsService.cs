@@ -43,7 +43,7 @@ namespace DnsTube.Core.Services
 						SkipCheckForNewReleases BOOLEAN NOT NULL CHECK (SkipCheckForNewReleases IN (0, 1)),
 						UpdateIntervalMinutes INTEGER,
 						ZoneIDs TEXT,
-						NetworkAdapter TEXT
+						NetworkAdapter TEXT  -- Kept for backward compatibility with existing databases
 					);
 				");
 
@@ -76,8 +76,7 @@ namespace DnsTube.Core.Services
 						SelectedDomains,
 						SkipCheckForNewReleases,
 						UpdateIntervalMinutes,
-						ZoneIDs,
-						NetworkAdapter
+						ZoneIDs
 					from Settings;";
 
 				using (var cn = await _dbService.GetConnectionAsync())
@@ -93,8 +92,7 @@ namespace DnsTube.Core.Services
 						settings.ZoneIDs = string.Empty;
 						settings.IPv4_API = "https://api.ipify.org/";
 						settings.IPv6_API = "https://api64.ipify.org/";
-						settings.NetworkAdapter = string.Empty;
-
+	
 						await SaveAsync(settings);
 						_currentSettings = settings;
 					}
@@ -127,8 +125,7 @@ namespace DnsTube.Core.Services
 						SelectedDomains = JsonSerializer.Serialize(settings.SelectedDomains),
 						SkipCheckForNewReleases = settings.SkipCheckForNewReleases ? 1 : 0,
 						UpdateIntervalMinutes = settings.UpdateIntervalMinutes,
-						ZoneIDs = settings.ZoneIDs,
-						NetworkAdapter = settings.NetworkAdapter
+						ZoneIDs = settings.ZoneIDs
 					};
 					await cn.ExecuteAsync(@"
 						delete from Settings;
@@ -145,8 +142,7 @@ namespace DnsTube.Core.Services
 							SelectedDomains,
 							SkipCheckForNewReleases,
 							UpdateIntervalMinutes,
-							ZoneIDs,
-							NetworkAdapter
+							ZoneIDs
 						) values
 						(
 							@ApiKeyOrToken,
@@ -160,8 +156,7 @@ namespace DnsTube.Core.Services
 							@SelectedDomains,
 							@SkipCheckForNewReleases,
 							@UpdateIntervalMinutes,
-							@ZoneIDs,
-							@NetworkAdapter
+							@ZoneIDs
 						)", parms);
 					txn.Commit();
 				}
@@ -209,8 +204,7 @@ namespace DnsTube.Core.Services
 				SelectedDomains = JsonSerializer.Serialize(domains),
 				SkipCheckForNewReleases = settings.SkipCheckForNewReleases ? 1 : 0,
 				UpdateIntervalMinutes = settings.UpdateIntervalMinutes,
-				ZoneIDs = settings.ZoneIDs,
-				NetworkAdapter = settings.NetworkAdapter
+				ZoneIDs = settings.ZoneIDs
 			};
 
 			using (var cn = await _dbService.GetConnectionAsync())
@@ -232,8 +226,7 @@ namespace DnsTube.Core.Services
 							SelectedDomains,
 							SkipCheckForNewReleases,
 							UpdateIntervalMinutes,
-							ZoneIDs,
-							NetworkAdapter
+							ZoneIDs
 						) values
 						(
 							@ApiKeyOrToken,
@@ -247,8 +240,7 @@ namespace DnsTube.Core.Services
 							@SelectedDomains,
 							@SkipCheckForNewReleases,
 							@UpdateIntervalMinutes,
-							@ZoneIDs,
-							@NetworkAdapter
+							@ZoneIDs
 						)", parms);
 					txn.Commit();
 				}

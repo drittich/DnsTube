@@ -17,6 +17,5 @@ namespace DnsTube.Core.Interfaces
 		bool SkipCheckForNewReleases { get; set; }
 		int UpdateIntervalMinutes { get; set; }
 		string? ZoneIDs { get; set; }
-		string? NetworkAdapter { get; set; }
 	}
 }

@@ -38,7 +38,6 @@ namespace DnsTube.Cli.Services
 				IPv4_API = dto.IPv4_API ?? "https://api.ipify.org/",
 				IPv6_API = dto.IPv6_API ?? "https://api64.ipify.org/",
 				IsUsingToken = dto.IsUsingToken,
-				NetworkAdapter = dto.NetworkAdapter,
 				ProtocolSupport = (IpSupport)dto.ProtocolSupport,
 				PublicIpv4Address = dto.PublicIpv4Address ?? string.Empty,
 				PublicIpv6Address = dto.PublicIpv6Address ?? string.Empty,
@@ -60,7 +59,6 @@ namespace DnsTube.Cli.Services
 				IPv4_API = settings.IPv4_API,
 				IPv6_API = settings.IPv6_API,
 				IsUsingToken = settings.IsUsingToken,
-				NetworkAdapter = settings.NetworkAdapter,
 				ProtocolSupport = (int)settings.ProtocolSupport,
 				PublicIpv4Address = settings.PublicIpv4Address,
 				PublicIpv6Address = settings.PublicIpv6Address,
@@ -119,7 +117,6 @@ namespace DnsTube.Cli.Services
 			public string? IPv4_API { get; set; }
 			public string? IPv6_API { get; set; }
 			public bool IsUsingToken { get; set; }
-			public string? NetworkAdapter { get; set; }
 			public int ProtocolSupport { get; set; }
 			public string? PublicIpv4Address { get; set; }
 			public string? PublicIpv6Address { get; set; }

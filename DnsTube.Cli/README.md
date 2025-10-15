@@ -263,8 +263,8 @@ Perfect for:
       "networkAdapterName": "Ethernet"
     }
   ],
-  "skipCheckForNewReleases": false,
-  "networkAdapter": "_DEFAULT_"
+  "skipCheckForNewReleases": false
+  // Note: Legacy 'networkAdapter' field removed - use per-domain 'networkAdapterName' instead
 }
 ```
 
@@ -273,27 +273,28 @@ Perfect for:
 - `1` = IPv6 only  
 - `2` = Both IPv4 and IPv6
 
-### Network Adapter Values
-- `_PUBLIC_` = Use public IP address (default)
-- `_DEFAULT_` = Use default network adapter
-- `<adapter name>` = Use specific adapter (e.g., "Ethernet", "Wi-Fi")
+## Network Adapters (Per-Domain Configuration)
 
-## Per-Domain Network Adapters
-
-Each DNS entry can specify which network adapter to use for IP address retrieval:
+DnsTube uses **per-domain network adapter configuration** exclusively. Each DNS entry can specify which network adapter to use for IP address retrieval:
 
 ```bash
 # Use public IP (default)
 dnstube domains add --zone example.com --name server.example.com --type A
 
-# Use specific network adapter
+# Use specific network adapter for a local domain
 dnstube domains add --zone example.com --name local.example.com --type A --adapter Ethernet
 ```
 
+### Network Adapter Values
+- `_PUBLIC_` = Use public IP address (default when not specified)
+- `<adapter name>` = Use specific adapter's IP (e.g., "Ethernet", "Wi-Fi")
+
 When updating DNS records, the system will:
 1. Use the public IP if `networkAdapterName` is null, empty, or `_PUBLIC_`
-2. Use the IP from the specified adapter otherwise
-3. Fall back to public IP if the adapter is not found
+2. Use the IP address from the specified adapter otherwise
+3. Fall back to public IP if the specified adapter is not found
+
+**Note**: There is no global network adapter setting. Each domain must specify its own adapter configuration.
 
 ## Exit Codes
 

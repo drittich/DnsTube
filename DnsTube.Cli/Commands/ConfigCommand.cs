@@ -87,7 +87,6 @@ namespace DnsTube.Cli.Commands
 							protocolSupport = settings.ProtocolSupport.ToString(),
 							ipv4Api = settings.IPv4_API,
 							ipv6Api = settings.IPv6_API,
-							networkAdapter = settings.NetworkAdapter,
 							selectedDomainsCount = settings.SelectedDomains.Count
 						}
 					};
@@ -105,7 +104,6 @@ namespace DnsTube.Cli.Commands
 				output.WriteInfo($"Protocol Support: {settings.ProtocolSupport}");
 				output.WriteInfo($"IPv4 API: {settings.IPv4_API}");
 				output.WriteInfo($"IPv6 API: {settings.IPv6_API}");
-				output.WriteInfo($"Network Adapter: {settings.NetworkAdapter ?? "(default)"}");
 				output.WriteInfo($"Selected Domains: {settings.SelectedDomains.Count}");
 
 				return 0;
@@ -152,11 +150,7 @@ namespace DnsTube.Cli.Commands
 			var protocolOption = new Option<string?>(
 				aliases: new[] { "--protocol" },
 				description: "Protocol support (IPv4, IPv6, or Both)");
-
-			var adapterOption = new Option<string?>(
-				aliases: new[] { "--adapter" },
-				description: "Network adapter name");
-
+	
 			command.AddOption(emailOption);
 			command.AddOption(tokenOption);
 			command.AddOption(apiKeyOption);
@@ -164,8 +158,7 @@ namespace DnsTube.Cli.Commands
 			command.AddOption(ipv4ApiOption);
 			command.AddOption(ipv6ApiOption);
 			command.AddOption(protocolOption);
-			command.AddOption(adapterOption);
-
+	
 			command.SetHandler(async (context) =>
 			{
 				var email = context.ParseResult.GetValueForOption(emailOption);
@@ -175,7 +168,6 @@ namespace DnsTube.Cli.Commands
 				var ipv4Api = context.ParseResult.GetValueForOption(ipv4ApiOption);
 				var ipv6Api = context.ParseResult.GetValueForOption(ipv6ApiOption);
 				var protocol = context.ParseResult.GetValueForOption(protocolOption);
-				var adapter = context.ParseResult.GetValueForOption(adapterOption);
 				var configFile = context.ParseResult.GetValueForOption(configFileOption);
 				var configFileOnly = context.ParseResult.GetValueForOption(configFileOnlyOption);
 				var json = context.ParseResult.GetValueForOption(jsonOption);
@@ -190,15 +182,15 @@ namespace DnsTube.Cli.Commands
 					Verbose = verbose,
 					NoColor = noColor
 				};
-
-				await ExecuteSetAsync(options, email, token, apiKey, interval, ipv4Api, ipv6Api, protocol, adapter);
+		
+				await ExecuteSetAsync(options, email, token, apiKey, interval, ipv4Api, ipv6Api, protocol);
 			});
 
 			return command;
 		}
 
 		private static async Task<int> ExecuteSetAsync(CliOptions options, string? email, string? token,
-			string? apiKey, int? interval, string? ipv4Api, string? ipv6Api, string? protocol, string? adapter)
+			string? apiKey, int? interval, string? ipv4Api, string? ipv6Api, string? protocol)
 		{
 			try
 			{
@@ -287,13 +279,7 @@ namespace DnsTube.Cli.Commands
 						return 1;
 					}
 				}
-
-				if (adapter != null)
-				{
-					settings.NetworkAdapter = adapter;
-					changes.Add($"Network Adapter: {adapter}");
-				}
-
+		
 				if (changes.Count == 0)
 				{
 					output.WriteWarning("No changes specified");
@@ -447,14 +433,7 @@ namespace DnsTube.Cli.Commands
 								return ValidationResult.Success();
 							}));
 				}
-
-				// Step 8: Network adapter
-				var setAdapter = AnsiConsole.Confirm("Specify a network adapter?", defaultValue: false);
-				if (setAdapter)
-				{
-					settings.NetworkAdapter = AnsiConsole.Ask<string>("Network adapter name:");
-				}
-
+		
 				// Show summary
 				AnsiConsole.WriteLine();
 				AnsiConsole.Write(new Rule("[yellow]Configuration Summary[/]"));
@@ -472,9 +451,7 @@ namespace DnsTube.Cli.Commands
 					table.AddRow("IPv4 API", settings.IPv4_API);
 				if (settings.ProtocolSupport != IpSupport.IPv4)
 					table.AddRow("IPv6 API", settings.IPv6_API);
-				if (!string.IsNullOrEmpty(settings.NetworkAdapter))
-					table.AddRow("Network Adapter", settings.NetworkAdapter);
-
+		
 				AnsiConsole.Write(table);
 				AnsiConsole.WriteLine();
 
@@ -631,7 +608,6 @@ namespace DnsTube.Cli.Commands
 					protocolSupport = settings.ProtocolSupport,
 					ipv4Api = settings.IPv4_API,
 					ipv6Api = settings.IPv6_API,
-					networkAdapter = settings.NetworkAdapter,
 					selectedDomains = settings.SelectedDomains
 				};
 
