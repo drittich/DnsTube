@@ -38,8 +38,21 @@ catch (Exception ex)
 	// Log the error but continue with service startup
 	// This ensures the service starts even if there are configuration issues
 	// The user can then access the UI to fix the configuration
-	Console.WriteLine($"Error during HTTP client configuration: {ex.Message}");
-	Console.WriteLine("Service will start with default configuration.");
+	
+	// Log to Windows Event Log for Windows Service scenarios
+	try
+	{
+		using var eventLog = new System.Diagnostics.EventLog("Application");
+		eventLog.Source = "DnsTube Service";
+		eventLog.WriteEntry($"Error during HTTP client configuration: {ex.Message}\nService will start with default configuration.", 
+			System.Diagnostics.EventLogEntryType.Warning);
+	}
+	catch
+	{
+		// If EventLog fails (e.g., not running as admin), fall back to console
+		Console.WriteLine($"Error during HTTP client configuration: {ex.Message}");
+		Console.WriteLine("Service will start with default configuration.");
+	}
 	
 	// Configure with default settings if initialization fails
 	ConfigureDefaultHttpClients(builder);
