@@ -28,8 +28,22 @@ builder.Host.UseWindowsService();
 builder.Services.AddSingleton<ISettingsService, SettingsService>();
 builder.Services.AddSingleton<IDbService, DbService>();
 
-var settingsService = builder.Services.BuildServiceProvider().GetRequiredService<ISettingsService>();
-await ConfigureHttpClientsAsync(builder, settingsService);
+try
+{
+	var settingsService = builder.Services.BuildServiceProvider().GetRequiredService<ISettingsService>();
+	await ConfigureHttpClientsAsync(builder, settingsService);
+}
+catch (Exception ex)
+{
+	// Log the error but continue with service startup
+	// This ensures the service starts even if there are configuration issues
+	// The user can then access the UI to fix the configuration
+	Console.WriteLine($"Error during HTTP client configuration: {ex.Message}");
+	Console.WriteLine("Service will start with default configuration.");
+	
+	// Configure with default settings if initialization fails
+	ConfigureDefaultHttpClients(builder);
+}
 
 builder.Services.AddSingleton<ICloudflareService, CloudflareService>();
 builder.Services.AddSingleton<IGitHubService, GitHubService>();
@@ -201,4 +215,34 @@ static string GetNetworkAdapterIPAddress(string? adapterName, AddressFamily addr
 	}
 
 	return ipAddress.ToString();
+}
+
+static void ConfigureDefaultHttpClients(WebApplicationBuilder builder)
+{
+	ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
+
+	builder.Services.AddHttpClient(HttpClientName.Cloudflare.ToString(), client =>
+	{
+		client.BaseAddress = new Uri("https://api.cloudflare.com/client/v4/");
+		client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+		client.DefaultRequestHeaders.UserAgent.ParseAdd("DnsTube");
+	});
+
+	builder.Services.AddHttpClient(HttpClientName.GitHub.ToString(), client =>
+	{
+		client.BaseAddress = new Uri("https://api.github.com/");
+		client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+		client.DefaultRequestHeaders.UserAgent.ParseAdd("DnsTube");
+		client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
+	});
+
+	builder.Services.AddHttpClient(HttpClientName.IpAddressV4.ToString(), client =>
+	{
+		client.DefaultRequestHeaders.UserAgent.ParseAdd("DnsTube");
+	});
+
+	builder.Services.AddHttpClient(HttpClientName.IpAddressV6.ToString(), client =>
+	{
+		client.DefaultRequestHeaders.UserAgent.ParseAdd("DnsTube");
+	});
 }
