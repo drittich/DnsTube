@@ -43,8 +43,9 @@ catch (Exception ex)
 	try
 	{
 		using var eventLog = new System.Diagnostics.EventLog("Application");
-		eventLog.Source = "DnsTube Service";
-		eventLog.WriteEntry($"Error during HTTP client configuration: {ex.Message}\nService will start with default configuration.", 
+		// Use default source since creating custom sources requires admin privileges
+		eventLog.Source = "Application";
+		eventLog.WriteEntry($"DnsTube Service - Error during HTTP client configuration: {ex.Message}\nService will start with default configuration.", 
 			System.Diagnostics.EventLogEntryType.Warning);
 	}
 	catch
