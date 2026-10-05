@@ -16,7 +16,7 @@ namespace DnsTube.Service.Tests;
 /// </summary>
 public class LogUpdatesStreamTests : IClassFixture<DnsTubeAppFactory>
 {
-	private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(10);
+	private static readonly TimeSpan TestTimeout = TimeSpan.FromSeconds(10);
 
 	private readonly DnsTubeAppFactory _factory;
 
@@ -28,7 +28,7 @@ public class LogUpdatesStreamTests : IClassFixture<DnsTubeAppFactory>
 	[Fact]
 	public async Task Writing_a_log_entry_pushes_log_updated_event_to_sse_clients()
 	{
-		using var cts = new CancellationTokenSource(Timeout);
+		using var cts = new CancellationTokenSource(TestTimeout);
 		var client = _factory.CreateClient();
 		using var request = new HttpRequestMessage(HttpMethod.Get, "/sse");
 		request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));
