@@ -7,6 +7,9 @@
 		"build": "tsc && vite build",
 		"watch": "tsc && vite build --watch"
 	},
+	"engines": {
+		"node": ">=24"
+	},
 	"devDependencies": {
 		"@types/node": "^24.19.1",
 		"sass": "^1.55.0",
