@@ -7,14 +7,14 @@ net.exe session 1>NUL 2>NUL || goto :not_admin
 rem check that the ASP.NET Core 10 Runtime is installed (it includes the .NET 10 Runtime)
 dotnet --list-runtimes | findstr /B /C:"Microsoft.AspNetCore.App 10."
 if %ErrorLevel% equ 0 (
-    echo Found ASP.NET Core 10 Runtime
+	echo Found ASP.NET Core 10 Runtime
 	goto :create_service
 )
 
 rem check that a .NET 10 SDK is installed (it includes the ASP.NET Core 10 Runtime)
 dotnet --list-sdks | findstr /B /C:"10."
 if %ErrorLevel% equ 0 (
-    echo Found .NET 10 SDK
+	echo Found .NET 10 SDK
 	goto :create_service
 )
 
