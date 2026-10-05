@@ -47,21 +47,9 @@ app.UseRouting();
 app.MapControllers();
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapServerSentEvents("/sse");
-app.MapGet("/", async context =>
-{
-        context.Response.Headers[HeaderNames.CacheControl] = "no-cache";
-        await context.Response.SendFileAsync(Path.Combine(app.Environment.WebRootPath, "index.html"));
-});
-app.MapGet("/index", async context =>
-{
-        context.Response.Headers[HeaderNames.CacheControl] = "no-cache";
-        await context.Response.SendFileAsync(Path.Combine(app.Environment.WebRootPath, "index.html"));
-});
-app.MapGet("/settings", async context =>
-{
-        context.Response.Headers[HeaderNames.CacheControl] = "no-cache";
-        await context.Response.SendFileAsync(Path.Combine(app.Environment.WebRootPath, "settings.html"));
-});
+app.MapGet("/", ServeUiPage(app.Environment, "index.html"));
+app.MapGet("/index", ServeUiPage(app.Environment, "index.html"));
+app.MapGet("/settings", ServeUiPage(app.Environment, "settings.html"));
 app.UseStaticFiles(new StaticFileOptions
 {
 	OnPrepareResponse = ctx =>
@@ -77,6 +65,18 @@ var defaultFilesOptions = new DefaultFilesOptions { DefaultFileNames = new List<
 app.UseDefaultFiles(defaultFilesOptions);
 
 await app.RunAsync();
+
+// Serves a wwwroot HTML page for an extensionless UI route. The Content-Type must be
+// explicit: proxies that add "X-Content-Type-Options: nosniff" stop browsers from sniffing it.
+static RequestDelegate ServeUiPage(IWebHostEnvironment environment, string fileName)
+{
+	return async context =>
+	{
+		context.Response.ContentType = "text/html; charset=utf-8";
+		context.Response.Headers[HeaderNames.CacheControl] = "no-cache";
+		await context.Response.SendFileAsync(Path.Combine(environment.WebRootPath, fileName));
+	};
+}
 
 static async Task ConfigureHttpClientsAsync(WebApplicationBuilder builder, ISettingsService settingsService)
 {
