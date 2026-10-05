@@ -38,11 +38,13 @@ namespace DnsTube.Core.Services
 		{
 			if (_dbFolder is null)
 			{
+				string dbFolder;
+
 				// an explicit override isolates the database, e.g. for in-process tests
 				var overrideFolder = Environment.GetEnvironmentVariable(DbFolderEnvironmentVariable);
 				if (!string.IsNullOrWhiteSpace(overrideFolder))
 				{
-					_dbFolder = overrideFolder;
+					dbFolder = overrideFolder;
 				}
 				else
 				{
@@ -54,12 +56,15 @@ namespace DnsTube.Core.Services
 					else
 						rootFolder = Environment.SpecialFolder.CommonApplicationData;
 
-					_dbFolder = Path.Combine(Environment.GetFolderPath(rootFolder), "DnsTube");
+					dbFolder = Path.Combine(Environment.GetFolderPath(rootFolder), "DnsTube");
 				}
 
-				_logger.LogInformation($"Db folder: {_dbFolder}");
+				_logger.LogInformation($"Db folder: {dbFolder}");
 
-				Directory.CreateDirectory(_dbFolder);
+				// create the folder before caching it: the constructor's WAL task and the
+				// first caller can race here, and a cached path must already exist
+				Directory.CreateDirectory(dbFolder);
+				_dbFolder = dbFolder;
 			}
 			return _dbFolder;
 		}
