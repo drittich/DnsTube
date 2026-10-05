@@ -11,6 +11,11 @@ namespace DnsTube.Core.Services
 {
 	public class DbService : IDbService
 	{
+		/// <summary>
+		/// Environment variable that, when set, overrides the folder holding the database.
+		/// </summary>
+		public const string DbFolderEnvironmentVariable = "DNSTUBE_DB_FOLDER";
+
 		private ILogger<DbService> _logger;
 		private string? _dbFolder;
 
@@ -34,24 +39,24 @@ namespace DnsTube.Core.Services
 			if (_dbFolder is null)
 			{
 				// an explicit override isolates the database, e.g. for in-process tests
-				var overrideFolder = Environment.GetEnvironmentVariable("DNSTUBE_DB_FOLDER");
+				var overrideFolder = Environment.GetEnvironmentVariable(DbFolderEnvironmentVariable);
 				if (!string.IsNullOrWhiteSpace(overrideFolder))
 				{
 					_dbFolder = overrideFolder;
-					_logger.LogInformation($"Db folder: {_dbFolder}");
-					Directory.CreateDirectory(_dbFolder);
-					return _dbFolder;
+				}
+				else
+				{
+					Environment.SpecialFolder rootFolder;
+
+					// use a separate folder for the database if we're developing
+					if (Debugger.IsAttached)
+						rootFolder = Environment.SpecialFolder.LocalApplicationData;
+					else
+						rootFolder = Environment.SpecialFolder.CommonApplicationData;
+
+					_dbFolder = Path.Combine(Environment.GetFolderPath(rootFolder), "DnsTube");
 				}
 
-				Environment.SpecialFolder rootFolder;
-
-				// use a separate folder for the database if we're developing
-				if (Debugger.IsAttached)
-					rootFolder = Environment.SpecialFolder.LocalApplicationData;
-				else
-					rootFolder = Environment.SpecialFolder.CommonApplicationData;
-
-				_dbFolder = Path.Combine(Environment.GetFolderPath(rootFolder), "DnsTube");
 				_logger.LogInformation($"Db folder: {_dbFolder}");
 
 				Directory.CreateDirectory(_dbFolder);
