@@ -33,6 +33,16 @@ namespace DnsTube.Core.Services
 		{
 			if (_dbFolder is null)
 			{
+				// an explicit override isolates the database, e.g. for in-process tests
+				var overrideFolder = Environment.GetEnvironmentVariable("DNSTUBE_DB_FOLDER");
+				if (!string.IsNullOrWhiteSpace(overrideFolder))
+				{
+					_dbFolder = overrideFolder;
+					_logger.LogInformation($"Db folder: {_dbFolder}");
+					Directory.CreateDirectory(_dbFolder);
+					return _dbFolder;
+				}
+
 				Environment.SpecialFolder rootFolder;
 
 				// use a separate folder for the database if we're developing

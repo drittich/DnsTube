@@ -202,3 +202,6 @@ static string GetNetworkAdapterIPAddress(string? adapterName, AddressFamily addr
 
 	return ipAddress.ToString();
 }
+
+// Exposes the generated entry point to the in-process test host (WebApplicationFactory<Program>).
+public partial class Program { }
