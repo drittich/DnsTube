@@ -47,7 +47,7 @@ DnsTube is a Windows service that helps you access your computer remotely even i
 ## Quick Start
 
 1. [Download the latest release](https://github.com/drittich/DnsTube/releases).
-2. Install [.NET 8](https://dotnet.microsoft.com/en-us/download) if needed.
+2. Install the [ASP.NET Core Runtime 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) if needed (or run `winget install Microsoft.DotNet.AspNetCore.10`).
 3. Extract the package, open a command prompt as Administrator, and run `install-service.bat`.
 4. Open [http://localhost:5666](http://localhost:5666) to complete setup.
 
@@ -66,7 +66,7 @@ DnsTube is a Windows service that helps you access your computer remotely even i
 
 * You must set Cloudflare as the DNS authority for your domain
 * You must have Administrator permissions for the computer you are installing DnsTube on
-* You must have .NET 8 installed
+* You must have the [ASP.NET Core Runtime 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) installed
 
 ## UI
 <img width="800" alt="image" src="https://github.com/user-attachments/assets/7d97be00-678b-471f-b28e-58acd3a1ede1" />
@@ -77,7 +77,7 @@ Head over to the [Releases](https://github.com/drittich/DnsTube/releases) page t
 
 ## Installing
 
-Note: This application is built using .NET 8. You may need to download and install it from here: https://dotnet.microsoft.com/en-us/download. Once you've installed .NET 8:
+Note: This application is built using .NET 10. You may need to download and install the **ASP.NET Core Runtime 10** from here: https://dotnet.microsoft.com/en-us/download/dotnet/10.0 (or run `winget install Microsoft.DotNet.AspNetCore.10`). `install-service.bat` checks for it and stops with a message if it's missing. Once you've installed it:
 
 - Extract the DnsTube package to a folder of your choice
 - Open a command prompt as Administrator and install the service using  `install-service.bat`.
@@ -149,6 +149,7 @@ When using a zone‑specific token, add the corresponding Zone IDs (comma-separa
 ## Updating
 
 - Download the latest release from https://github.com/drittich/DnsTube/releases/latest and decompress
+- If you are updating from 3.0.x or earlier, install the [ASP.NET Core Runtime 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) first. DnsTube 3.1.0 and later no longer run on .NET 8.
 - Open a command prompt as Administrator and stop the existing service by running `stop-service.bat`. Note, the service will stop more quickly if you close the web UI.
 - Copy the new decompressed files over the existing ones. The configuration is stored elsewhere so will be preserved.
 - Start the service again by running `start-service.bat` 
@@ -187,7 +188,7 @@ npm run build
 
 This will build your files and copy them to the `[YOUR_INSTALL_FOLDER]\DnsTube.Service\wwwroot` folder.
 
-At this point you can load the solution in Visual Studio 2022 and run the application with `Ctrl - F5`. You should then be able to load the application UI at the URL http://localhost:5666.
+Building requires the .NET 10 SDK (pinned by `global.json`). At this point you can load the solution in Visual Studio 2026 and run the application with `Ctrl - F5`, or run `dotnet run --project DnsTube.Service`. You should then be able to load the application UI at the URL http://localhost:5666.
 
 
 ## The Name
