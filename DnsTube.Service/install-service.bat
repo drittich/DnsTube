@@ -4,30 +4,23 @@ set SERVICE_NAME="DnsTube Service"
 rem abort if we're not running in an elevated command prompt
 net.exe session 1>NUL 2>NUL || goto :not_admin
 
-rem check that .NET 8 Desktop Runtime is installed
-dotnet --list-runtimes | findstr /B /C:"Microsoft.WindowsDesktop.App 8."
+rem check that the ASP.NET Core 10 Runtime is installed (it includes the .NET 10 Runtime)
+dotnet --list-runtimes | findstr /B /C:"Microsoft.AspNetCore.App 10."
 if %ErrorLevel% equ 0 (
-    echo Found .NET 8 Desktop Runtime
+    echo Found ASP.NET Core 10 Runtime
 	goto :create_service
 )
 
-rem check that .NET 8 Desktop Runtime is installed
-dotnet --list-runtimes | findstr /B /C:"Microsoft.NETCore.App 8."
+rem check that a .NET 10 SDK is installed (it includes the ASP.NET Core 10 Runtime)
+dotnet --list-sdks | findstr /B /C:"10."
 if %ErrorLevel% equ 0 (
-    echo Found .NET 8 Core Runtime
+    echo Found .NET 10 SDK
 	goto :create_service
 )
 
-rem check that .NET 8 SDK is installed
-dotnet --list-sdks | findstr /C:8. /B
-if %ErrorLevel% equ 0 (
-    echo Found .NET 8 SDK
-	goto :create_service
-)
-
-echo .NET 8 Runtime/SDK not installed, please download and install from https://dotnet.microsoft.com/en-us/download/dotnet/8.0 or using Microsoft's App-Installer (aka. WinGet-CLI, see https://apps.microsoft.com/detail/9nblggh4nns1): "winget install Microsoft.DotNet.DesktopRuntime.8"
+echo ASP.NET Core 10 Runtime not installed, please download and install it from https://dotnet.microsoft.com/en-us/download/dotnet/10.0 or using Microsoft's App-Installer (aka. WinGet-CLI, see https://apps.microsoft.com/detail/9nblggh4nns1): "winget install Microsoft.DotNet.AspNetCore.10"
 echo Exiting
-goto :eof
+exit /b 1
 
 :create_service
 echo Creating service...
