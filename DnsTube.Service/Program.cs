@@ -80,8 +80,6 @@ static RequestDelegate ServeUiPage(IWebHostEnvironment environment, string fileN
 
 static async Task ConfigureHttpClientsAsync(WebApplicationBuilder builder, ISettingsService settingsService)
 {
-	ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
-
 	var settings = await settingsService.GetAsync();
 	var selectedAdapterName = settings.NetworkAdapter;
 	bool needsCustomHandler = !string.IsNullOrWhiteSpace(selectedAdapterName) && selectedAdapterName != "_DEFAULT_";
