@@ -5,7 +5,7 @@ export default defineConfig({
 	build:{
 		outDir: "..\\wwwroot",
 		emptyOutDir: true,
-		rollupOptions: {
+		rolldownOptions: {
 			input: {
 				main: resolve(__dirname, 'index.html'),
 				settings: resolve(__dirname, 'settings.html')
