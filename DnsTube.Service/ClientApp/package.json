@@ -8,7 +8,7 @@
 		"watch": "tsc && vite build --watch"
 	},
 	"devDependencies": {
-		"@types/node": "^22.0.0",
+		"@types/node": "^24.19.1",
 		"sass": "^1.55.0",
 		"typescript": "^5.5.4",
 		"vite": "^6.0.0"
