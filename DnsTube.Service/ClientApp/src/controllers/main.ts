@@ -1,4 +1,4 @@
-import '@picocss/pico'
+import '@picocss/pico/css/pico.min.css'
 import 'three-dots/dist/three-dots.css'
 import '../style.css'
 

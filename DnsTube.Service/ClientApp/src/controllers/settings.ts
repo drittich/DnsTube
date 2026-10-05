@@ -1,4 +1,4 @@
-import '@picocss/pico'
+import '@picocss/pico/css/pico.min.css'
 import '../style.css'
 
 import { getDbFolderAsync, getNetworkAdapters, getSettingsAsync, saveSettingsAsync } from "../services/settings";
