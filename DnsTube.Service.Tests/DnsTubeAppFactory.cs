@@ -1,9 +1,15 @@
+using DnsTube.Core.Services;
 using DnsTube.Service;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+// DnsTubeAppFactory redirects the database through a process-wide environment
+// variable, so two factories running in parallel would race on it. Run test
+// collections one at a time.
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace DnsTube.Service.Tests;
 
@@ -20,7 +26,7 @@ public sealed class DnsTubeAppFactory : WebApplicationFactory<Program>
 	{
 		// Program resolves the settings service before the host is built, so the
 		// database location must be redirected before startup runs.
-		Environment.SetEnvironmentVariable("DNSTUBE_DB_FOLDER", _dbFolder);
+		Environment.SetEnvironmentVariable(DbService.DbFolderEnvironmentVariable, _dbFolder);
 	}
 
 	protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -35,7 +41,7 @@ public sealed class DnsTubeAppFactory : WebApplicationFactory<Program>
 	protected override void Dispose(bool disposing)
 	{
 		base.Dispose(disposing);
-		Environment.SetEnvironmentVariable("DNSTUBE_DB_FOLDER", null);
+		Environment.SetEnvironmentVariable(DbService.DbFolderEnvironmentVariable, null);
 		Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
 		try
 		{
