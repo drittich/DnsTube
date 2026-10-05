@@ -69,8 +69,7 @@ DnsTube is a Windows service that helps you access your computer remotely even i
 * You must have .NET 8 installed
 
 ## UI
-
-<img src="https://github.com/drittich/DnsTube/assets/1222810/751b4b21-333f-4a5a-bdba-b937474fc2ba" width="800">
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/7d97be00-678b-471f-b28e-58acd3a1ede1" />
 
 ## Downloading 
 
